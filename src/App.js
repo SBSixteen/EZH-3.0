@@ -2,6 +2,8 @@ import { useState } from 'react';
 import Login from './Login.jsx';
 import Home from './Home.js';
 import Register from './Register';
+import Settings from './Settings';
+import PaymentForm from './PaymentForm.jsx';
 import { createStyles, Navbar, Group, Code, getStylesRef, rem } from '@mantine/core';
 import {
   IconBellRinging,
@@ -22,9 +24,6 @@ import {
 import { MantineLogo } from '@mantine/ds';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import PassReset from './PassReset.jsx';
-import PaymentForm from './PaymentForm.jsx';
-
-
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -102,6 +101,7 @@ function App() {
 <Route path="/Home" element={<Home />} />
 <Route path="/PassReset" element={<PassReset />} />
 <Route path="/PaymentForm" element={<PaymentForm />} />
+<Route path="/Settings" element={<Settings/>} />
 navigate(path);
    </Routes>
 </BrowserRouter>

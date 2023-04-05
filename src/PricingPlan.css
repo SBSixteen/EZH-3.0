@@ -1,0 +1,68 @@
+.price-plan {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin:      auto;
+    max-width: 900px;
+  }
+    
+  .plan-card {
+    width: 200px;
+    height: auto;
+    margin: 20px;
+    padding: 30px;
+    color: #fff;
+    background-color: black;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .plan-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+  }
+  
+  .plan-card h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .plan-card .price {
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .plan-card .features {
+    margin-bottom: 30px;
+    list-style: none;
+    padding: 0;
+    text-align: left;
+  }
+  
+  .plan-card .features li {
+    margin-bottom: 10px;
+  }
+  
+  .plan-card button {
+    display: block;
+    width: 100%;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px 0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .plan-card button:hover {
+    background-color: #219d54;
+  }
+  

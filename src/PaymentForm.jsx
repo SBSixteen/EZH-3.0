@@ -1,93 +1,63 @@
 import React, { useState } from "react";
-import Stripe from "stripe";
+import StripeCheckout from "react-stripe-checkout";
+import { Container, Typography, TextField } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import Button from "./Components/Button";
 
-const stripe = new Stripe("your_stripe_api_key_here");
+const useStyles = makeStyles((theme) => ({
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    paddingTop: theme.spacing(4),
+    paddingBottom: theme.spacing(4),
+  },
+  title: {
+    marginBottom: theme.spacing(2),
+  },
+  input: {
+    marginBottom: theme.spacing(2),
+  },
+  button: {
+    marginTop: theme.spacing(2),
+  },
+}));
 
-function PaymentForm() {
-  const [cardNumber, setCardNumber] = useState("");
-  const [expiryMonth, setExpiryMonth] = useState("");
-  const [expiryYear, setExpiryYear] = useState("");
-  const [cvc, setCvc] = useState("");
-  const [accountHolder, setAccountHolder] = useState("");
+function PaymentPage() {
+  const [product] = useState({
+    name: "Final Payment",
+    price: 19.99,
+  });
+  const classes = useStyles();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const cardElement = stripe.elements().create("card");
-    const { token } = await stripe.createToken(cardElement, {
-      card: {
-        name: accountHolder,
-        number: cardNumber,
-        exp_month: expiryMonth,
-        exp_year: expiryYear,
-        cvc: cvc,
-      },
-    });
-    console.log(token.id);
-    // Do something with the token, such as submitting it to your server for payment processing
+  const handleToken = (token) => {
+    // Send the token to your backend to process the payment
+    
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
-        <h1>Payment Gateway</h1>
-      </label>
+    <Container maxWidth="md" className={classes.container}>
+      
+      <h1>Check Out</h1>  
       <br></br>
-      <label>
-        Account Holder Name
-        <br></br>
-        <input
-          type="text"
-          value={cardNumber}
-          onChange={(e) => setAccountHolder(e.target.value)}
-          placeholder="Name"
-        />
-      </label>
-      <br></br>
-      <label>
-        Card number
-        <br></br>
-        <input
-          type="text"
-          value={cardNumber}
-          onChange={(e) => setCardNumber(e.target.value)}
-          placeholder="XXXX XXXX XXXX XXXX"
-        />
-      </label>
-
-      <br></br>
-
-      <label>
-        Expiry
-        <br></br>
-        <input
-          type="text"
-          value={expiryYear}
-          onChange={(e) => setExpiryYear(e.target.value)}
-          placeholder="MM/YY"
-        />
-      </label>
-
-      <br></br>
-
-      <label>
-        CVC
-        <br></br>
-        <input
-          type="password"
-          id="pwd"
-          name="pwd"
-          minlength="8"
-          value={cvc}
-          onChange={(e) => setCvc(e.target.value)}
-          placeholder="* * *"
-        />
-      </label>
-      <br></br>
-
-      <Button title="Send Payment" />
-    </form>
+    
+      <Typography variant="h6">
+        {product.name} - ${product.price}
+      </Typography>
+      <TextField label="Name" variant="outlined" className={classes.input} />
+      
+      <StripeCheckout
+        stripeKey="<your_stripe_public_key>"
+        token={handleToken}
+        amount={product.price * 100}
+        name={product.name}
+      >
+        <Button variant="contained"  className={classes.button}
+          title = "Pay Now" >
+        </Button>
+      </StripeCheckout>
+    </Container>
   );
 }
 
-export default PaymentForm;
+export default PaymentPage;

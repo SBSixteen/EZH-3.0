@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Login from "./Login.jsx";
+import PricingPlan from "./PricingPlan.js";
 import {
   createStyles,
   Navbar,
@@ -159,7 +160,6 @@ function Home() {
     </Navbar>
     </div>
     <div style={{width:"80%",float:"right"}}>
-        <Login></Login>
     </div>
     </div>
     
