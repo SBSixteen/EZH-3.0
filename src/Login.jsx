@@ -72,6 +72,12 @@ return (
           <button className="default_m_right" type="submit" onClick={
             ()=>{
 
+              invoke('authenticate_user', {'e' : name, 'pwd' : password}).then((message)=>{
+
+                console.log(message);
+
+              })
+
             }
           }> Sign In </button>
           
