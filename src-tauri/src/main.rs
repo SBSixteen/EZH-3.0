@@ -52,6 +52,12 @@ struct User_Fetch {
     user: User,
 }
 
+
+#[derive(Serialize, Deserialize, Debug)]
+struct SMTP_CRED{
+    user:String,
+    pass:String,
+}
 struct User_Login {
     value: bool,
     twofa: bool,
@@ -183,16 +189,23 @@ async fn send_auth_code(mail: String) {
 
     let _send = _firebase.set::<V_Code>(&g).await;
 
-    println!(
-        "{:?} | {:?}",
-        env::var("SMTP_Email").unwrap(),
-        env::var("SMTP_PASS").unwrap()
+    let g = firebase.at("SMTP_Credentials");
+    let map = g.get::<HashMap<String, SMTP_CRED>>().await.unwrap();
+
+    let mut creds = Credentials::new(
+        String::from("123"),
+        String::from("123"),
     );
 
-    let creds = Credentials::new(
-        env::var("SMTP_Email").unwrap(),
-        env::var("SMTP_PASS").unwrap(),
-    );
+    for (key,value) in map.into_iter() {
+        
+        creds = Credentials::new(
+            String::from(value.user),
+            String::from(value.pass),
+        )
+
+    }
+
     let mailer = SmtpTransport::relay("smtp.gmail.com")
         .unwrap()
         .credentials(creds)
