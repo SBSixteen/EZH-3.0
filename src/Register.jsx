@@ -26,7 +26,7 @@ function Register() {
       </div>
 
       <h1>{title}</h1>
-
+<div>
       <div
         className="column"
         style={{
@@ -77,21 +77,24 @@ function Register() {
               <br></br>
 
               <button
+                margin="100px"
                 className="default_m_right"
                 type="submit"
                 onClick={() => {
-                  invoke("create_user", { mail: emailID, username:name, pwd: password }).then(
-                    (message) => {
-                      setResponse(message);
-                      console.log(message);
-                      var x = JSON.parse(message);
-                      setGreetMsg(x.response);
-                      console.log(x.value);
-                      setT(x.value);
-                      console.log("Toggle = ", T);
-                      setTitle("Verify Email");
-                    }
-                  );
+                  invoke("create_user", {
+                    mail: emailID,
+                    username: name,
+                    pwd: password,
+                  }).then((message) => {
+                    setResponse(message);
+                    console.log(message);
+                    var x = JSON.parse(message);
+                    setGreetMsg(x.response);
+                    console.log(x.value);
+                    setT(x.value);
+                    console.log("Toggle = ", T);
+                    setTitle("Verify Email");
+                  });
                 }}
               >
                 {" "}
@@ -100,18 +103,20 @@ function Register() {
             </React.Fragment>
           ) : (
             <>
-              <div style={{ display: "flex", flexDirection: "row" }}>
+              <div style={{ display: "flex", flexDirection: "column" }}>
                 <button
+                  className="default_m_right"
                   onClick={() => {
                     setT((T) => !T);
                     setTitle("Registration");
                     setGreetMsg("");
                   }}
                 >
-                  back
+                  Previous
                 </button>
 
                 <button
+                  className="default_m_right"
                   style={{ margin: "100" }}
                   onClick={() => {
                     setT((T) => !T);
@@ -140,6 +145,7 @@ function Register() {
       </div>
 
       <p>{greetMsg}</p>
+      </div>
     </div>
   );
 }

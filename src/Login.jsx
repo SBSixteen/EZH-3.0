@@ -81,7 +81,7 @@ return (
             }
           }> Sign In </button>
           
-          <button type = "button" onClick= {routeChange}> Register </button>
+          <button type = "button" className="reg" onClick= {routeChange}> Register </button>
           
           <br></br>
          
