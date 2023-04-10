@@ -31,13 +31,14 @@ import {
 import { MantineLogo } from "@mantine/ds";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PassReset from "./PassReset.jsx";
+import PricingPlan from "./PricingPlan.jsx";
 
 const useStyles = createStyles((theme) => ({
   header: {
     paddingBottom: theme.spacing.md,
     marginBottom: `calc(${theme.spacing.md} * 1.5)`,
     borderBottom: `${rem(1)} solid ${
-      theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[2]
+      theme.colorScheme === "light" 
     }`,
   },
 
@@ -45,7 +46,7 @@ const useStyles = createStyles((theme) => ({
     paddingTop: theme.spacing.md,
     marginTop: theme.spacing.md,
     borderTop: `${rem(1)} solid ${
-      theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[2]
+      theme.colorScheme === "light" 
     }`,
   },
 
@@ -56,22 +57,18 @@ const useStyles = createStyles((theme) => ({
     textDecoration: "none",
     fontSize: theme.fontSizes.sm,
     color:
-      theme.colorScheme === "dark"
-        ? theme.colors.dark[1]
-        : theme.colors.gray[7],
+      theme.colorScheme === "light",
     padding: `${theme.spacing.xs} ${theme.spacing.sm}`,
     borderRadius: theme.radius.sm,
     fontWeight: 500,
 
     "&:hover": {
       backgroundColor:
-        theme.colorScheme === "dark"
-          ? theme.colors.dark[6]
-          : theme.colors.gray[0],
-      color: theme.colorScheme === "dark" ? theme.white : theme.black,
+        theme.colorScheme === "light",
+      color: theme.colorScheme === "light",
 
       [`& .${getStylesRef("icon")}`]: {
-        color: theme.colorScheme === "dark" ? theme.white : theme.black,
+        color: theme.colorScheme === "light",
       },
     },
   },
@@ -79,9 +76,7 @@ const useStyles = createStyles((theme) => ({
   linkIcon: {
     ref: getStylesRef("icon"),
     color:
-      theme.colorScheme === "dark"
-        ? theme.colors.dark[2]
-        : theme.colors.gray[6],
+      theme.colorScheme === "light",
     marginRight: theme.spacing.sm,
   },
 
@@ -100,7 +95,6 @@ const useStyles = createStyles((theme) => ({
     },
   },
 }));
-
 const data = [
   { link: "", label: "Home", icon: IconHome },
   { link: "", label: "Notifications", icon: IconBellRinging },
@@ -116,12 +110,13 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="" element={<Register />} />
-          <Route path="/Register" element={<Register />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/Home" element={<Home />} />
-          <Route path="/PassReset" element={<PassReset />} />
-          <Route path="/PaymentForm" element={<PaymentForm />} />
-          <Route path="/Settings" element={<Settings />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/pass-reset" element={<PassReset />} />
+          <Route path="/payment-form" element={<PaymentForm />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/subscription" element={<PricingPlan />} />
           navigate(path);
         </Routes>
       </BrowserRouter>

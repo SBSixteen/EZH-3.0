@@ -26,125 +26,131 @@ function Register() {
       </div>
 
       <h1>{title}</h1>
-<div>
-      <div
-        className="column"
-        style={{
-          display: "flex",
-          flex: 1,
-          alignItems: "center",
-        }}
-      >
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
+      <div>
+        <div
+          className="column"
+          style={{
+            display: "flex",
+            flex: 1,
+            alignItems: "center",
           }}
         >
-          <input
-            className="default_gap"
-            id="username-input"
-            onChange={(e) => setEmail(e.currentTarget.value)}
-            placeholder="Email ID"
-          />
-
-          <br></br>
-
-          {!T ? (
-            <React.Fragment>
-              <input
-                className="default_gap"
-                id="username-input"
-                onChange={(e) => setName(e.currentTarget.value)}
-                placeholder="Entrer Username"
-              />
-              <br></br>
-              <input
-                className="default_gap"
-                type="Password"
-                id="password-input"
-                onChange={(e) => setPassword(e.currentTarget.value)}
-                placeholder="Password"
-              />
-              <br></br>
-              <input
-                className="default_gap"
-                type="Confirm Password"
-                id="password-input"
-                onChange={(e) => setPassword(e.currentTarget.value)}
-                placeholder="Confirm Password"
-              />
-
-              <br></br>
-
-              <button
-                margin="100px"
-                className="default_m_right"
-                type="submit"
-                onClick={() => {
-                  invoke("create_user", {
-                    mail: emailID,
-                    username: name,
-                    pwd: password,
-                  }).then((message) => {
-                    setResponse(message);
-                    console.log(message);
-                    var x = JSON.parse(message);
-                    setGreetMsg(x.response);
-                    console.log(x.value);
-                    setT(x.value);
-                    console.log("Toggle = ", T);
-                    setTitle("Verify Email");
-                  });
-                }}
-              >
-                {" "}
-                Register
-              </button>
-            </React.Fragment>
-          ) : (
-            <>
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                <button
-                  className="default_m_right"
-                  onClick={() => {
-                    setT((T) => !T);
-                    setTitle("Registration");
-                    setGreetMsg("");
-                  }}
-                >
-                  Previous
-                </button>
-
-                <button
-                  className="default_m_right"
-                  style={{ margin: "100" }}
-                  onClick={() => {
-                    setT((T) => !T);
-                    setTitle("Verify Email");
-                    setGreetMsg("");
-                  }}
-                >
-                  Verify
-                </button>
-              </div>
-            </>
-          )}
-
-          <br></br>
-        </form>
-        <div>
-          <a
-            style={{ marginTop: 30 + "em" }}
-            href="/Login"
-            target="_self"
-            onClick={() => {}}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+            }}
           >
-            Already have an account?
-          </a>
-        </div>
-      </div>
+            <br></br>
 
-      <p>{greetMsg}</p>
+            {!T ? (
+              <React.Fragment>
+                <input
+                  className="default_gap"
+                  id="username-input"
+                  onChange={(e) => setEmail(e.currentTarget.value)}
+                  placeholder="Email ID"
+                />
+                <br></br>
+                <input
+                  className="default_gap"
+                  id="username-input"
+                  onChange={(e) => setName(e.currentTarget.value)}
+                  placeholder="Entrer Username"
+                />
+                <br></br>
+                <input
+                  className="default_gap"
+                  type="Password"
+                  id="password-input"
+                  onChange={(e) => setPassword(e.currentTarget.value)}
+                  placeholder="Password"
+                />
+                <br></br>
+                <input
+                  className="default_gap"
+                  type="Confirm Password"
+                  id="password-input"
+                  onChange={(e) => setPassword(e.currentTarget.value)}
+                  placeholder="Confirm Password"
+                />
+
+                <br></br>
+
+                <button
+                  margin="100px"
+                  className="default_m_right"
+                  type="submit"
+                  onClick={() => {
+                    invoke("create_user", {
+                      mail: emailID,
+                      username: name,
+                      pwd: password,
+                    }).then((message) => {
+                      setResponse(message);
+                      console.log(message);
+                      var x = JSON.parse(message);
+                      setGreetMsg(x.response);
+                      console.log(x.value);
+                      setT(x.value);
+                      console.log("Toggle = ", T);
+                      setTitle("Verify Email");
+                    });
+                  }}
+                >
+                  {" "}
+                  Register
+                </button>
+              </React.Fragment>
+            ) : (
+              <>
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                  <input
+                    className="default_gap"
+                    id="username-input"
+                    onChange={(e) => setEmail(e.currentTarget.value)}
+                    placeholder="7 Digit Code"
+                  />
+                  <button
+                    className="default_m_right"
+                    style={{ margin: "100" }}
+                    onClick={() => {
+                      setT((T) => !T);
+                      setTitle("Verify Email");
+                      setGreetMsg("");
+                    }}
+                  >
+                    Verify
+                  </button>
+
+                  <button
+                    className="default_m_right"
+                    onClick={() => {
+                      setT((T) => !T);
+                      setTitle("Registration");
+                      setGreetMsg("");
+                    }}
+                  >
+                    Back
+                  </button>
+                </div>
+              </>
+            )}
+
+            <br></br>
+          </form>
+          <div>
+            <a
+              style={{ marginTop: "30em" }}
+              href="/Login"
+              target="_self"
+              onClick={() => {}}
+            >
+              Already have an account?
+            </a>
+          </div>
+        </div>
+
+        <p>{greetMsg}</p>
       </div>
     </div>
   );
