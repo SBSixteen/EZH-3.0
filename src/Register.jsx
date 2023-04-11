@@ -13,10 +13,50 @@ function Register() {
   const [emailID, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const [cpassowrd, setCPassword] = useState("");
   const [response, setResponse] = useState("");
   const [Remember, setRememberMe] = useState(false);
   const [T, setT] = useState(false);
   const [title, setTitle] = useState("Registration");
+  const [message, setMessage] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [matchError, setMatchError] = useState("");
+
+  
+  const emailValidation = () => {
+    const regEx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (regEx.test(name)) {
+      setMessage(" ");
+    } else if (!regEx.test(name) && name !== " ") {
+      setMessage("email or password incorrect");
+    } else {
+      setMessage(" ");
+    }
+  };
+
+  function validatePass() {
+    if (password.length < 8) {
+      setPasswordError("Password must be at least 8 characters long.");
+    } else {
+      setPasswordError("");
+    }
+  }
+
+  function ComparePass() {
+    if(cpassowrd != password){
+    setMatchError("Passwords do not match!");
+    }else{
+     setMatchError(""); 
+    }
+  }
+
+  let navigate = useNavigate();
+  const gotoLogin = () => {
+    let path = "/Login";
+    navigate(path);
+  };
+
+
   return (
     <div className="container">
       <div className="row">
@@ -26,62 +66,75 @@ function Register() {
       </div>
 
       <h1>{title}</h1>
-
-      <div
-        className="column"
-        style={{
-          display: "flex",
-          flex: 1,
-          alignItems: "center",
-        }}
-      >
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
+      <div>
+        <div
+          className="column"
+          style={{
+            display: "flex",
+            flex: 1,
+            alignItems: "center",
           }}
         >
-          <input
-            className="default_gap"
-            id="username-input"
-            onChange={(e) => setEmail(e.currentTarget.value)}
-            placeholder="Email ID"
-          />
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+            }}
+          >
+            <br></br>
 
-          <br></br>
+            {!T ? (
+              <React.Fragment>
+                <input
+                  className="default_gap"
+                  id="username-input"
+                  onChange={(e) => setEmail(e.currentTarget.value)}
+                  placeholder="Email ID"
+                />
+                <br></br>
+                <input
+                  className="default_gap"
+                  id="username-input"
+                  onChange={(e) => setName(e.currentTarget.value)}
+                  placeholder="Entrer Username"
+                />
+                <br></br>
+                <input
+                  className="default_gap"
+                  type="Password"
+                  id="password-input"
+                  onChange={(e) => setPassword(e.currentTarget.value)}
+                  placeholder="Password"
+                />
+                <br></br>
+                <input
+                  className="default_gap"
+                  type="Confirm Password"
+                  id="password-input"
+                  onChange={(e) => setCPassword(e.currentTarget.value)}
+                  placeholder="Confirm Password"
+                />
 
-          {!T ? (
-            <React.Fragment>
-              <input
-                className="default_gap"
-                id="username-input"
-                onChange={(e) => setName(e.currentTarget.value)}
-                placeholder="Entrer Username"
-              />
-              <br></br>
-              <input
-                className="default_gap"
-                type="Password"
-                id="password-input"
-                onChange={(e) => setPassword(e.currentTarget.value)}
-                placeholder="Password"
-              />
-              <br></br>
-              <input
-                className="default_gap"
-                type="Confirm Password"
-                id="password-input"
-                onChange={(e) => setPassword(e.currentTarget.value)}
-                placeholder="Confirm Password"
-              />
+              <div style={{color:'red'}}>
+                <div>{message}</div>
+                
+                <div>{passwordError}</div>
+                
+                <div>{matchError} </div>
+                </div>
+                <button
+                  margin="100px"
+                  className="default_m_right"
+                  type="submit"
+                  onClick={() => {
 
-              <br></br>
-
-              <button
-                className="default_m_right"
-                type="submit"
-                onClick={() => {
-                  invoke("create_user", { mail: emailID, pwd: password }).then(
-                    (message) => {
+                    ComparePass();
+                    validatePass();
+                    emailValidation();
+                    invoke("create_user", {
+                      mail: emailID,
+                      username: name,
+                      pwd: password,
+                    }).then((message) => {
                       setResponse(message);
                       console.log(message);
                       var x = JSON.parse(message);
@@ -90,56 +143,64 @@ function Register() {
                       setT(x.value);
                       console.log("Toggle = ", T);
                       setTitle("Verify Email");
-                    }
-                  );
-                }}
-              >
-                {" "}
-                Register
-              </button>
-            </React.Fragment>
-          ) : (
-            <>
-              <div style={{ display: "flex", flexDirection: "row" }}>
-                <button
-                  onClick={() => {
-                    setT((T) => !T);
-                    setTitle("Registration");
-                    setGreetMsg("");
+                    });
                   }}
                 >
-                  back
+                  {" "}
+                  Register
                 </button>
+              </React.Fragment>
+            ) : (
+              <>
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                  <input
+                    className="default_gap"
+                    id="username-input"
+                    onChange={(e) => setEmail(e.currentTarget.value)}
+                    placeholder="7 Digit Code"
+                  />
+                  <button
+                    className="default_m_right"
+                    style={{ margin: "100" }}
+                    onClick={() => {
+                      setT((T) => !T);
+                      setTitle("Verify Email");
+                      setGreetMsg("");
+                    }}
+                  >
+                    Verify
+                  </button>
 
-                <button
-                  style={{ margin: "100" }}
-                  onClick={() => {
-                    setT((T) => !T);
-                    setTitle("Verify Email");
-                    setGreetMsg("");
-                  }}
-                >
-                  Verify
-                </button>
-              </div>
-            </>
-          )}
+                  <button
+                    className="default_m_right"
+                    onClick={() => {
+                      setT((T) => !T);
+                      setTitle("Registration");
+                      setGreetMsg("");
+                    }}
+                  >
+                    Back
+                  </button>
+                </div>
+              </>
+            )}
 
-          <br></br>
-        </form>
-        <div>
-          <a
-            style={{ marginTop: 30 + "em" }}
-            href="/Login"
-            target="_self"
-            onClick={() => {}}
-          >
-            Already have an account?
-          </a>
+            <br></br>
+          </form>
+          <div>
+            <a
+              style={{ marginTop: "30em" }}
+              href="/Login"
+              target="_self"
+              onClick={() => {}}
+            >
+              Already have an account?
+            </a>
+          </div>
         </div>
-      </div>
 
-      <p>{greetMsg}</p>
+        <p>{greetMsg}</p>
+      </div>
     </div>
   );
 }

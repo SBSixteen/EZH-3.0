@@ -35,6 +35,7 @@ function PassReset() {
           />
 
           <br></br>
+          <button className="default_m_right" type="submit" > Send </button>
         </form>
       </div>
           <div>          <a style={{marginTop: 30 + 'em'}} href="/Login" target="_self" >
