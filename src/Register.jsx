@@ -95,7 +95,7 @@ function Register() {
                   className="default_gap"
                   id="username-input"
                   onChange={(e) => setName(e.currentTarget.value)}
-                  placeholder="Entrer Username"
+                  placeholder="Enter Name"
                 />
                 <br></br>
                 <input
