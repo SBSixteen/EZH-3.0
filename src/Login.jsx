@@ -119,7 +119,7 @@ return (
 
         {
           {validatePass(password)}
-          {emailValidation()}
+          
           invoke('authenticate_user', {'e' : name, 'pwd' : password}).then((message)=>{
             console.log(message);
           })

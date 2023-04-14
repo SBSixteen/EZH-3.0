@@ -3,10 +3,11 @@ import React from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
 import "./style.css";
+import Loader from "./Components/Loader";
 // import { Button } from "./Components/Button";
-import Button from "./Components/Button/";
 
-import { resolvePath, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import DigitCode from "./Components/DigitCode";
 
 function Register() {
   const [greetMsg, setGreetMsg] = useState("");
@@ -22,13 +23,12 @@ function Register() {
   const [passwordError, setPasswordError] = useState("");
   const [matchError, setMatchError] = useState("");
 
-  
   const emailValidation = () => {
     const regEx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (regEx.test(name)) {
       setMessage(" ");
     } else if (!regEx.test(name) && name !== " ") {
-      setMessage("email or password incorrect");
+      setMessage("Email is not valid");
     } else {
       setMessage(" ");
     }
@@ -43,10 +43,10 @@ function Register() {
   }
 
   function ComparePass() {
-    if(cpassowrd != password){
-    setMatchError("Passwords do not match!");
-    }else{
-     setMatchError(""); 
+    if (cpassowrd != password) {
+      setMatchError("Passwords do not match!");
+    } else {
+      setMatchError("");
     }
   }
 
@@ -55,7 +55,6 @@ function Register() {
     let path = "/Login";
     navigate(path);
   };
-
 
   return (
     <div className="container">
@@ -114,19 +113,19 @@ function Register() {
                   placeholder="Confirm Password"
                 />
 
-              <div style={{color:'red'}}>
-                <div>{message}</div>
-                
-                <div>{passwordError}</div>
-                
-                <div>{matchError} </div>
+                <div style={{ color: "red" }}>
+                  <div>{message}</div>
+
+                  <div>{passwordError}</div>
+
+                  <div>{matchError} </div>
                 </div>
                 <button
                   margin="100px"
                   className="default_m_right"
                   type="submit"
                   onClick={() => {
-
+                
                     ComparePass();
                     validatePass();
                     emailValidation();
@@ -152,13 +151,17 @@ function Register() {
               </React.Fragment>
             ) : (
               <>
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <input
-                    className="default_gap"
-                    id="username-input"
-                    onChange={(e) => setEmail(e.currentTarget.value)}
-                    placeholder="7 Digit Code"
-                  />
+                <div>
+                  <DigitCode></DigitCode>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    width: "100px",
+                    marginLeft: "296px",
+                  }}
+                >
                   <button
                     className="default_m_right"
                     style={{ margin: "100" }}
