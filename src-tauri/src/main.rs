@@ -17,7 +17,7 @@ struct User {
     email: String,
     name: String,
     password: String,
-    sub_type: i32,
+    sub_type: i32, //0 = free, 1 = paid, 2 =pro
     twofa: bool,
     verified: bool,
     datasets: String,
@@ -77,8 +77,6 @@ fn main() {
         .invoke_handler(tauri::generate_handler![create_user, authenticate_user])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
-
-     // println!("{:?}",authenticate_user(&String::from("nabeelmirza79@gmail.com"), &String::from("M4a1 gun")).await?);
 }
 
 async fn initConnection() -> Firebase {

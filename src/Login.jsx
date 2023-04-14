@@ -145,7 +145,7 @@ return (
           
           </div>        
      
-      <a href="/PassReset" target="_self">
+      <a href="/pass-reset" target="_self">
       Forgot Password?
       </a>
 
