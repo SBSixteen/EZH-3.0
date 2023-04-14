@@ -90,7 +90,7 @@ async fn main(){
 
     for g in VECTOR.clone(){
 
-        //convert_to_jpeg(g).await;
+        convert_to_jpeg(g).await;
 
     }
 
@@ -98,7 +98,7 @@ async fn main(){
 
     for g in VECTOR.clone(){
 
-        //ocr_jpeg(g).await;
+        ocr_jpeg(g).await;
  
     }
 
@@ -288,6 +288,7 @@ async fn main(){
         }
         }
 
+        //NOUGAT = Name of User - Generate A Ticket
         if !check_b && !check_a{
 
             println!("Discrepency Detected: OCR failed to detect a valid name for the candidate!");
@@ -323,7 +324,7 @@ async fn main(){
 
         if gg!=""{
 
-        repos = grab_repos(gg).await; //Array of repos
+        //repos = grab_repos(gg).await; //Array of repos
         
         }
 
@@ -340,7 +341,7 @@ async fn main(){
     }
 
     println!();
-    notify_cv_scan(profile).await;
+   // notify_cv_scan(profile).await;
    // println!("{:?}", f);
 
 }

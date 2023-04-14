@@ -7,6 +7,7 @@ use firebase_rs::*;
 use lettre::message::header::ContentType;
 use lettre::transport::smtp::authentication::Credentials;
 use lettre::{Message, SmtpTransport, Transport};
+use lettre::message::{header, MultiPart, SinglePart};
 use rand::Rng;
 use serde::{Deserialize, Serialize};
 use sha256::digest;
@@ -209,17 +210,24 @@ async fn send_auth_code(mail: String) {
         .credentials(creds)
         .build();
 
+    let mut msg_html = String::from("");
+    msg_html.push_str(  r#"<font color="red" style="" size="6"><b>"#);
+    msg_html.push_str(&num.to_string());
+    msg_html.push_str(  r#"</b></font>"#);
+    msg_html.push_str(" is your Verification Code for EZHire UAUTH service.");
+
     let mut msg = num.to_string();
-    msg.push_str(" is your Verification Code for EZHire UAUTH service.");
+    msg.push_str( "is your Verification Code for EZHire UAUTH service.");
 
     let email = Message::builder()
         .from("noreply.ezhire@gmail.com".parse().unwrap())
         .reply_to(mail.parse().unwrap())
         .to(mail.parse().unwrap())
         .subject("EZHire Verification Code")
-        .header(ContentType::TEXT_PLAIN)
-        .body(msg)
-        .unwrap();
+        .multipart(MultiPart::alternative_plain_html(
+            String::from(msg),
+            String::from(msg_html),
+        ),).unwrap();
 
     match mailer.send(&email) {
         Ok(_) => println!("Email sent successfully!"),
