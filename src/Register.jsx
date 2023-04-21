@@ -5,7 +5,6 @@ import "./App.css";
 import "./style.css";
 import Loader from "./Components/Loader";
 // import { Button } from "./Components/Button";
-
 import { useNavigate } from "react-router-dom";
 import DigitCode from "./Components/DigitCode";
 
@@ -16,7 +15,7 @@ function Register() {
   const [password, setPassword] = useState("");
   const [cpassowrd, setCPassword] = useState("");
   const [response, setResponse] = useState("");
-  const [Remember, setRememberMe] = useState(false);
+  //const [Remember, setRememberMe] = useState(false);
   const [T, setT] = useState(false);
   const [title, setTitle] = useState("Registration");
   const [message, setMessage] = useState("");
@@ -125,7 +124,6 @@ function Register() {
                   className="default_m_right"
                   type="submit"
                   onClick={() => {
-                
                     ComparePass();
                     validatePass();
                     emailValidation();
@@ -143,16 +141,21 @@ function Register() {
                       console.log("Toggle = ", T);
                       setTitle("Verify Email");
                     });
+                    
                   }}
                 >
                   {" "}
                   Register
                 </button>
+                <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                <br></br>
+                
               </React.Fragment>
+              
             ) : (
               <>
                 <div>
-                  <DigitCode></DigitCode>
+                  <DigitCode/>
                 </div>
                 <div
                   style={{

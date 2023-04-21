@@ -1,31 +1,41 @@
-import React, { useState } from 'react';
+import React, { useRef } from "react";
 
-const NumberInputs = () => {
-  const [inputValues, setInputValues] = useState(['', '', '', '', '', '', '']);
+function InputField() {
+  const inputRefs = [
+    useRef(null),
+    useRef(null),
+    useRef(null),
+    useRef(null),
+    useRef(null),
+    useRef(null),
+    useRef(null),
+  ];
 
-  const handleInputChange = (index, value) => {
-    if (!isNaN(value)) {
-      setInputValues(prevValues => {
-        const newValues = [...prevValues];
-        newValues[index] = value;
-        return newValues;
-      });
+  const handleChange = (index, e) => {
+    const { value, maxLength } = e.target;
+    const nextIndex = index + 1;
+
+    if (value.length >= maxLength && inputRefs[nextIndex]) {
+      inputRefs[nextIndex].current.focus();
     }
   };
 
   return (
-    <div style={{ display: 'flex' }}>
-      {inputValues.map((value, index) => (
-        <input maxLength={1}
-          key={index}
+    <div className="InputField">
+      {Array.from({ length: 7 }, (_, i) => (
+        <input
+          style={{ width: "50px", marginRight: "10px"}}
+          key={i}
           type="text"
-          value={value}
-          onChange={e => handleInputChange(index, e.target.value)}
-          style={{ width: '50px', marginRight: '10px' }}
+          inputMode="numeric"
+          pattern="[0-9]*"
+          maxLength={1}
+          ref={inputRefs[i]}
+          onChange={(e) => handleChange(i, e)}
         />
       ))}
     </div>
   );
-};
+}
 
-export default NumberInputs;
+export default InputField;

@@ -6,13 +6,26 @@ import "./style.css"
 import { useNavigate } from "react-router-dom";
 
 function Login() {
-  
+
+const [email, setEmail] = useState('');
 const [greetMsg, setGreetMsg] = useState("");
 const [name, setName] = useState("");
 const [password, setPassword] = useState("");
 const [Remember, setRememberMe] = useState(false);
 const [message, setMessage]=useState(" ");
 const [passwordError, setPasswordError] = useState(" ");
+
+const handleSubmit = (e) => {
+  e.preventDefault();
+  // call your authentication API here and store token or other info in localStorage if "remember me" is checked
+  if (rememberMe) {
+    localStorage.setItem('authToken', 'your-auth-token-here');
+  }
+  // handle authentication success or failure
+};
+
+const handleRememberMeChange = (e) => {
+  setRememberMe(e.target.checked);
 
 let navigate = useNavigate();
 const gotoRegister = () =>{
@@ -105,7 +118,8 @@ return (
         />
       
       <div className="row">
-      <input className="check" type = "checkbox"></input>
+      <input type="checkbox" checked={rememberMe} onChange={handleRememberMeChange} />
+      <input className="check" type = "checkbox" ></input>
       <p 
       onChange={(e) => setRememberMe(e.currentTarget.checked)}
       ></p>

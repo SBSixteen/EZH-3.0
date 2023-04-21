@@ -11,6 +11,26 @@ const PricingPlan = () => {
       features: ["1 GB Storage", "10 Users", "Email Support"],
     },
     {
+      title: "Basic Plan",
+      price: "$10/month",
+      features: ["1 GB Storage", "10 Users", "Email Support"],
+    },
+    {
+      title: "Basic Plan",
+      price: "$10/month",
+      features: ["1 GB Storage", "10 Users", "Email Support"],
+    },
+    {
+      title: "Basic Plan",
+      price: "$10/month",
+      features: ["1 GB Storage", "10 Users", "Email Support"],
+    },
+    {
+      title: "Basic Plan",
+      price: "$10/month",
+      features: ["1 GB Storage", "10 Users", "Email Support"],
+    },
+    {
       title: "Pro Plan",
       price: "$20/month",
       features: ["10 GB Storage", "100 Users", "Email + Phone Support"],
@@ -18,7 +38,12 @@ const PricingPlan = () => {
     {
       title: "Enterprise Plan",
       price: "$50/month",
-      features: ["100 GB Storage", "Unlimited Users", "24/7 Support"],
+      features: [
+        "100 GB Storage",
+        "Unlimited Users",
+        "24/7 Support ",
+        "New element",
+      ],
     },
   ];
 
@@ -40,7 +65,7 @@ const PricingPlan = () => {
       </div>
     );
   };
-
+  
   return (
     <>
       <Container>
@@ -59,8 +84,7 @@ const PricingPlan = () => {
           <PlanCard key={index} {...plan} />
         ))}
       </div>
-      </>
-    
+    </>
   );
 };
 
