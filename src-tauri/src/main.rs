@@ -22,7 +22,6 @@ struct User {
     twofa: bool,
     verified: bool,
     datasets: String,
-    //Remember_Token :bool
 }
 
 struct filepath {
@@ -78,6 +77,17 @@ fn main() {
         .invoke_handler(tauri::generate_handler![create_user, authenticate_user])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
+
+    //LogReg::toggle_2fa(String::from("nabeelmirza80@gmail.com")).await;
+    //println!("{}", LogReg::create_user(String::from("nabeelmirza80@gmail.com"), String::from("Nabeel Mirza"), String::from("12345678")).await);
+    //LogReg::create_user(String::from("nabeelmirza79@gmail.com"), String::from("Nabeel Mirza"), String::from("12345678")).await;
+    //LogReg::toggle_2fa(String::from("nabeelmirza79@gmail.com")).await;
+    //LogReg::generate_2fa(String::from("nabeelmirza80@gmail.com")).await;
+    //LogReg::toggle_blocked(String::from("nabeelmirza79@gmail.com")).await;
+    //println!("{}",login_user(String::from("nabeelmirza79@gmail.com"), String::from("12345678")).await);
+    //match_2fa(String::from("nabeelmirza79@gmail.com"), String::from("BksQ")).await;
+    //match_vcode(String::from("nabeelmirza79@gmail.com"), String::from("UOQYsuB")).await;
+
 }
 
 async fn initConnection() -> Firebase {
