@@ -1,0 +1,27 @@
+[package]
+name = "Surreal"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1"
+serde = "1.0.158"
+serde_json = "1.0.94"
+serde_derive = "1.0.158"
+firebase-rs = "2.0.6"
+tokio = {version = "1.26.0", features = ["full"]} 
+sha256 = "1.1.2"
+lettre = "0.10.4"
+rng = "0.1.0"
+rand = "0.8.5"
+rust-bert = "0.20.0"
+reqwest = "0.11.16"
+octocrab = "0.19.0"
+json = "0.12.4"
+pdfium-render = "0.8.0"
+pdf-extract = "0.6.4"
+lopdf = "0.30.0"
+image-base64 = "0.1.0"
+image = "0.24.6"
