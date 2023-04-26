@@ -7,6 +7,7 @@ import "./style.css";
 function PassReset() {
   const [greetMsg, setGreetMsg] = useState("");
   const [emailID, setEmail] = useState("");
+  const [proceed, setProceed] = useState(false);
 
   return (
     <div className="container">
@@ -35,7 +36,17 @@ function PassReset() {
           />
 
           <br></br>
-          <button className="default_m_right" type="submit">
+          <button
+            className="default_m_right"
+            type="submit"
+            onClick={() => {
+              console.log("Pressed!");
+              invoke("user_exist_w", { email: emailID }).then((message) => {
+                console.log(message);
+                setProceed(message);
+              });
+            }}
+          >
             {" "}
             Send{" "}
           </button>

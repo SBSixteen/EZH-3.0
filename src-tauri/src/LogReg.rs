@@ -112,6 +112,7 @@ async fn randomcode(length:i32) ->String{
 
 }
 
+#[tauri::command]
 pub async fn create_user(email:String, name:String, password:String) -> String{
 
     let x = User{
@@ -369,6 +370,7 @@ pub async fn toggle_2fa(email:String){
 
 }
 
+#[tauri::command]
 pub async fn user_exist(email:String) -> bool{
 
     let url = url_generator(email.clone()).await;
@@ -378,9 +380,11 @@ pub async fn user_exist(email:String) -> bool{
     
     match r1.as_str(){
         "null"=>{
+            println!("Account DNE");
             return false;
         }
         _=>{
+            println!("Account found!");
             return true;
         }
     }
@@ -421,6 +425,7 @@ pub async fn match_2fa(email:String, attempt:String){
 
 }
 
+#[tauri::command]
 pub async fn match_vcode(email:String, attempt:String){
 
     let url = url_generator_vcodes(email.clone()).await;

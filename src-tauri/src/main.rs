@@ -3,6 +3,7 @@
     windows_subsystem = "windows"
 )]
 
+pub mod LogReg;
 use firebase_rs::*;
 use lettre::message::header::ContentType;
 use lettre::transport::smtp::authentication::Credentials;
@@ -74,7 +75,7 @@ struct V_Code{
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![create_user, authenticate_user])
+        .invoke_handler(tauri::generate_handler![LogReg::create_user, authenticate_user, user_exist_w, LogReg::match_vcode])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 
@@ -98,7 +99,6 @@ async fn initConnection() -> Firebase {
     return firebase;
 }
 
-#[tauri::command]
 async fn create_user(mail: String, username: String, pwd: String) -> String {
     let firebase_client = initConnection().await;
     let x = user_exist(&mail).await;
@@ -132,6 +132,13 @@ async fn create_user(mail: String, username: String, pwd: String) -> String {
 
     let g = serde_json::to_string(&R).unwrap();
     return g.into();
+}
+
+#[tauri::command]
+async fn user_exist_w(email:String)->bool{
+
+    return LogReg::user_exist(email).await;
+
 }
 
 fn string_to_response(s: &str) -> Response {

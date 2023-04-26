@@ -7,6 +7,7 @@ import Loader from "./Components/Loader";
 // import { Button } from "./Components/Button";
 import { useNavigate } from "react-router-dom";
 import DigitCode from "./Components/DigitCode";
+import { giveInput} from "./Components/DigitCode"
 
 function Register() {
   const [greetMsg, setGreetMsg] = useState("");
@@ -128,9 +129,9 @@ function Register() {
                     validatePass();
                     emailValidation();
                     invoke("create_user", {
-                      mail: emailID,
-                      username: name,
-                      pwd: password,
+                      email: emailID,
+                      name: name,
+                      password: password,
                     }).then((message) => {
                       setResponse(message);
                       console.log(message);
@@ -141,21 +142,31 @@ function Register() {
                       console.log("Toggle = ", T);
                       setTitle("Verify Email");
                     });
-                    
                   }}
                 >
                   {" "}
                   Register
                 </button>
-                <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                <div class="lds-spinner">
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                </div>
                 <br></br>
-                
               </React.Fragment>
-              
             ) : (
               <>
                 <div>
-                  <DigitCode/>
+                  <DigitCode />
                 </div>
                 <div
                   style={{
@@ -169,22 +180,14 @@ function Register() {
                     className="default_m_right"
                     style={{ margin: "100" }}
                     onClick={() => {
-                      setT((T) => !T);
-                      setTitle("Verify Email");
-                      setGreetMsg("");
+                      // invoke("match_vcode",{email:emailID, attempt:})
+                      console.log(DigitCode.giveInput());
                     }}
                   >
                     Verify
                   </button>
 
-                  <button
-                    className="default_m_right"
-                    onClick={() => {
-                      setT((T) => !T);
-                      setTitle("Registration");
-                      setGreetMsg("");
-                    }}
-                  >
+                  <button className="default_m_right" onClick={() => {}}>
                     Back
                   </button>
                 </div>

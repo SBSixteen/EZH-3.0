@@ -20,15 +20,23 @@ function InputField() {
     }
   };
 
+  function giveInput() {
+    let text = "";
+
+    for (let member in inputRefs) {
+      text += member;
+    }
+
+    return text;
+  }
+
   return (
     <div className="InputField">
       {Array.from({ length: 7 }, (_, i) => (
         <input
-          style={{ width: "50px", marginRight: "10px"}}
+          style={{ width: "50px", marginRight: "10px" }}
           key={i}
           type="text"
-          inputMode="numeric"
-          pattern="[0-9]*"
           maxLength={1}
           ref={inputRefs[i]}
           onChange={(e) => handleChange(i, e)}

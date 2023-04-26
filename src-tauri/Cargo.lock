@@ -46,6 +46,7 @@ dependencies = [
  "firebase-rs",
  "lettre",
  "rand 0.8.5",
+ "reqwest",
  "serde",
  "serde_derive",
  "serde_json",
