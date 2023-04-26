@@ -32,6 +32,8 @@ import { MantineLogo } from "@mantine/ds";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PassReset from "./PassReset.jsx";
 import PricingPlan from "./PricingPlan.jsx";
+import Dataset from "./Dataset.jsx";
+import Nabeel from "./Nabe.jsx";
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -109,7 +111,7 @@ function App() {
     <div className={"App"}>
       <BrowserRouter>
         <Routes>
-          <Route path="" element={<Register />} />
+          <Route path="" element={<Nabeel />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/home" element={<Home />} />
@@ -117,6 +119,8 @@ function App() {
           <Route path="/payment-form" element={<PaymentForm />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/subscription" element={<PricingPlan />} />
+          <Route path="/dataset" element={<Dataset/>} />
+          <Route path="/nabeel" element={<Nabeel/>} />
           navigate(path);
         </Routes>
       </BrowserRouter>
