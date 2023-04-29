@@ -19,6 +19,16 @@ function Login() {
     navigate(path);
   };
 
+  const handleLogin = () => {
+    const savedUserId = localStorage.getItem("userId"); // retrieve user ID from local storage
+    if (savedUserId === name) {
+      // authentication successful, proceed with login
+    } else {
+      // authentication failed, show error message
+      setMessage("Incorrect email or password.");
+    }
+  };
+
   const emailValidation = () => {
     const regEx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (regEx.test(name)) {
@@ -99,6 +109,7 @@ function Login() {
             type="submit"
             onClick={() => {
               {
+                handleLogin();
                 validatePass(password);
               }
 

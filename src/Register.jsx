@@ -8,6 +8,7 @@ import Loader from "./Components/Loader";
 import { useNavigate } from "react-router-dom";
 import DigitCode from "./Components/DigitCode";
 import { giveInput} from "./Components/DigitCode"
+import {makeid} from "./Components/Functions/Functions"
 
 function Register() {
   const [greetMsg, setGreetMsg] = useState("");
@@ -22,6 +23,12 @@ function Register() {
   const [message, setMessage] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [matchError, setMatchError] = useState("");
+  
+  const handleRegister = () => {
+    const userId = makeid(64); // generate user ID
+    localStorage.setItem("userId", userId); // save user ID to local storage
+    // other registration logic
+  };
 
   const emailValidation = () => {
     const regEx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -125,6 +132,7 @@ function Register() {
                   className="default_m_right"
                   type="submit"
                   onClick={() => {
+                    {handleRegister();}
                     ComparePass();
                     validatePass();
                     emailValidation();
