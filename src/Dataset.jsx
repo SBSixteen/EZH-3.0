@@ -36,25 +36,25 @@ const Dataset = () => {
 
   const sets = [
     {
-      title: "Dataset-A",
+      title: "Martin Dow Hiring",
       noofcvs: "100",
       features: ["For MTO position", "GooGoo"],
       check: "app",
     },
     {
-      title: "Dataset-B",
+      title: "Stratesfy WebDev Intern",
       noofcvs: "50",
       features: ["For Accounts officer", "CFA"],
       check: "app",
     },
     {
-      title: "Dataset-C",
+      title: "IBA TA",
       noofcvs: "77",
       features: ["Logistics"],
       check: "appleasdasdasdasdasdasdasddasdas",
     },
     {
-      title: "Dataset-D",
+      title: "CEO of Valider",
       noofcvs: "3",
       features: ["Head of procurement"],
       check: "appleasdasdasdasdasdasdasddasdas",

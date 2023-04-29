@@ -2,7 +2,10 @@ use rand::Rng;
 use reqwest::Client;
 use serde::{Serialize, Deserialize};
 use serde_json::{Value, json};
+use sha256::digest;
 
+//Session Token -> username + current time ->256 -> unique hash // Session Tokens, Remember tokens
+//Global User : monkaw@gmail.com
 
 #[derive(Serialize, Deserialize, Debug)]
 struct User {
@@ -16,6 +19,12 @@ struct User {
     blocked:bool,
 }
 
+// struct Table{   
+//     columns: Vec<Strings>,
+//     cells: Vec<Vec<String>>, //2D array
+//     //Name, Institute, Contact, Skills,  //Skills.append(<Skill>)
+// }
+
 #[derive(Serialize, Deserialize, Debug)]
 struct ConfirmationLogin {
     value: bool,
@@ -25,10 +34,21 @@ struct ConfirmationLogin {
 
 #[derive(Serialize, Deserialize, Debug)]
 struct TwoFACode{
-
     account:String,
     code:String,
     attempts:i32,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+struct response{
+    proceed:bool,
+    response:String
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+struct RM_Token{
+
+    token:String,
 
 }
 
@@ -68,12 +88,24 @@ async fn url_generator_2fa(email:String) -> String{
 
 }
 
+async fn url_generator_rm(email:String) -> String{
+
+    let mut url = String::from("");
+
+    url.push_str("https://ezhire-c4044-default-rtdb.asia-southeast1.firebasedatabase.app/RM_Token/");
+    url.push_str(&sha256::digest(email.to_owned()));
+    url.push_str(".json");
+
+    return url;
+
+}
+
 async fn json_patch_generator(var:String, value:String, dtype:String) -> String{
 
     let mut dynstr = String::from("{\"");
     dynstr.push_str(&var);
     
-    match dtype.as_str(){
+    match dtype.to_lowercase().as_str(){
 
         "string" =>{
             dynstr.push_str("\":\"");
@@ -460,6 +492,135 @@ pub async fn match_vcode(email:String, attempt:String){
         let patch = json_patch_generator(String::from("attempts"), tries.to_string(), String::from("integer")).await;
         client.patch(&url).body(patch).send().await.unwrap();
 
+    }
+
+}
+
+pub async fn match_password(email:String, password:String) -> response{
+
+    let url = url_generator(email).await;
+
+    let client = Client::builder().build().unwrap();
+    let r1 = client.get(&url).send().await.unwrap().text().await.unwrap();
+
+    match r1.as_str(){
+
+        "null" => {
+            return response{
+                proceed:false,
+                response:String::from("Account DNE")
+            }
+        }
+        _  =>{
+            let v: Value = serde_json::from_str(&r1).unwrap();
+            let attempt = sha256::digest(password);
+
+            let target = v["password"].as_str().unwrap(); 
+
+            if target == &attempt{
+                return response{
+                    proceed:true,
+                    response:String::from("Passwords Match!")
+                }
+            }else{
+                return response{
+                    proceed:false,
+                    response:String::from("Passwords do not match!")
+                }
+            }
+        }
+
+    }
+
+}
+
+pub async fn update_password(email:String, password:String) -> response{
+
+    let url = url_generator(email).await;
+
+    let client = Client::builder().build().unwrap();
+    let r1 = client.get(&url).send().await.unwrap().text().await.unwrap();
+
+    match r1.as_str(){
+
+        "null" => {
+            return response{
+                proceed:false,
+                response:String::from("Account DNE")
+            }
+        }
+        _  =>{
+
+            let dynstr = json_patch_generator(String::from("password"), password, String::from("String")).await;
+            let _r2 = client.patch(&url).body(dynstr).send().await.unwrap();
+
+            return response{
+                proceed:true,
+                response:String::from("Password has been updated!")
+            }
+
+        }
+
+    }
+
+}
+
+pub async fn isBlocked(email:String)-> response{
+
+    let url = url_generator(email).await;
+
+    let client = Client::builder().build().unwrap();
+    let r1 = client.get(&url).send().await.unwrap().text().await.unwrap();
+
+    match r1.as_str(){
+
+        "null" => {
+            return response{
+                proceed:false,
+                response:String::from("Account DNE")
+            }
+        }
+        _  =>{
+
+            let v: Value = serde_json::from_str(&r1).unwrap();
+            let target = v["blocked"].as_bool().unwrap(); 
+
+            return response{
+                proceed:target,
+                response: String::from("Fetch successful.")
+            }
+        }
+
+    }
+
+}
+
+pub async fn remember_me_token(email:String){
+
+    let temp = format!("{} - {}", &email, chrono::Utc::now().to_string());
+
+
+    let url = url_generator_rm(email.clone()).await;
+    let client = Client::builder().build().unwrap();
+    let r1 = client.get(&url).send().await.unwrap().text().await.unwrap();
+
+    match r1.as_str() {
+
+        "null"=>{
+            let xx = digest(temp);
+
+            let x = RM_Token{
+                token:xx,
+            };
+
+            let r2= client.put(&url).body(serde_json::to_string(&x).unwrap().replace("\\", "")).send().await.unwrap();
+        }
+
+        _=>{
+            let xx = digest(temp);
+            let dynstr = json_patch_generator("token".to_string(), xx, "String".to_string()).await;
+            let _r2 = client.patch(&url).body(dynstr).send().await.unwrap();
+        }
     }
 
 }

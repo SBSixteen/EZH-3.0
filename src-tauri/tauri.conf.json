@@ -3,7 +3,7 @@
   "build": {
     "beforeBuildCommand": "yarn build",
     "beforeDevCommand": "yarn cross-env BROWSER=none yarn start",
-    "devPath": "http://172.15.7.19:3000",
+    "devPath": "http://localhost:3000",
     "distDir": "../build",
     "withGlobalTauri": true
   },

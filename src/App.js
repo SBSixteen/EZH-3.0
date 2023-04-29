@@ -4,6 +4,8 @@ import Home from "./Home.js";
 import Register from "./Register";
 import Settings from "./Settings";
 import PaymentForm from "./PaymentForm.jsx";
+import Reg from "./Reg.js"
+
 import {
   createStyles,
   Navbar,
@@ -121,6 +123,7 @@ function App() {
           <Route path="/subscription" element={<PricingPlan />} />
           <Route path="/dataset" element={<Dataset/>} />
           <Route path="/nabeel" element={<Nabeel/>} />
+          <Route path="/reg" element={<Reg/>} />
           navigate(path);
         </Routes>
       </BrowserRouter>

@@ -12,6 +12,8 @@
     "@material-ui/core": "^4.12.4",
     "@material-ui/icons": "^4.11.3",
     "@modulz/radix-icons": "^4.0.0",
+    "@react-three/drei": "^9.66.1",
+    "@react-three/fiber": "^8.13.0",
     "@tabler/icons-react": "^2.11.0",
     "@tauri-apps/api": "^1.2.0",
     "@testing-library/jest-dom": "^5.16.5",
@@ -24,6 +26,7 @@
     "react-scripts": "5.0.1",
     "react-stripe-checkout": "^2.6.3",
     "stripe": "^11.17.0",
+    "three": "^0.152.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
