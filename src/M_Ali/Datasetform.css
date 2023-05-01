@@ -1,0 +1,155 @@
+@import url(https://fonts.googleapis.com/css?family=Montserrat);
+
+.Datasetform {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(0deg, rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url("./assets/jeremy-bishop-G9i_plbfDgk-unsplash.jpg");
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+.datasetform-body {
+  margin: 0%;
+  padding: 0%;
+  font-family: montserrat, arial, verdana;
+  font-size: 10px;
+  align-items: center;
+}
+
+.datasetform-form {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.datasetform-form-container {
+  width: 400px;
+  height: 400px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+}
+
+.datasetform-form-container .header {
+  flex: 20%;
+  display: grid;
+  place-items: center;
+}
+
+.datasetform-form-container .body {
+  flex: 60%;
+  align-items: left;
+}
+
+.datasetform-form-container .footer {
+  flex: 20%;
+  display: flex;
+  justify-content: center;
+}
+
+.datasetform-form-container .footer button {
+  border-radius: 7px;
+  width: 100px;
+  height: 40px;
+  background-color: #2db3b8;
+  font-weight: bold;
+  color: white;
+  border: 0 none;
+  border-radius: 1px;
+  cursor: pointer;
+  padding: 10px 5px;
+  margin: 10px 5px;
+  margin: 5px;
+}
+
+.datasetform-dataset-info-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.datasetform-dataset-info-container input {
+  margin: 5px;
+  width: 250px;
+  height: 40px;
+  padding-left: 5px;
+  font-size: 20px;
+}
+
+.datasetform-dataset-upload-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.datasetform-personal-info-container input {
+  margin: 5px;
+  width: 200px;
+  height: 40px;
+  padding-left: 5px;
+  font-size: 20px;
+}
+
+/* PROGRESS BAR */
+.progressbar {
+  width: 400px;
+  height: 10px;
+  background-color: white;
+  margin-bottom: 50px;
+}
+
+.progressbar div {
+  width: 33.3%;
+  height: 100%;
+  background-color: #2db3b8;
+}
+
+.other-info-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.other-info-container input {
+  margin: 5px;
+  width: 200px;
+  height: 40px;
+  padding-left: 5px;
+  font-size: 20px;
+}
+
+.h3{
+  margin: 0;
+  padding: 0;
+}
+
+.h5{
+  margin:0;
+  padding: 0;
+}
+
+input {
+  border: 2px solid #2db3b8;
+  border-radius: 5px;
+}
+
+input:focus {
+  border: 3px solid #2db3b8;
+}
