@@ -16,31 +16,20 @@ function Login() {
   const [header, setHeader] = useState("Log In");
   const [twofacode, settwofa] = useState("");
 
-
   let navigate = useNavigate();
   const gotoRegister = () => {
     let path = "/Register";
     navigate(path);
   };
 
-  const handleLogin = () => {
-    const savedUserId = localStorage.getItem("userId"); // retrieve user ID from local storage
-    if (savedUserId === name) {
-      // authentication successful, proceed with login
-    } else {
-      // authentication failed, show error message
-      setMessage("Incorrect email or password.");
-    }
-  };
-
   const emailValidation = () => {
     const regEx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (regEx.test(name)) {
-      setMessage(" ");
-    } else if (!regEx.test(name) && name !== " ") {
-      setMessage("email or password incorrect");
+      setMessage("");
+    } else if (!regEx.test(name)) {
+      setMessage("Email is invalid!");
     } else {
-      setMessage(" ");
+      setMessage("");
     }
   };
 
@@ -57,8 +46,8 @@ function Login() {
   }
 
   const handlePasswordChange = (event) => {
-    setPassword(password.value);
-    if (!validatePassword(password.value)) {
+    setPassword(password);
+    if (!validatePassword(password)) {
     } else {
       setPasswordError(" ");
     }
@@ -76,125 +65,148 @@ function Login() {
 
 
       {!T ? (<React.Fragment>
-      <div className="column">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-          }}
-        >
-          <input
-            className="default_gap"
-            id="username-input"
-            onChange={(e) => {
-              setName(e.currentTarget.value);
-            }}
-            placeholder="Enter Username..."
-          />
-
-          <br></br>
-
-          <input
-            className="default_gap"
-            type="password"
-            id="password-input"
-            onChange={(e) => {
-              setPassword(e.currentTarget.value);
-            }}
-            placeholder="Enter Password..."
-          />
-
-          <div className="row">
-            <input className="check" type="checkbox"></input>
-            <p onChange={(e) => setRememberMe(e.currentTarget.checked)}></p>
-
-            <p>Remember Me?</p>
-          </div>
-
-          <button
-            className="default_m_right"
-            type="submit"
-            onClick={() => {
-              {
-                handleLogin();
-                validatePass(password);
-              }
-
-              invoke("login_user", { email: name, password: password }).then(
-                (message) => {
-                  var x = JSON.parse(message);
-                  console.log(x);
-                  setGreetMsg(x.response);
-                  setT(x.two_fa);
-                }
-              );
+        <div className="column">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
             }}
           >
-            {" "}
-            Sign In{" "}
-          </button>
-
-          <button
-            type="button"
-            onClick={() => {
-              gotoRegister();
-            }}
-          >
-            {" "}
-            Register{" "}
-          </button>
-
-          <div style={{ color: "red" }}>
-            {passwordError}
+            <input
+              className="default_gap"
+              id="username-input"
+              onChange={(e) => {
+                setName(e.currentTarget.value);
+              }}
+              placeholder="Enter Username..."
+            />
 
             <br></br>
 
-            {message}
+            <input
+              className="default_gap"
+              type="password"
+              id="password-input"
+              onChange={(e) => {
+                setPassword(e.currentTarget.value);
+              }}
+              placeholder="Enter Password..."
+            />
+
+            <div className="row">
+              <input className="check" type="checkbox" onChange={(e) => {
+                setRememberMe(e.target.checked);
+                console.log(Remember)
+              }}></input>
+              <p>Remember Me?</p>
+            </div>
+
+            <button
+              className="default_m_right"
+              type="submit"
+              onClick={() => {
+                {
+                  validatePass(password);
+                }
+
+                invoke("login_user", { email: name, password: password }).then(
+                  (message) => {
+                    var x = JSON.parse(message);
+                    console.log(x);
+                    setGreetMsg(x.response);
+                    emailValidation();
+                    handlePasswordChange();
+                    setT(x.two_fa);
+
+                    if (T) {
+                      setHeader("2 Factor Authentication");
+                      console.log("2FA On!");
+                    }
+
+                    console.log("Remember => {}", Remember);
+                  }
+                );
+              }}
+            >
+              {" "}
+              Sign In{" "}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                gotoRegister();
+              }}
+            >
+              {" "}
+              Register{" "}
+            </button>
+
+            <div style={{ color: "red" }}>
+              {passwordError}
+
+              <br></br>
+
+              {message}
+            </div>
+
+            <a href="/pass-reset" target="_self">
+              Forgot Password?
+            </a>
+            <br></br>
+            <a href="/register" target="_self">
+              Don't Have an Account?
+            </a>
+          </form>
+        </div>
+      </React.Fragment>) : (
+        <>
+          <div style={{
+            alignItems: "center"
+          }}>
+            <input
+              className="default_gap"
+              id="vcode-input"
+              onChange={(e) => settwofa(e.currentTarget.value)}
+              placeholder="Verification Code"
+            />
           </div>
+          <div
+            style={{
+              alignItems: "center"
+            }}
+          >
+            <button
+              onClick={() => {
 
-          <a href="/pass-reset" target="_self">
-            Forgot Password?
-          </a>
-          <br></br>
-          <a href="/register" target="_self">
-            Don't Have an Account?
-          </a>
-        </form>
-      </div>
-      </React.Fragment>) :(
-              <>
-              <div style={{
-                alignItems: "center"
-              }}>
-                <input
-                  className="default_gap"
-                  id="vcode-input"
-                  onChange={(e) => settwofa(e.currentTarget.value)}
-                  placeholder="Verification Code"
-                />
-              </div>
-              <div
-                style={{
-                  alignItems: "center"
-                }}
-              >
-                <button
-                  onClick={() => {
+                invoke("match_2fa", {
+                  email: name,
+                  attempt: twofacode,
+                }).then((message) => {
+                  var x = JSON.parse(message);
+                  setGreetMsg(x.response);
 
-                    invoke("match_2fa", {
-                      email: name,
-                      attempt: twofacode,
-                    }).then((message) => {
-                      var x = JSON.parse(message);
-                      setGreetMsg(x.response);
-                    });
+                  var truth = x.proceed;
+                  console.log("Proceed => {}", truth);
+                  console.log("Remember => {}", Remember);
+                  if (truth && Remember) {
+                    invoke('remember_me_token', { email: name }).then((message) => {
+                      console.log(message);
+                      var tokio = JSON.parse(message);
+                      localStorage.setItem('RMToken', tokio.token);
+                      localStorage.setItem('Mail', tokio.email);
+                    })
+                  }
 
-                  }}
-                >
-                  Verify
-                </button>
-              </div>
-            </>)
-}
+
+                });
+
+              }}
+            >
+              Verify
+            </button>
+          </div>
+        </>)
+      }
       <p>{greetMsg}</p>
     </div>
   );

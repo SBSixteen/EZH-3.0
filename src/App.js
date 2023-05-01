@@ -4,7 +4,6 @@ import Home from "./Home.js";
 import Register from "./Register";
 import Settings from "./Settings";
 import PaymentForm from "./PaymentForm.jsx";
-import Reg from "./Reg.js"
 import PassReset from "./PassReset.jsx";
 import PricingPlan from "./PricingPlan.jsx";
 import Dataset from "./Dataset.jsx";
@@ -126,7 +125,6 @@ function App() {
           <Route path="/subscription" element={<PricingPlan />} />
           <Route path="/dataset" element={<Dataset/>} />
           <Route path="/nabeel" element={<Nabeel/>} />
-          <Route path="/reg" element={<Reg/>} />
           <Route path="/Dataset" element={<Dataset />} />
           <Route path="/DynamicTable" element={<DynamicTable />} />
           <Route path="/Datasetform" element={<Datasetform />} />

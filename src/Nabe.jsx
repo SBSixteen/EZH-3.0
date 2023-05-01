@@ -15,7 +15,7 @@ function Nabeel() {
         onChange={(e) => {
           setName(e.currentTarget.value);
         }}
-        placeholder="Enter Username..."
+        placeholder="Enter URL"
       />
       <br></br>
       <button

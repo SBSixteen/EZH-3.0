@@ -80,7 +80,7 @@ struct V_Code{
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![LogReg::create_user, LogReg::login_user, user_exist_w, LogReg::match_vcode, LogReg::match_2fa])
+        .invoke_handler(tauri::generate_handler![LogReg::create_user, LogReg::login_user, user_exist_w, LogReg::match_vcode, LogReg::match_2fa, LogReg::remember_me_token])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 

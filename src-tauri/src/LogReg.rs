@@ -52,7 +52,8 @@ struct response{
 
 #[derive(Serialize, Deserialize, Debug)]
 struct RM_Token{
-
+    
+    email:String,
     token:String,
 
 }
@@ -211,7 +212,7 @@ pub async fn login_user(email:String, password:String) -> String{
         }
 
         _=>{
-            let mut str = String::from("Account Found. "); 
+            let mut str = String::from(""); 
             let pass = sha256::digest(password);
             let v: Value = serde_json::from_str(&r1).unwrap();
 
@@ -634,32 +635,40 @@ pub async fn isBlocked(email:String)-> response{
 
 }
 
-pub async fn remember_me_token(email:String){
+#[tauri::command]
+pub async fn remember_me_token(email:String) -> String{
 
     let temp = format!("{} - {}", &email, chrono::Utc::now().to_string());
-
 
     let url = url_generator_rm(email.clone()).await;
     let client = Client::builder().build().unwrap();
     let r1 = client.get(&url).send().await.unwrap().text().await.unwrap();
+
+    let mut answer = RM_Token{
+        email:email.clone(),
+        token:String::new(),
+    };
+
+    println!("Generating token for remember me");
 
     match r1.as_str() {
 
         "null"=>{
             let xx = digest(temp);
 
-            let x = RM_Token{
-                token:xx,
-            };
+            answer.token = xx.clone();
 
-            let r2= client.put(&url).body(serde_json::to_string(&x).unwrap().replace("\\", "")).send().await.unwrap();
+            let r2= client.put(&url).body(serde_json::to_string(&answer).unwrap().replace("\\", "")).send().await.unwrap();
         }
 
         _=>{
             let xx = digest(temp);
-            let dynstr = json_patch_generator("token".to_string(), xx, "String".to_string()).await;
+            let dynstr = json_patch_generator("token".to_string(), xx.clone(), "String".to_string()).await;
             let _r2 = client.patch(&url).body(dynstr).send().await.unwrap();
+            answer.token= xx.clone();
+
         }
     }
+    return serde_json::to_string(&answer).unwrap();
 
 }
