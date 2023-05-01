@@ -5,6 +5,12 @@ import Register from "./Register";
 import Settings from "./Settings";
 import PaymentForm from "./PaymentForm.jsx";
 import Reg from "./Reg.js"
+import PassReset from "./PassReset.jsx";
+import PricingPlan from "./PricingPlan.jsx";
+import Dataset from "./Dataset.jsx";
+import DynamicTable from "./DynamicTable.jsx";
+import Datasetform from "./Datasetform.jsx";
+import Nabeel from "./Nabe.jsx";
 
 import {
   createStyles,
@@ -32,10 +38,7 @@ import {
 } from "@tabler/icons-react";
 import { MantineLogo } from "@mantine/ds";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import PassReset from "./PassReset.jsx";
-import PricingPlan from "./PricingPlan.jsx";
-import Dataset from "./Dataset.jsx";
-import Nabeel from "./Nabe.jsx";
+
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -124,6 +127,10 @@ function App() {
           <Route path="/dataset" element={<Dataset/>} />
           <Route path="/nabeel" element={<Nabeel/>} />
           <Route path="/reg" element={<Reg/>} />
+          <Route path="/Dataset" element={<Dataset />} />
+          <Route path="/DynamicTable" element={<DynamicTable />} />
+          <Route path="/Datasetform" element={<Datasetform />} />
+
           navigate(path);
         </Routes>
       </BrowserRouter>

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@syncfusion/ej2-react-grids": "^21.1.39",
     "@emotion/react": "^11.10.6",
     "@mantine/core": "^6.0.2",
     "@mantine/ds": "^6.0.4",

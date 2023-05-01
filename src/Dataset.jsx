@@ -4,7 +4,7 @@ import "./dataset.css";
 
 import { Container } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   IconTrash,
   IconDatabaseExport,
@@ -18,11 +18,20 @@ const Dataset = () => {
   const [showExport, setShowExport] = useState(false);
   const [selectedCard, setSelectedCard] = useState(-1);
 
+
   let navigate = useNavigate();
-  const gotologin = () => {
-    let path = "/login";
-    navigate(path);
-  };
+const gotoaddnew = () =>{
+
+  let path = "/Datasetform";
+  navigate(path);
+  
+}
+let navigate2 = useNavigate();
+const gototable = () =>{
+  let path2 = "/DynamicTable";
+  navigate(path2);
+
+}
 
   const toggleExport = (index, check) => {
     setSelectedCard(index);
@@ -81,7 +90,7 @@ const Dataset = () => {
             <button className="iconbutton" onClick={handleExportClick}>
               <IconDatabaseExport size={20} />
             </button>
-            <button className="iconbutton" onClick={gotologin}>
+            <button className="iconbutton" onClick={gototable}>
               <IconArrowBadgeUp size={20} />
             </button>
           </div>
@@ -116,7 +125,6 @@ const Dataset = () => {
           ))}
         </div>
       </div>
-
       {showExport && selectedCard >= 0 && (
         <div className="popup">
           <div className="overlay" onClick={() => setShowExport(false)}></div>
@@ -185,32 +193,19 @@ const Dataset = () => {
           <div className="overlay" onClick={() => setShowExport(false)}></div>
           <div className="popup-content">
             <div>
-              <h className="quit-msg">Are you sure you want to delete</h>
-            </div>
+            <h className="quit-msg">Are you sure you want to delete</h>
+            </div>       
+                
+                <button className="remove-btn" type="submit"
+                onClick={() =>setShowRemove(false)}> YES </button>
+                
+                <button className="remove-btn" type="submit"
+                onClick={() =>setShowRemove(false)}>   NO </button>
 
-            <button
-              className="remove-btn"
-              type="submit"
-              onClick={() => setShowRemove(false)}
-            >
-              {" "}
-              YES{" "}
-            </button>
 
-            <button
-              className="remove-btn"
-              type="submit"
-              onClick={() => setShowRemove(false)}
-            >
-              {" "}
-              NO{" "}
-            </button>
-
-            <button
-              className="close-Export"
-              onClick={() => setShowRemove(false)}
-            >
-              <IconX size={20} />
+            
+            <button className="close-Export" onClick={() => setShowRemove(false)}>
+              <IconX size={20}/>
             </button>
           </div>
         </div>
