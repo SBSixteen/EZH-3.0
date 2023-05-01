@@ -3,12 +3,9 @@ import React from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
 import "./style.css";
-import Loader from "./Components/Loader";
 // import { Button } from "./Components/Button";
 import { useNavigate } from "react-router-dom";
-import DigitCode from "./Components/DigitCode";
-import { giveInput} from "./Components/DigitCode"
-import {makeid} from "./Components/Functions/Functions"
+import sample from './sample.mp4';
 
 function Register() {
   const [greetMsg, setGreetMsg] = useState("");
@@ -16,6 +13,7 @@ function Register() {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [cpassowrd, setCPassword] = useState("");
+  const [VCode, setVCode] = useState("");
   const [response, setResponse] = useState("");
   //const [Remember, setRememberMe] = useState(false);
   const [T, setT] = useState(false);
@@ -23,21 +21,16 @@ function Register() {
   const [message, setMessage] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [matchError, setMatchError] = useState("");
-  
-  const handleRegister = () => {
-    const userId = makeid(64); // generate user ID
-    localStorage.setItem("userId", userId); // save user ID to local storage
-    // other registration logic
-  };
+  const [RegBtnDisable, setRegBtnDisable]= useState(false);
 
   const emailValidation = () => {
     const regEx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (regEx.test(name)) {
-      setMessage(" ");
-    } else if (!regEx.test(name) && name !== " ") {
+    if (regEx.test(emailID)) {
+      setMessage("");
+    } else if (!regEx.test(emailID)) {
       setMessage("Email is not valid");
     } else {
-      setMessage(" ");
+      setMessage("");
     }
   };
 
@@ -65,6 +58,7 @@ function Register() {
 
   return (
     <div className="container">
+
       <div className="row">
         <a href="" target="_blank">
           <img src="/Logo_Ezhire.svg" className="logo tauri" alt="Tauri logo" />
@@ -127,12 +121,15 @@ function Register() {
 
                   <div>{matchError} </div>
                 </div>
-                <button
+                <button 
+                  id= "Register"
                   margin="100px"
                   className="default_m_right"
                   type="submit"
+                  disabled={RegBtnDisable}
                   onClick={() => {
-                    {handleRegister();}
+                    console.log("Button Clicked")
+                    setRegBtnDisable(true);
                     ComparePass();
                     validatePass();
                     emailValidation();
@@ -150,12 +147,13 @@ function Register() {
                       console.log("Toggle = ", T);
                       setTitle("Verify Email");
                     });
+                    setRegBtnDisable(false);
                   }}
                 >
                   {" "}
                   Register
                 </button>
-                <div class="lds-spinner">
+                {/* <div class="lds-spinner" disabled>
                   <div></div>
                   <div></div>
                   <div></div>
@@ -168,34 +166,43 @@ function Register() {
                   <div></div>
                   <div></div>
                   <div></div>
-                </div>
+                </div> */}
                 <br></br>
               </React.Fragment>
             ) : (
               <>
-                <div>
-                  <DigitCode />
+                <div style={{
+                  alignItems: "center"
+                }}>
+                  <input
+                    className="default_gap"
+                    id="vcode-input"
+                    onChange={(e) => setVCode(e.currentTarget.value)}
+                    placeholder="Verification Code"
+                  />
                 </div>
                 <div
                   style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    width: "100px",
-                    marginLeft: "296px",
+                    alignItems: "center"
                   }}
                 >
                   <button
-                    className="default_m_right"
-                    style={{ margin: "100" }}
                     onClick={() => {
-                      // invoke("match_vcode",{email:emailID, attempt:})
-                      console.log(DigitCode.giveInput());
+
+                      invoke("match_vcode", {
+                        email: emailID,
+                        attempt: VCode,
+                      }).then((message) => {
+                        var x = JSON.parse(message);
+                        setGreetMsg(x.response);
+                      });
+
                     }}
                   >
                     Verify
                   </button>
 
-                  <button className="default_m_right" onClick={() => {}}>
+                  <button className="default_m_right" onClick={() => { }}>
                     Back
                   </button>
                 </div>
@@ -209,7 +216,7 @@ function Register() {
               style={{ marginTop: "30em" }}
               href="/Login"
               target="_self"
-              onClick={() => {}}
+              onClick={() => { }}
             >
               Already have an account?
             </a>

@@ -1,8 +1,13 @@
+#![allow(warnings)]
+
 use rand::Rng;
 use reqwest::Client;
 use serde::{Serialize, Deserialize};
 use serde_json::{Value, json};
 use sha256::digest;
+
+use crate::SMTP_EZH;
+
 
 //Session Token -> username + current time ->256 -> unique hash // Session Tokens, Remember tokens
 //Global User : monkaw@gmail.com
@@ -187,6 +192,7 @@ pub async fn create_user(email:String, name:String, password:String) -> String{
 
 }
 
+#[tauri::command]
 pub async fn login_user(email:String, password:String) -> String{
 
     let url = url_generator(email.clone().to_lowercase()).await;
@@ -256,6 +262,7 @@ pub async fn generate_vcode(email:String){
                 attempts:3,
             };
             let _response = client.put(&url).body(serde_json::to_string(&answer).unwrap().replace("\\", "")).send().await.unwrap();
+            SMTP_EZH::send_mail_vcode(email.clone(), answer.code).await;
         }
 
         _ =>{
@@ -267,6 +274,7 @@ pub async fn generate_vcode(email:String){
             dynstr.push_str("\"}");
 
             let _r2 = client.patch(&url).body(dynstr).send().await.unwrap();
+            SMTP_EZH::send_mail_vcode(email.clone(), vcode).await;
         }
     }
 }
@@ -296,15 +304,19 @@ pub async fn generate_2fa(email:String){
                 attempts:3
             };
             let _response = client.put(&url).body(serde_json::to_string(&answer).unwrap().replace("\\", "")).send().await.unwrap();
+            SMTP_EZH::send_mail_2FA(email.clone(), answer.code.clone()).await;
         }
 
         _ =>{
             
             let vcode = randomcode(4).await;
-            let dynstr = json_patch_generator("code".to_string(), vcode, "string".to_owned()).await;
+            let dynstr = json_patch_generator("code".to_string(), vcode.clone(), "string".to_owned()).await;
             let _r2 = client.patch(&url).body(dynstr).send().await.unwrap();
+            SMTP_EZH::send_mail_2FA(email.clone(), vcode.clone()).await;
         }
     }
+
+
 }
 
 pub async fn toggle_verified(email:String){
@@ -422,23 +434,31 @@ pub async fn user_exist(email:String) -> bool{
     }
 }
 
-pub async fn match_2fa(email:String, attempt:String){
+#[tauri::command]
+pub async fn match_2fa(email:String, attempt:String) -> String{
 
     let url = url_generator_2fa(email.clone()).await;
     let client = Client::builder().build().unwrap();
     let r1 = client.get(&url).send().await.unwrap().text().await.unwrap();
 
+    let mut answer = response{
+
+        proceed:false,
+        response: String::from("")
+    };
+
     if &r1 == "null"{
-        println!("2FA code for account DNE");
-        return;
+        answer.response = String::from("2FA code for account DNE");
+        return serde_json::to_string(&answer).unwrap();
     }
 
     let v: Value = serde_json::from_str(&r1).unwrap();
     if v["code"].as_str().unwrap() == &attempt{
-        println!("Correct!");
+        answer.response = String::from("Correct!");
+        answer.proceed = true;
         client.delete(&url).send().await.unwrap();
+        return serde_json::to_string(&answer).unwrap();
     }else{
-        println!("Incorrect!");
         let mut tries = v["attempts"].as_i64().unwrap();
         tries-=1;
 
@@ -447,27 +467,37 @@ pub async fn match_2fa(email:String, attempt:String){
             let patch = json_patch_generator("blocked".to_string(), "true".to_string(), "boolean".to_string()).await;
             client.patch(&new_url).body(patch).send().await.unwrap();
             client.delete(&url).send().await.unwrap();
-            return;
+            answer.response = String::from(format!("Too many incorrect attempts, account is blocked"));
+            return serde_json::to_string(&answer).unwrap();
         }
 
         let patch = json_patch_generator(String::from("attempts"), tries.to_string(), String::from("integer")).await;
         client.patch(&url).body(patch).send().await.unwrap();
-
+        answer.response = String::from(format!("Incorrect Attempt, {} tries remaining!", tries));
+        answer.proceed = false;
+        return serde_json::to_string(&answer).unwrap();
     }
+
+
 
 }
 
 #[tauri::command]
-pub async fn match_vcode(email:String, attempt:String){
+pub async fn match_vcode(email:String, attempt:String) -> String{
 
     let url = url_generator_vcodes(email.clone()).await;
     let client = Client::builder().build().unwrap();
     let r1 = client.get(&url).send().await.unwrap().text().await.unwrap();
     let new_url = url_generator(email.clone()).await;
 
-    if &r1 == "null"{
-        println!("No VCode for this account exists.");
-        return;
+    let mut answer = response{
+        proceed:false,
+        response:String::from("Correct! Account is now verified!")
+    };
+
+    if &r1 == "null"{ 
+        answer.response = String::from("Account does not have a valid Verification Code");
+        return serde_json::to_string(&answer).unwrap();
     }
 
     let v: Value = serde_json::from_str(&r1).unwrap();
@@ -477,6 +507,11 @@ pub async fn match_vcode(email:String, attempt:String){
         client.delete(&url).send().await.unwrap();
         let patch = json_patch_generator("verified".to_string(), "true".to_string(), "boolean".to_string()).await;
         client.patch(&new_url).body(patch).send().await.unwrap();
+
+        answer.proceed = true;
+
+        return serde_json::to_string(&answer).unwrap();
+
     }else{
         println!("Incorrect!");
         let mut tries = v["attempts"].as_i64().unwrap();
@@ -486,12 +521,16 @@ pub async fn match_vcode(email:String, attempt:String){
 
             client.delete(&new_url).send().await.unwrap();
             client.delete(&url).send().await.unwrap();
-            return;
+            answer.response = String::from("Your account has been deleted due to failure to type in a valid Verification Code");
+            return serde_json::to_string(&answer).unwrap();
         }
 
         let patch = json_patch_generator(String::from("attempts"), tries.to_string(), String::from("integer")).await;
         client.patch(&url).body(patch).send().await.unwrap();
 
+        answer.response = format!("Incorrect Attempt, Tries Remaining = {}", tries).to_string();
+
+        return serde_json::to_string(&answer).unwrap();
     }
 
 }

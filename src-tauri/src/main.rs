@@ -3,7 +3,10 @@
     windows_subsystem = "windows"
 )]
 
+#![allow(warnings)]
+
 pub mod LogReg;
+pub mod SMTP_EZH;
 use firebase_rs::*;
 use lettre::message::header::ContentType;
 use lettre::transport::smtp::authentication::Credentials;
@@ -14,6 +17,8 @@ use serde::{Deserialize, Serialize};
 use sha256::digest;
 use std::collections::HashMap;
 use std::env;
+use reqwest::Client;
+use serde_json::{Value, json};
 #[derive(Serialize, Deserialize, Debug)]
 struct User {
     email: String,
@@ -75,7 +80,7 @@ struct V_Code{
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![LogReg::create_user, authenticate_user, user_exist_w, LogReg::match_vcode])
+        .invoke_handler(tauri::generate_handler![LogReg::create_user, LogReg::login_user, user_exist_w, LogReg::match_vcode, LogReg::match_2fa])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 
@@ -88,6 +93,17 @@ fn main() {
     //println!("{}",login_user(String::from("nabeelmirza79@gmail.com"), String::from("12345678")).await);
     //match_2fa(String::from("nabeelmirza79@gmail.com"), String::from("BksQ")).await;
     //match_vcode(String::from("nabeelmirza79@gmail.com"), String::from("UOQYsuB")).await;
+
+}
+
+async fn info(){
+    
+    let url = "https://ezhire-c4044-default-rtdb.asia-southeast1.firebasedatabase.app/SMTP_Credentials/-NSRyEvgXnEMKbAGGcBZ".to_string();
+    let client = Client::builder().build().unwrap();
+    let r1 = client.get(&url).send().await.unwrap().text().await.unwrap();
+
+    let v: Value = serde_json::from_str(&r1).unwrap();
+    println!("{}", v);
 
 }
 

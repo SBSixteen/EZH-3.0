@@ -12,6 +12,10 @@ function Login() {
   const [Remember, setRememberMe] = useState(false);
   const [message, setMessage] = useState(" ");
   const [passwordError, setPasswordError] = useState(" ");
+  const [T, setT] = useState(false);
+  const [header, setHeader] = useState("Log In");
+  const [twofacode, settwofa] = useState("");
+
 
   let navigate = useNavigate();
   const gotoRegister = () => {
@@ -68,8 +72,10 @@ function Login() {
         </a>
       </div>
 
-      <h1>Log In</h1>
+      <h1>{header}</h1>
 
+
+      {!T ? (<React.Fragment>
       <div className="column">
         <form
           onSubmit={(e) => {
@@ -113,9 +119,12 @@ function Login() {
                 validatePass(password);
               }
 
-              invoke("authenticate_user", { e: name, pwd: password }).then(
+              invoke("login_user", { email: name, password: password }).then(
                 (message) => {
-                  console.log(message);
+                  var x = JSON.parse(message);
+                  console.log(x);
+                  setGreetMsg(x.response);
+                  setT(x.two_fa);
                 }
               );
             }}
@@ -151,7 +160,41 @@ function Login() {
           </a>
         </form>
       </div>
+      </React.Fragment>) :(
+              <>
+              <div style={{
+                alignItems: "center"
+              }}>
+                <input
+                  className="default_gap"
+                  id="vcode-input"
+                  onChange={(e) => settwofa(e.currentTarget.value)}
+                  placeholder="Verification Code"
+                />
+              </div>
+              <div
+                style={{
+                  alignItems: "center"
+                }}
+              >
+                <button
+                  onClick={() => {
 
+                    invoke("match_2fa", {
+                      email: name,
+                      attempt: twofacode,
+                    }).then((message) => {
+                      var x = JSON.parse(message);
+                      setGreetMsg(x.response);
+                    });
+
+                  }}
+                >
+                  Verify
+                </button>
+              </div>
+            </>)
+}
       <p>{greetMsg}</p>
     </div>
   );
