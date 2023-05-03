@@ -345,9 +345,9 @@ fn remove_ending_in(s: &str) -> String {
     result
 }
 
-
-
 fn classifier_single_column(ocr_info:String)->String{
+
+
 
     let mut fin_edu: String="".to_string();
     let mut fin_exp: String="".to_string();
@@ -356,6 +356,13 @@ fn classifier_single_column(ocr_info:String)->String{
     let mut fin_elec: String="".to_string();
     let mut fin_cer: String="".to_string();
     let mut fin_cirr: String="".to_string();
+    let mut fin_int: String="".to_string();
+    let mut fin_ach: String="".to_string();
+    let mut fin_summ: String="".to_string();
+    let mut fin_lang: String="".to_string();
+    let mut fin_per: String="".to_string();
+    let mut fin_lead: String="".to_string();
+
 
 // 43== QUALIFICATION
 
@@ -371,517 +378,228 @@ fn classifier_single_column(ocr_info:String)->String{
                                 "Summary","SUMMARY","Objective","OBJECTIVE","Educational Detail","EDUCATIONAL DETAIL",
                                 "Qualification","QUALIFICATION","Languages","LANGUAGES","Personal",
                                 "PERSONAL","Leadership","LEADERSHIP"];
+
+                                
     let mut int_vec = Vec::new();
     for keyword in &keywords {
         let pos = find_word(ocr_info.as_str() , keyword);
-        int_vec.push(pos);
+        int_vec.push(pos);   
     }
+
+    let edu_vec=[0,12,5,17,40,41,42,43];
+    let meta_vec=[8,9,10,11,20,21,22,23];
+    let exp_vec=[1,13];
+    let elec_vec=[6,18];
+    let skill_vec=[2,14,4,16,30,31];
+    let proj_vec=[3,15];
+    let cer_vec=[7,19,24,25];
+    let interest_vec=[26,27,28,29];
+    let ach_vec=[32,33,34,35];
+    let summ_vec=[36,37,38,39];
+    let lang_vec=[44,45];
+    let per_vec=[46,47];
+    let lead_vec=[48,49];
+
+
 
     let keywords_2 = ["Education",  "Experience", "Skills","Projects","Academic Elective", "Cerification","Meta Cirricular","Interests","Achievements","Summary","Languages","Personal","Leadership"];
     for keyword in &keywords_2 {
         if(keyword.to_string() == "Education"){
-            let a = int_vec.clone();
-            if(a[0]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[0]);
-                if(x != None){
-                    fin_edu=slice_in_between(&ocr_info.as_str(),int_vec[0],x);
+            for val in edu_vec{
+                let a = int_vec.clone();
+                if(a[val]!=None){
+                    let x= find_next_smallest(int_vec.clone(), int_vec[val]);
+                    if(x != None){
+                        fin_edu=slice_in_between(&ocr_info.as_str(),int_vec[val],x);
+                    }
+                    else{
+                        fin_edu=slice_in_between(&ocr_info.as_str(),int_vec[val],Some(ocr_info.len())); 
+                    }
                 }
-                else{
-                    fin_edu=slice_in_between(&ocr_info.as_str(),int_vec[0],Some(ocr_info.len())); 
-                }
-            }
-            else if(a[12]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[12]);
-                if(x != None){
-                    fin_edu=slice_in_between(&ocr_info.as_str(),int_vec[12],x);
-                }
-                else{
-                    fin_edu=slice_in_between(&ocr_info.as_str(),int_vec[12],Some(ocr_info.len())); 
-                }
-            }
-            // academic qualification
-            else if(a[5]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[5]);
-                if(x != None){
-                    fin_edu=slice_in_between(&ocr_info.as_str(),int_vec[5],x);
-                }
-                else{
-                    fin_edu=slice_in_between(&ocr_info.as_str(),int_vec[5],Some(ocr_info.len())); 
-                }
-            }
-            else if(a[17]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[17]);
-                if(x != None){
-                    fin_edu=slice_in_between(&ocr_info.as_str(),int_vec[17],x);
-                }
-                else{
-                    fin_edu=slice_in_between(&ocr_info.as_str(),int_vec[17],Some(ocr_info.len())); 
-                }
-            }
-            else if(a[40]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[40]);
-                if(x != None){
-                    fin_edu=slice_in_between(&ocr_info.as_str(),int_vec[40],x);
-                }
-                else{
-                    fin_edu=slice_in_between(&ocr_info.as_str(),int_vec[40],Some(ocr_info.len())); 
-                }
-            }
-            else if(a[41]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[41]);
-                if(x != None){
-                    fin_edu=slice_in_between(&ocr_info.as_str(),int_vec[41],x);
-                }
-                else{
-                    fin_edu=slice_in_between(&ocr_info.as_str(),int_vec[41],Some(ocr_info.len())); 
-                }
-            }
-            else if(a[42]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[42]);
-                if(x != None){
-                    fin_edu=slice_in_between(&ocr_info.as_str(),int_vec[42],x);
-                }
-                else{
-                    fin_edu=slice_in_between(&ocr_info.as_str(),int_vec[42],Some(ocr_info.len())); 
-                }
-            }
-            else if(a[43]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[43]);
-                if(x != None){
-                    fin_edu=slice_in_between(&ocr_info.as_str(),int_vec[43],x);
-                }
-                else{
-                    fin_edu=slice_in_between(&ocr_info.as_str(),int_vec[43],Some(ocr_info.len())); 
-                }
+
             }
         }
 
         if(keyword.to_string() == "Meta Cirricular"){
-            let a = int_vec.clone();
-            if(a[8]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[8]);
-                if(x != None){
-                    fin_cirr=slice_in_between(&ocr_info.as_str(),int_vec[8],x);
+            for val in meta_vec{
+                let a = int_vec.clone();
+                if(a[val]!=None){
+                    let x= find_next_smallest(int_vec.clone(), int_vec[val]);
+                    if(x != None){
+                        fin_cirr=slice_in_between(&ocr_info.as_str(),int_vec[val],x);
+                    }
+                    else{
+                        fin_cirr=slice_in_between(&ocr_info.as_str(),int_vec[val],Some(ocr_info.len())); 
+                    }
                 }
-                else{
-                    fin_cirr=slice_in_between(&ocr_info.as_str(),int_vec[8],Some(ocr_info.len())); 
-                }
-            }
-            else if(a[9]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[9]);
-                if(x != None){
-                    fin_cirr=slice_in_between(&ocr_info.as_str(),int_vec[9],x);
-                }
-                else{
-                    fin_cirr=slice_in_between(&ocr_info.as_str(),int_vec[9],Some(ocr_info.len())); 
-                }
-            }
-            else if(a[10]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[10]);
-                if(x != None){
-                    fin_cirr=slice_in_between(&ocr_info.as_str(),int_vec[10],x);
-                }
-                else{
-                    fin_cirr=slice_in_between(&ocr_info.as_str(),int_vec[10],Some(ocr_info.len())); 
-                }
-            }
-            else if(a[11]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[11]);
-                if(x != None){
-                    fin_cirr=slice_in_between(&ocr_info.as_str(),int_vec[11],x);
-                }
-                else{
-                    fin_cirr=slice_in_between(&ocr_info.as_str(),int_vec[11],Some(ocr_info.len())); 
-                }
-            }
-            else if(a[20]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[20]);
-                if(x != None){
-                    fin_cirr=slice_in_between(&ocr_info.as_str(),int_vec[20],x);
-                }
-                else{
-                    fin_cirr=slice_in_between(&ocr_info.as_str(),int_vec[20],Some(ocr_info.len())); 
-                }
-            }
-            else if(a[21]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[21]);
-                if(x != None){
-                    fin_cirr=slice_in_between(&ocr_info.as_str(),int_vec[21],x);
-                }
-                else{
-                    fin_cirr=slice_in_between(&ocr_info.as_str(),int_vec[21],Some(ocr_info.len())); 
-                }
-            }
-            else if(a[22]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[22]);
-                if(x != None){
-                    fin_cirr=slice_in_between(&ocr_info.as_str(),int_vec[22],x);
-                }
-                else{
-                    fin_cirr=slice_in_between(&ocr_info.as_str(),int_vec[22],Some(ocr_info.len())); 
-                }
-            }
-            else if(a[23]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[23]);
-                if(x != None){
-                    fin_cirr=slice_in_between(&ocr_info.as_str(),int_vec[23],x);
-                }
-                else{
-                    fin_cirr=slice_in_between(&ocr_info.as_str(),int_vec[23],Some(ocr_info.len())); 
-                }
-            }
 
+            }
         }
 
         if(keyword.to_string() == "Experience"){
-            let a = int_vec.clone();
-            if(a[1]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[1]);
-                if(x != None){
-                    fin_exp=slice_in_between(&ocr_info.as_str(),int_vec[1],x);
-                }
-                else{
-                    fin_exp=slice_in_between(&ocr_info.as_str(),int_vec[1],Some(ocr_info.len())); 
-                }
-            }
-            else if(a[13]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[13]);
-                if(x != None){
-                    fin_exp=slice_in_between(&ocr_info.as_str(),int_vec[13],x);
-                }
-                else{
-                    fin_exp=slice_in_between(&ocr_info.as_str(),int_vec[13],Some(ocr_info.len())); 
+            for val in exp_vec{
+                let a = int_vec.clone();
+                if(a[val]!=None){
+                    let x= find_next_smallest(int_vec.clone(), int_vec[val]);
+                    if(x != None){
+                        fin_exp=slice_in_between(&ocr_info.as_str(),int_vec[val],x);
+                    }
+                    else{
+                        fin_exp=slice_in_between(&ocr_info.as_str(),int_vec[val],Some(ocr_info.len())); 
+                    }
                 }
             }
         }
+
 
         if(keyword.to_string() == "Academic Elective"){
+            for val in elec_vec{
             let a = int_vec.clone();
-            if(a[6]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[6]);
+            if(a[val]!=None){
+                let x= find_next_smallest(int_vec.clone(), int_vec[val]);
                 if(x != None){
-                    fin_elec=slice_in_between(&ocr_info.as_str(),int_vec[6],x);
+                    fin_elec=slice_in_between(&ocr_info.as_str(),int_vec[val],x);
                 }
                 else{
-                    fin_elec=slice_in_between(&ocr_info.as_str(),int_vec[6],Some(ocr_info.len())); 
-                }
-            }
-            else if(a[18]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[18]);
-                if(x != None){
-                    fin_elec=slice_in_between(&ocr_info.as_str(),int_vec[18],x);
-                }
-                else{
-                    fin_elec=slice_in_between(&ocr_info.as_str(),int_vec[18],Some(ocr_info.len())); 
+                    fin_elec=slice_in_between(&ocr_info.as_str(),int_vec[val],Some(ocr_info.len())); 
                 }
             }
         }
+    }
+
 
         if(keyword.to_string() == "Skills"){
+            for val in skill_vec{
             let a = int_vec.clone();
-            if(a[2]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[2]);
+            if(a[val]!=None){
+                let x= find_next_smallest(int_vec.clone(), int_vec[val]);
                 if(x != None){
-                    fin_ski=slice_in_between(&ocr_info.as_str(),int_vec[2],x);
+                    fin_ski=slice_in_between(&ocr_info.as_str(),int_vec[val],x);
                 }
                 else{
-                    fin_ski=slice_in_between(&ocr_info.as_str(),int_vec[2],Some(ocr_info.len())); 
-                }
-            }
-            else if(a[14]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[14]);
-                if(x != None){
-                    fin_ski=slice_in_between(&ocr_info.as_str(),int_vec[14],x);
-                }
-                else{
-                    fin_ski=slice_in_between(&ocr_info.as_str(),int_vec[14],Some(ocr_info.len())); 
-                }
-            }
-            else if(a[4]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[4]);
-                if(x != None){
-                    fin_ski=slice_in_between(&ocr_info.as_str(),int_vec[4],x);
-                }
-                else{
-                    fin_ski=slice_in_between(&ocr_info.as_str(),int_vec[4],Some(ocr_info.len())); 
-                }
-            }
-            else if(a[16]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[16]);
-                if(x != None){
-                    fin_ski=slice_in_between(&ocr_info.as_str(),int_vec[16],x);
-                }
-                else{
-                    fin_ski=slice_in_between(&ocr_info.as_str(),int_vec[16],Some(ocr_info.len())); 
-                }
-            }
-            else if(a[30]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[30]);
-                if(x != None){
-                    fin_ski=slice_in_between(&ocr_info.as_str(),int_vec[30],x);
-                }
-                else{
-                    fin_ski=slice_in_between(&ocr_info.as_str(),int_vec[30],Some(ocr_info.len())); 
-                }
-            }
-            else if(a[31]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[31]);
-                if(x != None){
-                    fin_ski=slice_in_between(&ocr_info.as_str(),int_vec[31],x);
-                }
-                else{
-                    fin_ski=slice_in_between(&ocr_info.as_str(),int_vec[31],Some(ocr_info.len())); 
-                }
-            }
-
-        }
-
-
-        if(keyword.to_string() == "Projects"){
-            let a = int_vec.clone();
-            if(a[3]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[3]);
-                if(x != None){
-                    fin_pro=slice_in_between(&ocr_info.as_str(),int_vec[3],x);
-                }
-                else{
-                    fin_pro=slice_in_between(&ocr_info.as_str(),int_vec[3],Some(ocr_info.len())); 
-                }
-            }
-            else if(a[15]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[15]);
-                if(x != None){
-                    fin_pro=slice_in_between(&ocr_info.as_str(),int_vec[15],x);
-                }
-                else{
-                    fin_pro=slice_in_between(&ocr_info.as_str(),int_vec[15],Some(ocr_info.len())); 
+                    fin_ski=slice_in_between(&ocr_info.as_str(),int_vec[val],Some(ocr_info.len())); 
                 }
             }
         }
-        
-        if(keyword.to_string() == "Certification"){
-            let a = int_vec.clone();
-            if(a[7]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[7]);
-                if(x != None){
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[7],x);
-                }
-                else{
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[7],Some(ocr_info.len())); 
-                }
-            }
-            else if(a[19]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[19]);
-                if(x != None){
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[19],x);
-                }
-                else{
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[19],Some(ocr_info.len())); 
-                }
-            }
-            else if(a[24]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[24]);
-                if(x != None){
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[24],x);
-                }
-                else{
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[24],Some(ocr_info.len())); 
-                }
-            }
-            else if(a[25]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[25]);
-                if(x != None){
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[25],x);
-                }
-                else{
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[25],Some(ocr_info.len())); 
-                }
-            }
-        }
-
-        if(keyword.to_string() == "Interests"){
-            let a = int_vec.clone();
-            if(a[26]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[26]);
-                if(x != None){
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[26],x);
-                }
-                else{
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[26],Some(ocr_info.len())); 
-                }
-            }
-            else if(a[27]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[27]);
-                if(x != None){
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[27],x);
-                }
-                else{
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[27],Some(ocr_info.len())); 
-                }
-            }
-            else if(a[28]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[28]);
-                if(x != None){
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[28],x);
-                }
-                else{
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[28],Some(ocr_info.len())); 
-                }
-            }
-            else if(a[29]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[29]);
-                if(x != None){
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[29],x);
-                }
-                else{
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[29],Some(ocr_info.len())); 
-                }
-            }
-        }
-
-
-        if(keyword.to_string() == "Achievements"){
-            let a = int_vec.clone();
-            if(a[32]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[32]);
-                if(x != None){
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[32],x);
-                }
-                else{
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[32],Some(ocr_info.len())); 
-                }
-            }
-            else if(a[33]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[33]);
-                if(x != None){
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[33],x);
-                }
-                else{
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[33],Some(ocr_info.len())); 
-                }
-            }
-            else if(a[34]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[34]);
-                if(x != None){
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[34],x);
-                }
-                else{
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[34],Some(ocr_info.len())); 
-                }
-            }
-            else if(a[35]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[35]);
-                if(x != None){
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[35],x);
-                }
-                else{
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[35],Some(ocr_info.len())); 
-                }
-            }
-        }
-
-        if(keyword.to_string() == "Summary"){
-            let a = int_vec.clone();
-            if(a[36]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[36]);
-                if(x != None){
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[36],x);
-                }
-                else{
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[36],Some(ocr_info.len())); 
-                }
-            }
-            else if(a[37]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[37]);
-                if(x != None){
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[37],x);
-                }
-                else{
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[37],Some(ocr_info.len())); 
-                }
-            }
-            else if(a[38]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[38]);
-                if(x != None){
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[38],x);
-                }
-                else{
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[38],Some(ocr_info.len())); 
-                }
-            }
-            else if(a[39]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[39]);
-                if(x != None){
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[39],x);
-                }
-                else{
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[39],Some(ocr_info.len())); 
-                }
-            }
-        }
-
-
-        if(keyword.to_string() == "Languages"){
-            let a = int_vec.clone();
-            if(a[44]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[44]);
-                if(x != None){
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[44],x);
-                }
-                else{
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[44],Some(ocr_info.len())); 
-                }
-            }
-            else if(a[45]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[45]);
-                if(x != None){
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[45],x);
-                }
-                else{
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[45],Some(ocr_info.len())); 
-                }
-            }
-        }
-        if(keyword.to_string() == "Personal"){
-            let a = int_vec.clone();
-            if(a[46]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[46]);
-                if(x != None){
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[46],x);
-                }
-                else{
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[46],Some(ocr_info.len())); 
-                }
-            }
-            else if(a[47]!=None){
-                let x= find_next_smallest(int_vec.clone(), int_vec[47]);
-                if(x != None){
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[47],x);
-                }
-                else{
-                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[47],Some(ocr_info.len())); 
-                }
-            }
     }
     
-    if(keyword.to_string() == "Leadership"){
-        let a = int_vec.clone();
-        if(a[48]!=None){
-            let x= find_next_smallest(int_vec.clone(), int_vec[48]);
-            if(x != None){
-                fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[48],x);
-            }
-            else{
-                fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[48],Some(ocr_info.len())); 
+        if(keyword.to_string() == "Projects"){
+            for val in proj_vec{
+            let a = int_vec.clone();
+            if(a[val]!=None){
+                let x= find_next_smallest(int_vec.clone(), int_vec[val]);
+                if(x != None){
+                    fin_pro=slice_in_between(&ocr_info.as_str(),int_vec[val],x);
+                }
+                else{
+                    fin_pro=slice_in_between(&ocr_info.as_str(),int_vec[val],Some(ocr_info.len())); 
+                }
             }
         }
-        else if(a[49]!=None){
-            let x= find_next_smallest(int_vec.clone(), int_vec[49]);
-            if(x != None){
-                fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[49],x);
+    }
+
+        if(keyword.to_string() == "Certification"){
+            for val in cer_vec{
+            let a = int_vec.clone();
+            if(a[val]!=None){
+                let x= find_next_smallest(int_vec.clone(), int_vec[val]);
+                if(x != None){
+                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[val],x);
+                }
+                else{
+                    fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[val],Some(ocr_info.len())); 
+                }
             }
-            else{
-                fin_cer=slice_in_between(&ocr_info.as_str(),int_vec[49],Some(ocr_info.len())); 
+        }
+    }
+
+        if(keyword.to_string() == "Interests"){
+            for val in interest_vec{
+            let a = int_vec.clone();
+            if(a[val]!=None){
+                let x= find_next_smallest(int_vec.clone(), int_vec[val]);
+                if(x != None){
+                    fin_int=slice_in_between(&ocr_info.as_str(),int_vec[val],x);
+                }
+                else{
+                    fin_int=slice_in_between(&ocr_info.as_str(),int_vec[val],Some(ocr_info.len())); 
+                }
+            }
+        }
+    }   
+
+        if(keyword.to_string() == "Achievements"){
+            for val in ach_vec{
+            let a = int_vec.clone();
+            if(a[val]!=None){
+                let x= find_next_smallest(int_vec.clone(), int_vec[val]);
+                if(x != None){
+                    fin_ach=slice_in_between(&ocr_info.as_str(),int_vec[val],x);
+                }
+                else{
+                    fin_ach=slice_in_between(&ocr_info.as_str(),int_vec[val],Some(ocr_info.len())); 
+                }
+            }
+        }
+    }
+
+        if(keyword.to_string() == "Summary"){
+            for val in summ_vec{
+            let a = int_vec.clone();
+            if(a[val]!=None){
+                let x= find_next_smallest(int_vec.clone(), int_vec[val]);
+                if(x != None){
+                    fin_summ=slice_in_between(&ocr_info.as_str(),int_vec[val],x);
+                }
+                else{
+                    fin_summ=slice_in_between(&ocr_info.as_str(),int_vec[val],Some(ocr_info.len())); 
+                }
+            }
+        }
+    }   
+
+        if(keyword.to_string() == "Languages"){
+            for val in lang_vec{
+            let a = int_vec.clone();
+            if(a[val]!=None){
+                let x= find_next_smallest(int_vec.clone(), int_vec[val]);
+                if(x != None){
+                    fin_lang=slice_in_between(&ocr_info.as_str(),int_vec[val],x);
+                }
+                else{
+                    fin_lang=slice_in_between(&ocr_info.as_str(),int_vec[val],Some(ocr_info.len())); 
+                }
+            }
+        }
+    }       
+
+     
+        if(keyword.to_string() == "Personal"){
+            for val in per_vec{
+            let a = int_vec.clone();
+            if(a[val]!=None){
+                let x= find_next_smallest(int_vec.clone(), int_vec[val]);
+                if(x != None){
+                    fin_per=slice_in_between(&ocr_info.as_str(),int_vec[val],x);
+                }
+                else{
+                    fin_per=slice_in_between(&ocr_info.as_str(),int_vec[val],Some(ocr_info.len())); 
+                }
+            }
+        }
+    }
+     
+        if(keyword.to_string() == "Leadership"){
+            for val in lead_vec{
+            let a = int_vec.clone();
+            if(a[val]!=None){
+                let x= find_next_smallest(int_vec.clone(), int_vec[val]);
+                if(x != None){
+                    fin_lead=slice_in_between(&ocr_info.as_str(),int_vec[val],x);
+                }
+                else{
+                    fin_lead=slice_in_between(&ocr_info.as_str(),int_vec[val],Some(ocr_info.len())); 
+                }
             }
         }
     }
@@ -889,6 +607,7 @@ fn classifier_single_column(ocr_info:String)->String{
 return fin_exp;
 
 }
+
 
 
 fn slice_in_between(s: &str, start: Option<usize>, end: Option<usize>) -> String {
