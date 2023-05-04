@@ -2,29 +2,11 @@ import App from "./App.js";
 import "./style.css";
 import { Container } from "@mantine/core";
 import React from "react";
+import Sidebar from "./Sidebar.jsx";
+import "./Home.css";
 
 const PricingPlan = () => {
   const plans = [
-    {
-      title: "Basic Plan",
-      price: "$10/month",
-      features: ["1 GB Storage", "10 Users", "Email Support"],
-    },
-    {
-      title: "Basic Plan",
-      price: "$10/month",
-      features: ["1 GB Storage", "10 Users", "Email Support"],
-    },
-    {
-      title: "Basic Plan",
-      price: "$10/month",
-      features: ["1 GB Storage", "10 Users", "Email Support"],
-    },
-    {
-      title: "Basic Plan",
-      price: "$10/month",
-      features: ["1 GB Storage", "10 Users", "Email Support"],
-    },
     {
       title: "Basic Plan",
       price: "$10/month",
@@ -68,6 +50,9 @@ const PricingPlan = () => {
   
   return (
     <>
+    <div className="container-new">
+      <Sidebar/>
+      <div className="others">
       <Container>
         <div className="row">
           <a href="" target="_blank">
@@ -84,6 +69,8 @@ const PricingPlan = () => {
           <PlanCard key={index} {...plan} />
         ))}
       </div>
+      </div>
+    </div>
     </>
   );
 };

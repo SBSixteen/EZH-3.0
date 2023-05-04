@@ -3,6 +3,8 @@ import StripeCheckout from "react-stripe-checkout";
 import { Container, Typography, TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "./Components/Button";
+import Sidebar from "./Sidebar.jsx";
+import "./Home.css";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -36,27 +38,35 @@ function PaymentPage() {
   };
 
   return (
-    <Container maxWidth="md" className={classes.container}>
-      
-      <h1>Check Out</h1>  
-      <br></br>
-    
-      <Typography variant="h6">
-        {product.name} - ${product.price}
-      </Typography>
-      <TextField label="Name" variant="outlined" className={classes.input} />
-      
-      <StripeCheckout
-        stripeKey="<your_stripe_public_key>"
-        token={handleToken}
-        amount={product.price * 100}
-        name={product.name}
-      >
-        <Button variant="contained"  className={classes.button}
-          title = "Pay Now" >
-        </Button>
-      </StripeCheckout>
-    </Container>
+  
+    <>
+    <div className="container-new">
+      <Sidebar />
+      <div className="others">
+      <Container maxWidth="md" className={classes.container}>
+
+<h1>Check Out</h1>
+<br></br>
+
+<Typography variant="h6">
+  {product.name} - ${product.price}
+</Typography>
+<TextField label="Name" variant="outlined" className={classes.input} />
+
+<StripeCheckout
+  stripeKey="<your_stripe_public_key>"
+  token={handleToken}
+  amount={product.price * 100}
+  name={product.name}
+>
+  <Button variant="contained" className={classes.button}
+    title="Pay Now">
+  </Button>
+</StripeCheckout>
+</Container>
+      </div>
+    </div>
+    </>
   );
 }
 

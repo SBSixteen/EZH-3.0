@@ -128,7 +128,6 @@ function App() {
           <Route path="/Dataset" element={<Dataset />} />
           <Route path="/DynamicTable" element={<DynamicTable />} />
           <Route path="/Datasetform" element={<Datasetform />} />
-
           navigate(path);
         </Routes>
       </BrowserRouter>

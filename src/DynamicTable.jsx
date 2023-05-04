@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { CheckBox } from "@material-ui/icons";
 import "./style.css";
 import { Container } from '@mantine/core';
+import Sidebar from "./Sidebar.jsx";
+import "./Home.css";
 
 const DynamicTable = () => {
   const data = [
@@ -67,6 +69,9 @@ const DynamicTable = () => {
 
   return (
     <>
+    <div className="container-new">
+      <Sidebar/>
+      <div className="others">
       <div className="row">
         <a href="" target="_blank">
           <img
@@ -131,6 +136,8 @@ const DynamicTable = () => {
         </table>
       </div>
       </Container>
+      </div>
+    </div>
     </>
   );
 };

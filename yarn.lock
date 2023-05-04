@@ -2230,6 +2230,175 @@
     "@svgr/plugin-svgo" "^5.5.0"
     loader-utils "^2.0.0"
 
+"@syncfusion/ej2-base@~21.2.3":
+  version "21.2.3"
+  resolved "https://registry.yarnpkg.com/@syncfusion/ej2-base/-/ej2-base-21.2.3.tgz#0c192b075b660ab637daf10195b4b175c42d56c4"
+  integrity sha512-dUMehTP62PWZZbZjbvFAr9li5bVqAcpy4mPyLNYbIkXujWHuJqxlcihuvZWZKPXZ1RynzK6YerWbBwjFKKz6vA==
+  dependencies:
+    "@syncfusion/ej2-icons" "~21.2.3"
+
+"@syncfusion/ej2-buttons@~21.2.3":
+  version "21.2.3"
+  resolved "https://registry.yarnpkg.com/@syncfusion/ej2-buttons/-/ej2-buttons-21.2.3.tgz#69fc169410e644d7ef5b1eed9d2301c95023feb5"
+  integrity sha512-j1HQkmfM7eBqXLFuHa0AJ/WsCosPKVpM0fr9dSPHp+wGGvdSMZf0HrYRAAYPFr+rgznowQirvgJDbryFtmR+Mw==
+  dependencies:
+    "@syncfusion/ej2-base" "~21.2.3"
+
+"@syncfusion/ej2-calendars@~21.2.3":
+  version "21.2.3"
+  resolved "https://registry.yarnpkg.com/@syncfusion/ej2-calendars/-/ej2-calendars-21.2.3.tgz#6a5da385d10bf2c1c052daca25d178b22fd9f97e"
+  integrity sha512-qd9ZhhDVARJKqQHh3u5KFqjhgvencqqoMcouNkfQaGuo7nQZwUyUR3jrRsFlWJze04kdtbDDoCp0ITlSRo6nPg==
+  dependencies:
+    "@syncfusion/ej2-base" "~21.2.3"
+    "@syncfusion/ej2-buttons" "~21.2.3"
+    "@syncfusion/ej2-inputs" "~21.2.3"
+    "@syncfusion/ej2-lists" "~21.2.3"
+    "@syncfusion/ej2-popups" "~21.2.3"
+
+"@syncfusion/ej2-compression@~21.2.3":
+  version "21.2.3"
+  resolved "https://registry.yarnpkg.com/@syncfusion/ej2-compression/-/ej2-compression-21.2.3.tgz#1eb05ce95a486b9d3f06854abf4793c08b7c103b"
+  integrity sha512-J2bqSwG8AoGB0fkEQcdMTPwMDwNU9CP3LqS3P7UptG1dzJfVSDBIMRXQMQGiWSomjXPuqvgFtAKXISp6noY+wA==
+  dependencies:
+    "@syncfusion/ej2-file-utils" "~21.2.3"
+
+"@syncfusion/ej2-data@~21.2.3":
+  version "21.2.3"
+  resolved "https://registry.yarnpkg.com/@syncfusion/ej2-data/-/ej2-data-21.2.3.tgz#e3ef12d6e9d80cf83ca2fb84ee37ae0661c0c1e0"
+  integrity sha512-0srTnClTP0zsIYpRTZn877OY7bEbktMYEhoz5mBUYVcxbgmRM0LuCXfi7X+fGA0f2WCYnoEXhp044XuzjjhPyA==
+  dependencies:
+    "@syncfusion/ej2-base" "~21.2.3"
+
+"@syncfusion/ej2-dropdowns@~21.2.3":
+  version "21.2.3"
+  resolved "https://registry.yarnpkg.com/@syncfusion/ej2-dropdowns/-/ej2-dropdowns-21.2.3.tgz#9dab1669fe8fe8ebba2e45c62892c8d9c82ee418"
+  integrity sha512-Qb3kR6JAXmUJC2IlrbVb3S+we/OvNURZufUksx8SZU3EQ9oIiLoIGDH9kzDahE9LGj99w3GRqZtpqNtJKtd+0g==
+  dependencies:
+    "@syncfusion/ej2-base" "~21.2.3"
+    "@syncfusion/ej2-data" "~21.2.3"
+    "@syncfusion/ej2-inputs" "~21.2.3"
+    "@syncfusion/ej2-lists" "~21.2.3"
+    "@syncfusion/ej2-navigations" "~21.2.3"
+    "@syncfusion/ej2-popups" "~21.2.3"
+
+"@syncfusion/ej2-excel-export@~21.2.3":
+  version "21.2.3"
+  resolved "https://registry.yarnpkg.com/@syncfusion/ej2-excel-export/-/ej2-excel-export-21.2.3.tgz#87fe4a8295c5e3ec2bde052ab98f4367ccdaaa2e"
+  integrity sha512-gb21JlKdDLDbKBYZxYTDUe9k3Qy6bBruSAnaBxS37gk7Cgppqhtt50Ayd1VzNmH7EGuwhBjgxZhxdQI2w9FjNw==
+  dependencies:
+    "@syncfusion/ej2-base" "~21.2.3"
+    "@syncfusion/ej2-compression" "~21.2.3"
+
+"@syncfusion/ej2-file-utils@~21.2.3":
+  version "21.2.3"
+  resolved "https://registry.yarnpkg.com/@syncfusion/ej2-file-utils/-/ej2-file-utils-21.2.3.tgz#bf6a2fca8e7c0e7f001227e1208df3210d15d886"
+  integrity sha512-fOvqTeRgKTkQSpHlSF6P1Twoa5DRrTq6Cs2lhnNyD26PofAh/58Zi88jJ+pdehtQb1JeAzxpvPJO2wiZ27VqjA==
+
+"@syncfusion/ej2-grids@21.2.3":
+  version "21.2.3"
+  resolved "https://registry.yarnpkg.com/@syncfusion/ej2-grids/-/ej2-grids-21.2.3.tgz#44e933ad57e4cccc0829a2fc21f80fe17a51b3c4"
+  integrity sha512-VQs/aWpTiR7JPj1y3iUqrcGRCz6leCqsuw60RpIG2QVrFJJDy9QXVIIUceG4xG7pbeeBQpYN1Ay99ZT7lzEG6g==
+  dependencies:
+    "@syncfusion/ej2-base" "~21.2.3"
+    "@syncfusion/ej2-buttons" "~21.2.3"
+    "@syncfusion/ej2-calendars" "~21.2.3"
+    "@syncfusion/ej2-compression" "~21.2.3"
+    "@syncfusion/ej2-data" "~21.2.3"
+    "@syncfusion/ej2-dropdowns" "~21.2.3"
+    "@syncfusion/ej2-excel-export" "~21.2.3"
+    "@syncfusion/ej2-file-utils" "~21.2.3"
+    "@syncfusion/ej2-inputs" "~21.2.3"
+    "@syncfusion/ej2-lists" "~21.2.3"
+    "@syncfusion/ej2-navigations" "~21.2.3"
+    "@syncfusion/ej2-notifications" "~21.2.3"
+    "@syncfusion/ej2-pdf-export" "~21.2.3"
+    "@syncfusion/ej2-popups" "~21.2.3"
+    "@syncfusion/ej2-splitbuttons" "~21.2.3"
+
+"@syncfusion/ej2-icons@~21.2.3":
+  version "21.2.3"
+  resolved "https://registry.yarnpkg.com/@syncfusion/ej2-icons/-/ej2-icons-21.2.3.tgz#caa565bb8e43f065d7ee58a96054068e6d466484"
+  integrity sha512-LSu+sXQHRO6eTjD1D66GPQALoUMVRZXeLnZ86WWAI7V3j8rfCDAiI4tG8XQ7nncuHgGO2e36T9A70J1eRh0/ng==
+
+"@syncfusion/ej2-inputs@~21.2.3":
+  version "21.2.3"
+  resolved "https://registry.yarnpkg.com/@syncfusion/ej2-inputs/-/ej2-inputs-21.2.3.tgz#f13fedd38db5fdd965c13e46d113f4f39d615307"
+  integrity sha512-GpxAmrMTi8rzjoFTy9YpLeozm3WJ5wCHVSpzgg5nHuutgbsarlqYecLVTG7ePxUB9TFAAXXLdWcVzVebUlEIXQ==
+  dependencies:
+    "@syncfusion/ej2-base" "~21.2.3"
+    "@syncfusion/ej2-buttons" "~21.2.3"
+    "@syncfusion/ej2-popups" "~21.2.3"
+    "@syncfusion/ej2-splitbuttons" "~21.2.3"
+
+"@syncfusion/ej2-lists@~21.2.3":
+  version "21.2.3"
+  resolved "https://registry.yarnpkg.com/@syncfusion/ej2-lists/-/ej2-lists-21.2.3.tgz#4cc0e6fc2d6aef113d40d1a953678b0b86b38a4b"
+  integrity sha512-0eYnOb435N7TEFHUFmeffxIvt2hcAUNP7c5iHXH4+S/QWqJ9l5Jpvs1SNmpGMYU5HSyRyWZiDHjkMLRSklIsnQ==
+  dependencies:
+    "@syncfusion/ej2-base" "~21.2.3"
+    "@syncfusion/ej2-buttons" "~21.2.3"
+    "@syncfusion/ej2-data" "~21.2.3"
+
+"@syncfusion/ej2-navigations@~21.2.3":
+  version "21.2.3"
+  resolved "https://registry.yarnpkg.com/@syncfusion/ej2-navigations/-/ej2-navigations-21.2.3.tgz#98ac6f7bb80f812e1ed8e303d2e99d87e40c4dff"
+  integrity sha512-02Eu1R3dfrtPr357seR2bOr5rz4u9d/zGZfK8mxS6uM7/H5MVLYkQ9RR91qYggdlzskUpMXsMWD8Q0MyrUQGCg==
+  dependencies:
+    "@syncfusion/ej2-base" "~21.2.3"
+    "@syncfusion/ej2-buttons" "~21.2.3"
+    "@syncfusion/ej2-data" "~21.2.3"
+    "@syncfusion/ej2-inputs" "~21.2.3"
+    "@syncfusion/ej2-lists" "~21.2.3"
+    "@syncfusion/ej2-popups" "~21.2.3"
+
+"@syncfusion/ej2-notifications@~21.2.3":
+  version "21.2.3"
+  resolved "https://registry.yarnpkg.com/@syncfusion/ej2-notifications/-/ej2-notifications-21.2.3.tgz#84ce577113f6ad6b8b8b160c918ca294e6efb05a"
+  integrity sha512-U6NxkG6poLjSbwstU7aC9//1V+/Fy5VlvYkHBAVbo3jKVDcvEeupgong4ULNTAO/RPMCIUHajy8ytdnnAJ5iJw==
+  dependencies:
+    "@syncfusion/ej2-base" "~21.2.3"
+    "@syncfusion/ej2-buttons" "~21.2.3"
+    "@syncfusion/ej2-popups" "~21.2.3"
+
+"@syncfusion/ej2-pdf-export@~21.2.3":
+  version "21.2.3"
+  resolved "https://registry.yarnpkg.com/@syncfusion/ej2-pdf-export/-/ej2-pdf-export-21.2.3.tgz#cb04d0af8a34bac506887fb48bf7ba3e41eb5fcf"
+  integrity sha512-z1fOEfihiHz/9kTX4+k8WcdBVMCG33OK2/+mr1i70oUBd7dsguBGCHCnyihttoY1djcJMi3bLZs0zUo5Dw4j6g==
+  dependencies:
+    "@syncfusion/ej2-compression" "~21.2.3"
+
+"@syncfusion/ej2-popups@~21.2.3":
+  version "21.2.3"
+  resolved "https://registry.yarnpkg.com/@syncfusion/ej2-popups/-/ej2-popups-21.2.3.tgz#ae262967a41a9d54e20187401492cd3b5d7ca28f"
+  integrity sha512-rAXSVzniejoNS4K+8Jlc2wDSxWZ5WdPhITNzr8YkRjTlJhA0hw5I8z1qqJ+dvAYY9dEDNBI0lp0nebfkMAWiig==
+  dependencies:
+    "@syncfusion/ej2-base" "~21.2.3"
+    "@syncfusion/ej2-buttons" "~21.2.3"
+
+"@syncfusion/ej2-react-base@~21.2.3":
+  version "21.2.3"
+  resolved "https://registry.yarnpkg.com/@syncfusion/ej2-react-base/-/ej2-react-base-21.2.3.tgz#0c4e6db7c9b8b6b83a09f95855d6407e88f47461"
+  integrity sha512-/ftG9YY2exx3HQqJxofaYlLH5hCPHiH72TiUUUXYYPZlxjYQfl0bESjrVbHz9nZGjSr8haLNccWO4QabpauSig==
+  dependencies:
+    "@syncfusion/ej2-base" "~21.2.3"
+
+"@syncfusion/ej2-react-grids@^21.1.39":
+  version "21.2.3"
+  resolved "https://registry.yarnpkg.com/@syncfusion/ej2-react-grids/-/ej2-react-grids-21.2.3.tgz#ba6e83dda9f6e254b09f020cad95eba80a61781e"
+  integrity sha512-u5n/e1AkyBF4VsDm0kC+4JOmNZ6RsS3uqLYeZ2pTco4RYeFdGbSd7Qt5jNC6gIwzHUfhTdf5+MVBUp7S3F2pMA==
+  dependencies:
+    "@syncfusion/ej2-base" "~21.2.3"
+    "@syncfusion/ej2-grids" "21.2.3"
+    "@syncfusion/ej2-react-base" "~21.2.3"
+
+"@syncfusion/ej2-splitbuttons@~21.2.3":
+  version "21.2.3"
+  resolved "https://registry.yarnpkg.com/@syncfusion/ej2-splitbuttons/-/ej2-splitbuttons-21.2.3.tgz#71ee04fe310c14a2569b777705b642b68e522bd0"
+  integrity sha512-G+czEjiXJ8dZ540nfTsN15WLtkm5i9EgcQGaMw37wnRy511LZweBGeFBCKgobNyqmuxM7GPSV049BUCdhxl5rA==
+  dependencies:
+    "@syncfusion/ej2-base" "~21.2.3"
+    "@syncfusion/ej2-popups" "~21.2.3"
+
 "@tabler/icons-react@^2.11.0":
   version "2.13.1"
   resolved "https://registry.yarnpkg.com/@tabler/icons-react/-/icons-react-2.13.1.tgz#9cead65d6208bd4eb3d33ed8d0906d87c8b2d39b"
@@ -2248,65 +2417,65 @@
   resolved "https://registry.yarnpkg.com/@tauri-apps/api/-/api-1.2.0.tgz#1f196b3e012971227f41b98214c846430a4eb477"
   integrity sha512-lsI54KI6HGf7VImuf/T9pnoejfgkNoXveP14pVV7XarrQ46rOejIVJLFqHI9sRReJMGdh2YuCoI3cc/yCWCsrw==
 
-"@tauri-apps/cli-darwin-arm64@1.2.3":
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/@tauri-apps/cli-darwin-arm64/-/cli-darwin-arm64-1.2.3.tgz#dae9142e683c00199f4d7e088f22b564b08b9cac"
-  integrity sha512-phJN3fN8FtZZwqXg08bcxfq1+X1JSDglLvRxOxB7VWPq+O5SuB8uLyssjJsu+PIhyZZnIhTGdjhzLSFhSXfLsw==
+"@tauri-apps/cli-darwin-arm64@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@tauri-apps/cli-darwin-arm64/-/cli-darwin-arm64-1.3.0.tgz#6c738af14f494546e0fbe64f6befa0eb08959150"
+  integrity sha512-uuhx3/LaqFyHkoGOnOltBLKWGOzC6WzdXu+/Qv3NmNnyQWkY7O34z5V0oP6ibfuiOBZufKjOuBR+8YAIR8Qh9Q==
 
-"@tauri-apps/cli-darwin-x64@1.2.3":
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/@tauri-apps/cli-darwin-x64/-/cli-darwin-x64-1.2.3.tgz#c6f84a11a1a7800e3e8e22c8fa5b95d0b3d1f802"
-  integrity sha512-jFZ/y6z8z6v4yliIbXKBXA7BJgtZVMsITmEXSuD6s5+eCOpDhQxbRkr6CA+FFfr+/r96rWSDSgDenDQuSvPAKw==
+"@tauri-apps/cli-darwin-x64@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@tauri-apps/cli-darwin-x64/-/cli-darwin-x64-1.3.0.tgz#d3fda368b555663723337a70abe4b470592d9bda"
+  integrity sha512-fj0VXHMDvb/H1CjaS/JoYd7xcourxndJn1IyM4afYbpXibT/fpmM6uZflDI6rRa220NfnBtQvy+asgwC9wuyLA==
 
-"@tauri-apps/cli-linux-arm-gnueabihf@1.2.3":
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/@tauri-apps/cli-linux-arm-gnueabihf/-/cli-linux-arm-gnueabihf-1.2.3.tgz#ecccec4c255ab32903fb36e1c746ed7b4eff0d1d"
-  integrity sha512-C7h5vqAwXzY0kRGSU00Fj8PudiDWFCiQqqUNI1N+fhCILrzWZB9TPBwdx33ZfXKt/U4+emdIoo/N34v3TiAOmQ==
+"@tauri-apps/cli-linux-arm-gnueabihf@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@tauri-apps/cli-linux-arm-gnueabihf/-/cli-linux-arm-gnueabihf-1.3.0.tgz#165ed5a299a944a8c0fc1ed5fc0d609db78a142b"
+  integrity sha512-f80DmFPnH5ZskG61KIlAyMVk9YkrTq0XM2uiQjOo5gToIdJidSwhPQVeBLv+7UxhqaRBx082Dg2fOkWlO3LiOQ==
 
-"@tauri-apps/cli-linux-arm64-gnu@1.2.3":
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/@tauri-apps/cli-linux-arm64-gnu/-/cli-linux-arm64-gnu-1.2.3.tgz#c3915de83a8fbe6f406eaa0b524a17c091a9a2cd"
-  integrity sha512-buf1c8sdkuUzVDkGPQpyUdAIIdn5r0UgXU6+H5fGPq/Xzt5K69JzXaeo6fHsZEZghbV0hOK+taKV4J0m30UUMQ==
+"@tauri-apps/cli-linux-arm64-gnu@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@tauri-apps/cli-linux-arm64-gnu/-/cli-linux-arm64-gnu-1.3.0.tgz#a68f2efc78e03d1ae59804e61ad9ee6bd78b08c0"
+  integrity sha512-s6/OByuGoppoUSnOXv/b6Oe6cVFk2w/KHs19aJJpo9ov/dUAA1w9wXlXu2l6sOFGsu/plaVomF2cw3iAQmaUCQ==
 
-"@tauri-apps/cli-linux-arm64-musl@1.2.3":
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/@tauri-apps/cli-linux-arm64-musl/-/cli-linux-arm64-musl-1.2.3.tgz#40f9f7cf0b4088964661fd412eff7310cb4ac605"
-  integrity sha512-x88wPS9W5xAyk392vc4uNHcKBBvCp0wf4H9JFMF9OBwB7vfd59LbQCFcPSu8f0BI7bPrOsyHqspWHuFL8ojQEA==
+"@tauri-apps/cli-linux-arm64-musl@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@tauri-apps/cli-linux-arm64-musl/-/cli-linux-arm64-musl-1.3.0.tgz#eff2221408d1040d6f4cbf98a851c16e9eeb11e5"
+  integrity sha512-yZfZAW4BG92cynL/D4wdrwBAl2oekRwiZnU5CM8k5yncalVEL0tyzuxQjjqbqrtDcw0rdkoBWrhFd+EB89vQaQ==
 
-"@tauri-apps/cli-linux-x64-gnu@1.2.3":
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/@tauri-apps/cli-linux-x64-gnu/-/cli-linux-x64-gnu-1.2.3.tgz#0b3e4c1fda6205dbe872f4b69506669476f60591"
-  integrity sha512-ZMz1jxEVe0B4/7NJnlPHmwmSIuwiD6ViXKs8F+OWWz2Y4jn5TGxWKFg7DLx5OwQTRvEIZxxT7lXHi5CuTNAxKg==
+"@tauri-apps/cli-linux-x64-gnu@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@tauri-apps/cli-linux-x64-gnu/-/cli-linux-x64-gnu-1.3.0.tgz#2faaea4272278837df09edae90a9907c4dfe99c4"
+  integrity sha512-K3KRWSGKh7DTBr/ZKgWzeNX1Vdgx1ZBlUJXsm72R0Hb+93fDEp3TWgiwVkxqecB4aNWJhJsDcvRHuxw1G8xPlA==
 
-"@tauri-apps/cli-linux-x64-musl@1.2.3":
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/@tauri-apps/cli-linux-x64-musl/-/cli-linux-x64-musl-1.2.3.tgz#edcf8f53da50337a2e763d4fda750ef56124036c"
-  integrity sha512-B/az59EjJhdbZDzawEVox0LQu2ZHCZlk8rJf85AMIktIUoAZPFbwyiUv7/zjzA/sY6Nb58OSJgaPL2/IBy7E0A==
+"@tauri-apps/cli-linux-x64-musl@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@tauri-apps/cli-linux-x64-musl/-/cli-linux-x64-musl-1.3.0.tgz#3f678ab7dc441da5582909230934204e23f85f6b"
+  integrity sha512-99bVHqL1EtF7oESrlmEb5BWJsMNQ2ha70gesZhaVO2qI9Vg089XvrFZWC+aGiUsXNFrOw270+D9DKn03xO5+Zg==
 
-"@tauri-apps/cli-win32-ia32-msvc@1.2.3":
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/@tauri-apps/cli-win32-ia32-msvc/-/cli-win32-ia32-msvc-1.2.3.tgz#0592d3e4eee4685674579ba897eef1469c6f1cfe"
-  integrity sha512-ypdO1OdC5ugNJAKO2m3sb1nsd+0TSvMS9Tr5qN/ZSMvtSduaNwrcZ3D7G/iOIanrqu/Nl8t3LYlgPZGBKlw7Ng==
+"@tauri-apps/cli-win32-ia32-msvc@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@tauri-apps/cli-win32-ia32-msvc/-/cli-win32-ia32-msvc-1.3.0.tgz#eeaaa3e59cb1f26f5e7d7ce5aa101d5821a5355b"
+  integrity sha512-ckBUTqXXdnCiYyf2xvxiuqiKZurg7ET++f6yzfvYa+gofd5dagQJkGLlkIg2pJ2c8mhEG1Cfk1vxWPqqGfN2GQ==
 
-"@tauri-apps/cli-win32-x64-msvc@1.2.3":
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/@tauri-apps/cli-win32-x64-msvc/-/cli-win32-x64-msvc-1.2.3.tgz#89f0cc36e11e56564161602cd6add155cc7b0dfb"
-  integrity sha512-CsbHQ+XhnV/2csOBBDVfH16cdK00gNyNYUW68isedmqcn8j+s0e9cQ1xXIqi+Hue3awp8g3ImYN5KPepf3UExw==
+"@tauri-apps/cli-win32-x64-msvc@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@tauri-apps/cli-win32-x64-msvc/-/cli-win32-x64-msvc-1.3.0.tgz#8d67ab0e9bd3ae9e3a9b6e54845e0ca34ab1526c"
+  integrity sha512-vQ4wqRE0aziyRxgHIOLudGuxx4wETvFnmMvDBaNJRRrZQPlkOKnRxrvj1rNnI1845BdzSbDF4p7JDcFzToAfXA==
 
-"@tauri-apps/cli@^1.2.3":
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/@tauri-apps/cli/-/cli-1.2.3.tgz#957f8a3a370f306e9e1ea5a891cb30aed91af64e"
-  integrity sha512-erxtXuPhMEGJPBtnhPILD4AjuT81GZsraqpFvXAmEJZ2p8P6t7MVBifCL8LznRknznM3jn90D3M8RNBP3wcXTw==
+"@tauri-apps/cli@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@tauri-apps/cli/-/cli-1.3.0.tgz#587b7d6ed34dab04f56f29925626ba1a248e298c"
+  integrity sha512-H65YQQkE6SBTQ+KlqTmzx7oCL/2p36v2jPFVNHBhZ5EN7g0VLYmImh9TFcB/QsO2aT+sVlRZSmTpL3R0Iiu8pA==
   optionalDependencies:
-    "@tauri-apps/cli-darwin-arm64" "1.2.3"
-    "@tauri-apps/cli-darwin-x64" "1.2.3"
-    "@tauri-apps/cli-linux-arm-gnueabihf" "1.2.3"
-    "@tauri-apps/cli-linux-arm64-gnu" "1.2.3"
-    "@tauri-apps/cli-linux-arm64-musl" "1.2.3"
-    "@tauri-apps/cli-linux-x64-gnu" "1.2.3"
-    "@tauri-apps/cli-linux-x64-musl" "1.2.3"
-    "@tauri-apps/cli-win32-ia32-msvc" "1.2.3"
-    "@tauri-apps/cli-win32-x64-msvc" "1.2.3"
+    "@tauri-apps/cli-darwin-arm64" "1.3.0"
+    "@tauri-apps/cli-darwin-x64" "1.3.0"
+    "@tauri-apps/cli-linux-arm-gnueabihf" "1.3.0"
+    "@tauri-apps/cli-linux-arm64-gnu" "1.3.0"
+    "@tauri-apps/cli-linux-arm64-musl" "1.3.0"
+    "@tauri-apps/cli-linux-x64-gnu" "1.3.0"
+    "@tauri-apps/cli-linux-x64-musl" "1.3.0"
+    "@tauri-apps/cli-win32-ia32-msvc" "1.3.0"
+    "@tauri-apps/cli-win32-x64-msvc" "1.3.0"
 
 "@testing-library/dom@^8.5.0":
   version "8.20.0"

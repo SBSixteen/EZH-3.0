@@ -1,6 +1,8 @@
 import App from "./App.js";
 import "./style.css";
 import "./dataset.css";
+import Sidebar from "./Sidebar.jsx";
+import "./Home.css";
 
 import { Container } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
@@ -107,6 +109,9 @@ const gototable = () =>{
 
   return (
     <>
+    <div className="container-new">
+      <Sidebar/>
+      <div className="others">
       <Container>
         <div className="row">
           <a href="" target="_blank">
@@ -210,6 +215,8 @@ const gototable = () =>{
           </div>
         </div>
       )}
+      </div>
+    </div>
     </>
   );
 };

@@ -27,8 +27,10 @@ import {
 } from "@tabler/icons-react";
 import { MantineLogo } from "@mantine/ds";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Sidebar from "./Sidebar.jsx";
+import "./Home.css";
 
-const useStyles = createStyles((theme) => ({
+/*const useStyles = createStyles((theme) => ({
   header: {
     paddingBottom: theme.spacing.md,
     marginBottom: `calc(${theme.spacing.md} * 1.5)`,
@@ -98,11 +100,11 @@ const data = [
   { link: "", label: "Subscription", icon: IconReceipt2 },
   { link: "", label: "Dataset", icon: IconDatabaseExport },
   { link: "", label: "Settings", icon: IconSettings },
-];
+];*/
 
 function Home() {
     
-  const { classes, cx } = useStyles();
+  /*const { classes, cx } = useStyles();
   const [active, setActive] = useState("Billing");
   const links = data.map((item) => (
     <a
@@ -120,10 +122,17 @@ function Home() {
       <item.icon className={classes.linkIcon} stroke={1.5} />
       <span>{item.label}</span>
     </a>
-  ));
+  ));*/
 
   return (
-   <div>
+
+    <div className="container-new">
+      <Sidebar/>
+      <div className="others">
+        other pages
+      </div>
+    </div>
+   /*<div>
     <div style={{width:"20%",float:"left"}}>
     <Navbar height={700} width={{ sm: 300 }} p="md">
       <Navbar.Section grow>
@@ -155,7 +164,7 @@ function Home() {
     </div>
     <div style={{width:"80%",float:"right"}}>
     </div>
-    </div>
+    </div>*/
     
   );
 }
