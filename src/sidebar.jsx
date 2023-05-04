@@ -6,12 +6,23 @@ import { Link } from "react-router-dom";
 export default function Sidebar() {
   return (
     <div className='sidebar'>
+        <div className = 'top'>
+        <img
+            style={{ paddingLeft: "15px" }}
+            margin-left="auto"
+            width="150px"
+            height="75px"
+            src="Logo_Ezhire.svg"
+            className="logo react"
+            alt="Tauri logo"
+          />
+        </div>
         <div className='sidebarwrapper'>
             <div className="sidebarmenu">
                 <h3 className="sidebartitle">Dashboard</h3>
                 <ul className="sidebarlist">
                     <Link to="/home" className="link" style={{ textDecoration: 'none', color: 'inherit' }}>
-                    <li className="sidebarlistitem active">
+                    <li className="sidebarlistitem">
                         <LineStyle className='sidebaricon'/>
                         Home
                     </li>
