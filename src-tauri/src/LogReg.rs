@@ -51,11 +51,9 @@ struct response{
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-struct RM_Token{
-    
+struct RM_Token{   
     email:String,
     token:String,
-
 }
 
 async fn url_generator(email:String) -> String{
