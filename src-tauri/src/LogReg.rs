@@ -8,7 +8,6 @@ use sha256::digest;
 
 use crate::SMTP_EZH;
 
-
 //Session Token -> username + current time ->256 -> unique hash // Session Tokens, Remember tokens
 //Global User : monkaw@gmail.com
 
@@ -22,6 +21,7 @@ struct User {
     verified: bool,
     datasets: Vec<String>,
     blocked:bool,
+    isAdmin:bool,
 }
 
 // struct Table{   
@@ -161,6 +161,7 @@ pub async fn create_user(email:String, name:String, password:String) -> String{
         two_fa:false,
         verified:false,
         blocked:false,
+        isAdmin:false,
     };
 
     let client = Client::builder().build().unwrap();

@@ -1,4 +1,7 @@
+use std::{fs, collections::HashMap};
+
 use pdfium_render::prelude::*;
+use reqwest::Client;
 
 //Convert to JPEG
 fn convert_to_jpeg(x:String){
@@ -32,8 +35,6 @@ fn convert_to_jpeg(x:String){
 
 //filename, email, first two words, linkedin
 
-
-
 //Convert to PNG
 
 //Batch Convert to JPEG
@@ -47,4 +48,33 @@ async fn batch_convert_JPEG(paths:Vec<String>){
 
 //Convert 
 
-//PDF OCR
+//OCR JPEG
+async fn ocr_jpeg(x:String) -> String{
+
+    println!("{:?}", x.clone());
+    let mut path = String::from("./TEMP_JPEGs/");
+    path.push_str(&x);
+    path.push_str(".jpg");
+    let base64 = image_base64::to_base64(&path); 
+
+    let client = Client::builder().build().unwrap();
+    let mut h  = HashMap::new();
+    h.insert("base64Image".to_owned(), base64);
+    h.insert("language".to_owned(), "eng".to_owned());
+    h.insert("OCREngine".to_owned(), "1".to_owned());
+
+    let response = client.post("https://api.ocr.space/parse/image").header("apikey", "3d7d76351588957").form(&h).send().await.unwrap().text().await.unwrap();
+    
+    let parse = json::parse(&response).unwrap();
+
+    let data = parse["ParsedResults"][0]["ParsedText"].to_string().replace("\r\n", " ");
+    let mut txt_path = "./TEMP/".to_owned();
+    txt_path.push_str(&x);
+    txt_path.push_str(".txt");
+    fs::write(txt_path, data.clone()).expect("Unable to write file");
+
+    println!("{:?}",parse["ParsedResults"][0]["ParsedText"].to_string().replace("\r\n", " "));
+
+    return data;
+
+}

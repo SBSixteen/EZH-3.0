@@ -482,12 +482,6 @@ async fn ocr_jpeg(x:String){
     println!("{:?}",parse["ParsedResults"][0]["ParsedText"].to_string().replace("\r\n", " "));
     println!("");
     println!("");
-
-
-    //Promise => 
-    //8GB
-    //5.0 MB
-
 }
 
 async fn clearStr(){
