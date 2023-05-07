@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "./App.css";
 import "./style.css";
 import Sidebar from "./Sidebar.jsx";
 import "./Home.css";
 import "./Datasetform.css";
-
+import * as FileSaver from "file-saver";
 
 function Datasetform() {
   const [name, setName] = useState("");
@@ -13,6 +13,11 @@ function Datasetform() {
   const [isFileUploaded, setIsFileUploaded] = useState(false);
   const [base64String, setBase64String] = useState("");
   const [fileBytes, setFileBytes] = useState([]);
+  const base64StringRef = useRef("");
+
+  useEffect(() => {
+    base64StringRef.current = base64String;
+  }, [base64String]);
 
   function handleFileUpload(event) {
     if (isFileUploaded) {
@@ -28,52 +33,64 @@ function Datasetform() {
       alert("Please upload a file");
       return;
     }
+
+    // saveBase64ToFile(base64StringRef.current);
   }
 
   function handleChange(event) {
     const file = event.target.files[0];
-    const extension = file.name.split('.').pop().toLowerCase();
-  
-    if (extension === 'zip') {
+    const extension = file.name.split(".").pop().toLowerCase();
+
+    if (extension === "zip") {
       const reader = new FileReader();
-      reader.onload = function(event) {
+      reader.onload = function (event) {
         try {
           const bytes = new Uint8Array(event.target.result);
           const byteArr = Array.from(bytes);
           setFileBytes(byteArr);
-          const binary = bytes.reduce((acc, byte) => acc + String.fromCharCode(byte), '');
+          const binary = bytes.reduce(
+            (acc, byte) => acc + String.fromCharCode(byte),
+            ""
+          );
           const base64 = btoa(binary);
           setBase64String(base64);
           setSelectedFolder(file.name);
         } catch (error) {
           console.error(error);
-          alert('Error occurred while processing the zip file.');
+          alert("Error occurred while processing the zip file.");
         }
-        // console.log(base64String); // added line
-
       };
       reader.readAsArrayBuffer(file);
-    }
-
-    else if (extension === 'pdf' || extension === 'docx') {
+    } else if (extension === "pdf" || extension === "docx") {
       const reader = new FileReader();
-      reader.onload = function(event) {
+      reader.onload = function (event) {
         try {
           const base64 = btoa(event.target.result);
           setBase64String(base64);
           setSelectedFolder(file.name);
         } catch (error) {
           console.error(error);
-          alert('Error occurred while processing the file.');
+          alert("Error occurred while processing the file.");
         }
-        // console.log(base64String); // added line
-
       };
       reader.readAsBinaryString(file);
     } else {
-      alert('Invalid file type. Please upload a .pdf, .docx, or .zip file.');
+      alert("Invalid file type. Please upload a .pdf, .docx, or .zip file.");
     }
   }
+
+  function saveBase64ToFile(event) {
+    event.preventDefault();
+    const binaryString = base64String;
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    const file = new Blob([bytes], { type: "application/octet-stream" });
+    FileSaver.saveAs(file, "my-file.txt");
+  }
+  
+
   return (
     <div className="container-new">
       <Sidebar />
@@ -119,7 +136,7 @@ function Datasetform() {
                 <button
                   className="default_m_right"
                   type="submit"
-                  onClick={() => {}}
+                  onClick={saveBase64ToFile}
                 >
                   Submit
                 </button>
