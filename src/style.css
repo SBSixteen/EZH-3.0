@@ -551,4 +551,39 @@ display:flex;
     background-color: #f8f8f8;
     font-weight: bold;
   }
+  .tabs-div {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+      margin: 4px, 4px;
+      padding: 4px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      white-space: nowrap;
+  }
   
+  .charts-pie {
+    width: 300px;
+    height: 300px;
+  }
+  
+  .charts-bar {
+    width: 300px;
+    height: 300px;
+  }
+    
+.comparison .charts canvas {
+  width: 300px;
+  height: 300px;
+}
+.my-button {
+  background-color: #526652;
+  color: black;
+  padding: 0px 0px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+  margin: 0px 0px;
+  cursor: pointer;
+}

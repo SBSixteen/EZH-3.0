@@ -11,6 +11,7 @@ import DynamicTable from "./DynamicTable.jsx";
 import Datasetform from "./Datasetform.jsx";
 import Nabeel from "./Nabe.jsx";
 import Startingpage from "./Startingpage.jsx";
+import Comparision from "./Comparision.jsx";
 
 import {
   createStyles,
@@ -129,6 +130,9 @@ function App() {
           <Route path="/Dataset" element={<Dataset />} />
           <Route path="/DynamicTable" element={<DynamicTable />} />
           <Route path="/Datasetform" element={<Datasetform />} />
+          <Route path="/Comparision" element={<Comparision />} />
+          
+
           navigate(path);
         </Routes>
       </BrowserRouter>
