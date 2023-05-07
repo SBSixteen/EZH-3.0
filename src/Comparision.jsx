@@ -380,12 +380,13 @@ return (
         <><div className="tabs-div">
         {users.map((user, index) => (
           <button
-            key={index}
-            className={activeSheet === index ? 'active' : ''}
-            onClick={() => handleTabClick(index)}
-          >
-            {user.name}
-          </button>
+          key={index}
+          className={`my-button ${activeSheet === index ? 'active' : ''}`}
+          onClick={() => handleTabClick(index)}
+        >
+          {user.name}
+        </button>
+        
         ))}
       </div>
       <div className="user-info">
