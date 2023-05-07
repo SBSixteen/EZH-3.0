@@ -4,7 +4,12 @@ import "./style.css";
 import Sidebar from "./Sidebar.jsx";
 import "./Home.css";
 import "./Datasetform.css";
+<<<<<<< Updated upstream
 import * as FileSaver from "file-saver";
+=======
+import { Publish } from "@material-ui/icons";
+
+>>>>>>> Stashed changes
 
 function Datasetform() {
   const [name, setName] = useState("");
@@ -19,7 +24,7 @@ function Datasetform() {
     base64StringRef.current = base64String;
   }, [base64String]);
 
-  function handleFileUpload(event) {
+  /*function handleFileUpload(event) {
     if (isFileUploaded) {
       alert("You can only upload one file");
       return;
@@ -36,6 +41,7 @@ function Datasetform() {
 
     // saveBase64ToFile(base64StringRef.current);
   }
+  */
 
   function handleChange(event) {
     const file = event.target.files[0];
@@ -78,6 +84,7 @@ function Datasetform() {
       alert("Invalid file type. Please upload a .pdf, .docx, or .zip file.");
     }
   }
+<<<<<<< Updated upstream
 
   function saveBase64ToFile(event) {
     event.preventDefault();
@@ -92,25 +99,19 @@ function Datasetform() {
   
 
   return (
+=======
+  /*return (
+>>>>>>> Stashed changes
     <div className="container-new">
       <Sidebar />
       <div className="others">
-        <div className="container">
-          <div className="row">
-            <a href="" target="_blank">
-              <img
-                src="/Logo_Ezhire.svg"
-                className="logo tauri"
-                alt="Tauri logo"
-              />
-            </a>
-          </div>
+        
           <div className="holder">
             <div className="h1datasetform">
               <h1>Dataset</h1>
             </div>
             <div className="column">
-              <form onSubmit={handleSubmit}>
+              <form className="datasetForm" onSubmit={handleSubmit}>
                 <input
                   className="default_gap"
                   id="name-input"
@@ -129,9 +130,11 @@ function Datasetform() {
                   }}
                 />
                 <br></br>
+                <div className="datasetUpdateRight">
                 <input type="file" onChange={handleChange} />
                 <br></br>
                 <p>base64: {base64String.slice(0, 30)}</p>
+                </div>
                 <br></br>
                 <button
                   className="default_m_right"
@@ -143,11 +146,61 @@ function Datasetform() {
               </form>
             </div>
           </div>
-        </div>
+        
       </div>
     </div>
-  );
-
+  );*/
+  return (
+    <>
+    <div className="container-new">
+    <Sidebar />
+      <div className="others">
+          <div className="holder">
+            <span className="datasetUpdateTitle">Create Dataset</span>
+            <form className="datasetUpdateForm">
+              <div className="datasetUpdateLeft">
+                <div className="datasetUpdateItem">
+                  <label>Dataset Name</label>
+                  <input
+                    type="text"
+                    placeholder="Enter Dataset Name"
+                    className="datasetUpdateInput" />
+                </div>
+                <div className="datasetUpdateItem">
+                  <label>Deadline</label>
+                  <input
+                    type="datetime-local"
+                    id="deadline-input"
+                    className="datasetUpdateInput"
+                    onChange={(e) => {
+                      setDeadline(e.currentTarget.value);
+                    }} 
+                  />
+                </div>
+              </div>
+              <div className="datasetUpdateRight">
+                <div className="datasetUpdateUpload">
+                  <label htmlFor="file" className="customButton">
+                    <Publish className="datasetUpdateIcon" />
+                    Upload Dataset
+                  </label>
+                  <input type="file" id ='file' onChange={handleChange} style={{ display: "none" }} />
+                  <br></br>
+                </div>
+                <button
+                  className="datasetUpdateButton"
+                  type="submit"
+                  onClick={() => {}}
+                >
+                  Create
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </>
+  )
 }
 
 export default Datasetform;

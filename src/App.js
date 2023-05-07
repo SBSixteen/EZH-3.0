@@ -10,6 +10,7 @@ import Dataset from "./Dataset.jsx";
 import DynamicTable from "./DynamicTable.jsx";
 import Datasetform from "./Datasetform.jsx";
 import Nabeel from "./Nabe.jsx";
+import Startingpage from "./Startingpage.jsx";
 
 import {
   createStyles,
@@ -115,7 +116,7 @@ function App() {
     <div className={"App"}>
       <BrowserRouter>
         <Routes>
-          <Route path="" element={<Nabeel />} />
+          <Route path="" element={<Startingpage />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/home" element={<Home />} />
