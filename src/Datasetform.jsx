@@ -4,12 +4,9 @@ import "./style.css";
 import Sidebar from "./Sidebar.jsx";
 import "./Home.css";
 import "./Datasetform.css";
-<<<<<<< Updated upstream
 import * as FileSaver from "file-saver";
-=======
 import { Publish } from "@material-ui/icons";
 
->>>>>>> Stashed changes
 
 function Datasetform() {
   const [name, setName] = useState("");
@@ -24,24 +21,23 @@ function Datasetform() {
     base64StringRef.current = base64String;
   }, [base64String]);
 
-  /*function handleFileUpload(event) {
-    if (isFileUploaded) {
-      alert("You can only upload one file");
-      return;
-    }
-    setIsFileUploaded(true);
-  }
+  // function handleFileUpload(event) {
+  //   if (isFileUploaded) {
+  //     alert("You can only upload one file");
+  //     return;
+  //   }
+  //   setIsFileUploaded(true);
+  // }
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    if (!isFileUploaded) {
-      alert("Please upload a file");
-      return;
-    }
+  // function handleSubmit(event) {
+  //   event.preventDefault();
+  //   if (!isFileUploaded) {
+  //     alert("Please upload a file");
+  //     return;
+  //   }
 
-    // saveBase64ToFile(base64StringRef.current);
-  }
-  */
+  //   // saveBase64ToFile(base64StringRef.current);
+  // }
 
   function handleChange(event) {
     const file = event.target.files[0];
@@ -84,7 +80,6 @@ function Datasetform() {
       alert("Invalid file type. Please upload a .pdf, .docx, or .zip file.");
     }
   }
-<<<<<<< Updated upstream
 
   function saveBase64ToFile(event) {
     event.preventDefault();
@@ -97,11 +92,7 @@ function Datasetform() {
     FileSaver.saveAs(file, "my-file.txt");
   }
   
-
-  return (
-=======
   /*return (
->>>>>>> Stashed changes
     <div className="container-new">
       <Sidebar />
       <div className="others">
@@ -150,6 +141,8 @@ function Datasetform() {
       </div>
     </div>
   );*/
+
+  
   return (
     <>
     <div className="container-new">
@@ -190,7 +183,7 @@ function Datasetform() {
                 <button
                   className="datasetUpdateButton"
                   type="submit"
-                  onClick={() => {}}
+                  onClick={saveBase64ToFile}
                 >
                   Create
                 </button>
