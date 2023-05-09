@@ -1,21 +1,39 @@
-use std::{collections::HashMap, fs};
+use std::{collections::HashMap, fs::{self, File}, hash::Hash, io::{BufReader, BufRead}};
 
 use regex::Regex;
 use reqwest::Client;
 use serde_json::{json, Value};
 use sha256::digest;
 
-struct Template {
+use crate::CloudStorage_EZH::context_path_generator;
+
+pub struct Template {
     name: String,
     tokens: Vec<String>,
 }
 
 impl Template {
-    fn new() -> Template {
+    pub fn new() -> Template {
         return Template {
             name: String::new(),
             tokens: Vec::new(),
         };
+    }
+    
+    pub fn generate_from_default(&mut self, interface:String){
+
+        let mut path = "./Templates/Assets/".to_string();
+        path.push_str(&interface);
+
+        let f = File::open(&path).expect("Unable to open file");
+
+        let f = BufReader::new(f);
+
+        for line in f.lines() {
+            let line = line.expect("Unable to read line");
+            self.tokens.push(line);
+        }
+
     }
 
     fn append_tokens(&mut self, input: String) {
@@ -24,7 +42,7 @@ impl Template {
         self.tokens.append(&mut data);
     }
 
-    fn change_name(&mut self, input: String) {
+    pub fn change_name(&mut self, input: String) {
         self.name = input;
     }
 
@@ -36,39 +54,45 @@ impl Template {
         return self.tokens.clone();
     }
 
-    fn size(&self) -> usize {
+    pub fn size(&self) -> usize {
         return self.tokens.len();
     }
 }
 
-struct Candidate {
+#[derive(Debug)]
+pub struct Candidate {
     //Personal Info
     name: String,
     phone: String,
 
     //Crux
-    skills: Vec<String>,
+    skills: HashMap<String,i32>,
     workexp: Vec<String>,
     git_repos: Vec<Git_Repo_Info>,
 
     //Socials
     github: String,
     git_username: String,
-
     linkedin: String,
+
+    //metadata
+    template:String,
+    tokens:Vec<String>,
 }
 
 impl Candidate {
-    fn new() -> Candidate {
+    pub async fn new() -> Candidate {
         return Candidate {
             name: String::new(),
             phone: String::new(),
-            skills: Vec::new(),
+            skills: HashMap::new(),
             workexp: Vec::new(),
             git_repos: Vec::new(),
             github: String::new(),
             git_username: String::new(),
             linkedin: String::new(),
+            template:String::from("NONE"),
+            tokens:Vec::new()
         };
     }
 
@@ -79,14 +103,27 @@ impl Candidate {
 
     }
 
-    fn set_name(&mut self, input: String) {
+    pub fn set_name(&mut self, input: String) {
         self.name = input;
+    }
+    pub fn get_name(&mut self) ->String{
+        return self.name.clone();
     }
     fn set_phone(&mut self, input: String) {
         self.phone = input;
     }
-    fn set_skills(&mut self, input: Vec<String>) {
+    fn set_skill(&mut self, input: HashMap<String,i32>) {
         self.skills = input;
+    }
+    fn append_skill(&mut self, input:String){
+
+        if self.skills.contains_key(&input){
+            self.skills.insert(input.clone(), self.skills.get(&input).unwrap() + 1);
+            return;
+        }else{
+            self.skills.insert(input.clone(), 1);
+        }
+
     }
     fn set_workexp(&mut self, input: Vec<String>) {
         self.workexp = input;
@@ -110,9 +147,43 @@ impl Candidate {
     fn append_git_repo(&mut self, input: Git_Repo_Info) {
         self.git_repos.push(input);
     }
+    pub async fn generate_git_report(&mut self){
 
-    pub async fn generate_git_report(user:String){
+    }
+    pub async fn generate_skills(&mut self, template:&Template){
+        
+        let d = self.tokens.clone();
+        let e = template.tokens.clone();
 
+        let mut temp = String::new();
+
+        for i in &d{
+            for j in &e{
+
+                temp.push_str(&format!("{} | {} \r\n", i,j));
+                if i.to_lowercase() == j.to_lowercase(){
+                    //println!("{} | {}", i,j);
+                    self.append_skill(i.clone());
+                }
+            }
+        }
+        fs::write("./ali.txt", temp).expect("Unable to write file");
+    }
+
+    pub async fn generate_tokens(&mut self,context:String){
+
+        let mut temp = context.replace(",", "");
+
+        let p = temp.split_whitespace();
+
+        for g in p{
+            self.tokens.push(g.to_string());
+        }
+
+    }
+
+    pub fn clear_tokens(&mut self){
+        self.tokens = Vec::new();
     }
 }
 
@@ -244,6 +315,17 @@ pub async fn generate_git_report(user:String){
     //generate_repos_url(user)
 }
 
+pub async fn generate_contexts(owner:String,arr:Vec<String>) -> Vec<String>{
+
+    let mut data = Vec::new();
+
+    for i in arr{
+        let mut path = context_path_generator(owner.clone());
+        path.push_str(&i);
+        data.push(fs::read_to_string(&path).expect("Unable to read file"));
+    }
+    return data;
+}
 //API HALP
 // Scoring => https://api.github.com/repos/{candidate.git_username}/{git_repos[i].name}/languages
 // User Fetch => https://api.github.com/users/{candidate.git_username}

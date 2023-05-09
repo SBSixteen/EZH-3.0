@@ -22,6 +22,7 @@ struct User {
     datasets: Vec<String>,
     blocked:bool,
     isAdmin:bool,
+    trial:String,
 }
 
 // struct Table{   
@@ -162,6 +163,7 @@ pub async fn create_user(email:String, name:String, password:String) -> String{
         verified:false,
         blocked:false,
         isAdmin:false,
+        trial:String::from(""),
     };
 
     let client = Client::builder().build().unwrap();

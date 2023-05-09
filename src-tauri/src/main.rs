@@ -4,7 +4,7 @@
 )]
 
 /*
-(Skeler Remix)
+)
 3 a.m., drinkin' with this pistol on my lap, uh
 Six medications, guess there ain't no fixin' that
 It's that broken motherfucker, knucklin' 'til I relapse
@@ -69,8 +69,6 @@ When I die just play this fucking song
 I was never meant for this, been tortured just to carry on (when I die)
 Couple coupes, a lot of zeros and a couple homes
 None of it is shit for me, cock the pistol and now I'm-
-
-
  */
 
 pub mod LogReg;
@@ -79,11 +77,14 @@ pub mod PDF_EZH;
 pub mod CloudStorage_EZH;
 pub mod Single_Column;
 mod NER_EZH;
-use CloudStorage_EZH::{generate_PDF_queue_report, generate_dir};
+use CloudStorage_EZH::{return_dir_count, return_dir_contents};
+use NER_EZH::*;
 use serde::{Deserialize, Serialize};
 use reqwest::{header::{USER_AGENT, HeaderMap, HeaderValue, AUTHORIZATION}, Client};
 use regex::Regex;
 use serde_json::{json, Value};
+
+use crate::CloudStorage_EZH::generate_PDF_queue_report;
 
 #[derive(Serialize, Deserialize, Debug)]
 struct User {
@@ -150,23 +151,27 @@ async fn main() {
     // //Generate your cloud storage directories
     // generate_dir(String::from("monkaw.gmail.com")).await;
 
-    // //Start PDF Processing. <Put PDF in TEMP_PDF> and set to true
-    // generate_PDF_queue_report(String::from("nabeelmirza79@gmail.com"), false).await;
+    //Start PDF Processing. <Put PDF in TEMP_PDF> and set to true
 
-    tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![LogReg::create_user, LogReg::login_user, LogReg::match_vcode, LogReg::match_2fa, LogReg::remember_me_token])
-        .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+    // tauri::Builder::default()
+    //     .invoke_handler(tauri::generate_handler![LogReg::create_user, LogReg::login_user, LogReg::match_vcode, LogReg::match_2fa, LogReg::remember_me_token])
+    //     .run(tauri::generate_context!())
+    //     .expect("error while running tauri application");
 
     // let re = Regex::new(r"\+?\(?\d*\)? ?\(?\d+\)?\d*([\s./-]?\d{2,})+").unwrap();
 
-    // let mut headers = HeaderMap::new();
-    // headers.insert(USER_AGENT, HeaderValue::from_static("SBSixteen"));
-    // headers.insert(AUTHORIZATION,HeaderValue::from_static("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") );
 
-    // let client = Client::builder().default_headers(headers).build().unwrap();
+    let owner = String::from("nabeelmirza79@gmail.com");
 
-    // //let temp = NER_EZH::Git_Repo_Info::automatic(&client, String::from("SBSixteen"), String::from("Academia")).await;
+    generate_PDF_queue_report(owner.clone(), false).await;
+
+    let mut headers = HeaderMap::new();
+    headers.insert(USER_AGENT, HeaderValue::from_static("SBSixteen"));
+    headers.insert(AUTHORIZATION,HeaderValue::from_static("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") );
+
+    let client = Client::builder().default_headers(headers).build().unwrap();
+
+    //let temp = NER_EZH::Git_Repo_Info::automatic(&client, String::from("SBSixteen"), String::from("Academia")).await;
     // let r1 = client.get("https://api.github.com/users/SBSixteen/repos").send().await.unwrap().text().await.unwrap();
 
     // let value:Value = serde_json::from_str(&r1).unwrap();
@@ -178,6 +183,37 @@ async fn main() {
     // for i in 0..temp{
     //     println!("{}",value[i]["name"]);
     // }
+
+    let mut candidates: Vec<NER_EZH::Candidate> = Vec::new();
+
+    for i in 0..return_dir_count(owner.clone(), "TEMP_TXT".to_string()).await{
+        candidates.push(Candidate::new().await);
+        println!("Candidate #{} is generated.", (i+1));
+    }
+
+    let temp = return_dir_contents(owner.clone(), "TEMP_TXT".to_string());
+
+    let contexts = generate_contexts(owner.clone(), temp.clone()).await;
+
+    let mut temple = Template::new();
+    temple.generate_from_default("languages.txt".to_string());
+    temple.change_name("Junior Software Developer".to_string());
+
+    candidates[6].set_name(temp[6].clone());
+    println!("Name => {:?}", candidates[6].get_name());
+    candidates[6].generate_tokens(contexts[6].clone()).await;
+    candidates[6].generate_skills(&temple).await;
+    candidates[6].clear_tokens();
+
+    // for i in 0..candidates.len(){
+    //     candidates[i].set_name(temp[i].clone());
+    //     println!("Name => {:?}", candidates[i].get_name());
+    //     candidates[i].generate_tokens(contexts[i].clone()).await;
+    //     candidates[i].generate_skills(&temple).await;
+    //     //candidates[i].clear_tokens();
+    // }
+
+    println!("{:#?}", candidates[6]);
 
     //LogReg::toggle_2fa(String::from("nabeelmirza80@gmail.com")).await;
     //println!("{}", LogReg::create_user(String::from("nabeelmirza80@gmail.com"), String::from("Nabeel Mirza"), String::from("12345678")).await);

@@ -97,6 +97,40 @@ pub fn file_path_generator(email: String, file: String) -> String {
     return path;
 }
 
+pub fn context_path_generator(email: String) -> String {
+    let mut path = "./cloudStorage/".to_string();
+    let u_dir = sha256::digest(email);
+    path.push_str(&u_dir);
+    path.push_str("/TEMP_TXT/");
+    return path;
+}
+
+pub fn return_dir_contents(owner:String, file_in_cloud:String) -> Vec<String>{
+
+    let hash = sha256::digest(owner);
+    let mut path = String::from("./cloudStorage/");
+    path.push_str(&hash);
+    path.push_str(&format!("/{}/", file_in_cloud));
+    let filepaths = fs::read_dir(&path).unwrap();
+
+    let mut files = Vec::new();
+
+    for paths in filepaths {
+        files.push(paths.unwrap().file_name().to_str().unwrap().to_string());
+    }
+
+    return files;
+}
+
+pub async fn return_dir_count(owner:String, file_in_cloud:String) -> usize{
+    let hash = sha256::digest(owner);
+    let mut path = String::from("./cloudStorage/");
+    path.push_str(&hash);
+    path.push_str(&format!("/{}/", file_in_cloud));
+
+    return fs::read_dir(&path).unwrap().count();
+}
+
 pub async fn generate_PDF_queue_report(account: String, proceed: bool) {
     let hash = sha256::digest(account.clone());
 
@@ -163,7 +197,7 @@ pub async fn pdf2jpeg(files: Vec<String>, hash: String, pdf_path: String) {
         ).unwrap();
         //add delays here
         let elapsed = now.elapsed();
-        println!("{} has been succesfully converted to JPEG | Time Elapsed : {:.4?} milliseconds", &f_name, elapsed);
+        println!("{} has been succesfully converted to JPEG | Time Elapsed : {:.4?} seconds", &f_name, elapsed);
     }
 
     jpeg2txt(hash).await;
@@ -174,8 +208,6 @@ pub async fn jpeg2txt(hash:String){
     
     println!("");
     println!("Dislaimer : OCR Time varies on internet speed");
-
-    
 
     let mut path = String::from("./cloudStorage/");
     path.push_str(&hash);
@@ -221,8 +253,6 @@ pub async fn jpeg2txt(hash:String){
         fs::write(txt_path, data).expect("Unable to write file");
         //add delays here
         let elapsed = now.elapsed();
-        println!("{} has been OCR'd! | Time Elapsed : {:.4?} milliseconds", &f_name, elapsed)
+        println!("{} has been OCR'd! | Time Elapsed : {:.4?} seconds", &f_name, elapsed)
     }
-
-
 }

@@ -202,6 +202,7 @@ fn time_diff_years(mut mo1: String, mut y1: String, mo2: String, y2: String) -> 
     }
     return yearss;
 }
+
 fn get_words_before_index(s: &str, index: usize) -> String {
     let exceptions = ["&", "in", "at", "on", "of"];
     let mut words = String::new();

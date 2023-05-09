@@ -1,0 +1,41 @@
+java
+rust
+c++
+python
+c#
+kotlin
+ruby
+matlab
+css
+js
+golang
+javascript
+react
+express
+mern
+mongodb
+sql
+django
+reqwest
+laravel
+angular
+mean
+vercel
+php
+typescript
+ts
+node.js
+nodejs
+swift
+ruby on rails
+reactjs
+mysql
+shopify
+wordpress
+azure
+powerbi
+figma
+mircrosoft 365
+microsoft office
+mongo db
+java
