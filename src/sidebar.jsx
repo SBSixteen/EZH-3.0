@@ -28,10 +28,7 @@ export default function Sidebar() {
                         Home
                     </li>
                     </Link>
-                    <li className="sidebarlistitem">
-                        <Notifications className='sidebaricon'/>
-                        Notifications
-                    </li>
+                   
                 </ul>
             </div>
             <div className="sidebarmenu">
@@ -94,3 +91,10 @@ export default function Sidebar() {
     </div>
   )
 }
+
+/*
+ <li className="sidebarlistitem">
+                        <Notifications className='sidebaricon'/>
+                        Notifications
+                    </li>
+                    */
