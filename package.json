@@ -29,7 +29,8 @@
     "react-stripe-checkout": "^2.6.3",
     "stripe": "^11.17.0",
     "three": "^0.152.2",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "file-saver": "^2.0.5"
   },
   "scripts": {
     "dev": "tauri dev",
