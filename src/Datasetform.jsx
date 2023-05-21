@@ -6,17 +6,18 @@ import "./Home.css";
 import "./Datasetform.css";
 import * as FileSaver from "file-saver";
 import { Publish } from "@material-ui/icons";
+import { invoke } from "@tauri-apps/api/tauri";
 
 
 function Datasetform() {
   const [name, setName] = useState("");
+  const [datasetname,setDataset_name] = useState("");
   const [deadline, setDeadline] = useState("");
   const [selectedFolder, setSelectedFolder] = useState([]);
   const [isFileUploaded, setIsFileUploaded] = useState(false);
   const [base64String, setBase64String] = useState("");
   const [fileBytes, setFileBytes] = useState([]);
   const base64StringRef = useRef("");
-
   useEffect(() => {
     base64StringRef.current = base64String;
   }, [base64String]);
@@ -38,9 +39,12 @@ function Datasetform() {
 
   //   // saveBase64ToFile(base64StringRef.current);
   // }
-
+  function hendle_dataset_name_change(name1){
+    setDataset_name(name1);
+  }
   function handleChange(event) {
     const file = event.target.files[0];
+    setName(file.name);
     const extension = file.name.split(".").pop().toLowerCase();
 
     if (extension === "zip") {
@@ -63,7 +67,7 @@ function Datasetform() {
         }
       };
       reader.readAsArrayBuffer(file);
-    } else if (extension === "pdf" || extension === "docx") {
+    } else if (extension === "pdf" ) {
       const reader = new FileReader();
       reader.onload = function (event) {
         try {
@@ -77,12 +81,12 @@ function Datasetform() {
       };
       reader.readAsBinaryString(file);
     } else {
-      alert("Invalid file type. Please upload a .pdf, .docx, or .zip file.");
+      alert("Invalid file type. Please upload a .pdf or .zip file.");
     }
   }
 
   function saveBase64ToFile(event) {
-    event.preventDefault();
+    // event.preventDefault();
     const binaryString = base64String;
     const bytes = new Uint8Array(binaryString.length);
     for (let i = 0; i < binaryString.length; i++) {
@@ -158,7 +162,11 @@ function Datasetform() {
                   <input
                     type="text"
                     placeholder="Enter Dataset Name"
-                    className="datasetUpdateInput" />
+                    className="datasetUpdateInput" 
+                    onChange={(e)=> {
+                      hendle_dataset_name_change(e.currentTarget.value);
+                    }}
+                    />
                 </div>
                 <div className="datasetUpdateItem">
                   <label>Deadline</label>
@@ -178,13 +186,48 @@ function Datasetform() {
                     <Publish className="datasetUpdateIcon" />
                     Upload Dataset
                   </label>
-                  <input type="file" id ='file' onChange={handleChange} style={{ display: "none" }} />
+                  <input type="file" id ='file' onChange={handleChange}
+                  
+                  style={{ display: "none" }} />
                   <br></br>
                 </div>
                 <button
                   className="datasetUpdateButton"
-                  type="submit"
-                  onClick={saveBase64ToFile}
+                  type="button"
+                  onClick={()=>{
+                    console.log(datasetname);
+                    console.log(deadline);   
+                    console.log(name);
+                          //  filename
+                    invoke("create_dataset",{
+                      email:"ali@1mail.com",
+                      datasetName:datasetname,
+                      deadline:deadline,
+                    }).then(()=>{
+                    invoke("write_file", {
+                      filename0:name,
+                      b64: base64String,
+                      email:"ali@1mail.com",
+                    })
+                    .then(()=>{
+                      invoke("jpeg2txt",{
+                        account:"ali@1mail.com",
+                      })
+                      .then(()=>{
+                        invoke("ner_caller",{
+                          email:"ali@1mail.com", 
+                          filename:name,
+                          datasetName:datasetname,
+                        })
+                        .then(()=>{
+                          invoke("destroy_directory",{
+                            email:"ali@1mail.com",
+                          });
+                        });
+                      });
+                    });
+});
+                  }}
                 >
                   Create
                 </button>

@@ -117,7 +117,7 @@ function App() {
     <div className={"App"}>
       <BrowserRouter>
         <Routes>
-          <Route path="" element={<Startingpage />} />
+          <Route path="" element={<Datasetform />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/home" element={<Home />} />

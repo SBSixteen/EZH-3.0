@@ -5,32 +5,42 @@ use std::io::{BufReader, Read};
 use std::process::Command;
 use std::str;
 
-struct candidate {
-    experience: Vec<experience>,
+// struct candidate {
+//     experience: Vec<experience>,
+// }
+
+// struct experience {
+//     name: String,
+//     years: String,
+// }
+
+
+// fn update_candid(data:String)-> candidate{
+
+//     let mut nabeel = candidate {
+//         experience: Vec::new(),
+//     };
+
+//     // regexer(&data,&mut nabeel);
+
+//     return nabeel;
+
+// }
+
+
+pub async fn caller(ocr_info: String)-> (Vec<String>,Vec<String>) {
+    let text=classifier_single_column(ocr_info.to_string()).await;
+    // println!("{}",text);
+    let y= regexer(&text).await;
+    return (y.0,y.1);
+    // println!("{:?}",y.0);
+    // println!("{:?}",y.1);
 }
 
-struct experience {
-    name: String,
-    years: String,
-}
-
-fn main() {
-
-}
-
-fn retarded(data:String)-> candidate{
-
-    let mut nabeel = candidate {
-        experience: Vec::new(),
-    };
-
-    regexer(&data,&mut nabeel);
-
-    return nabeel;
-
-}
-
-fn regexer(mut text: &str, user: &mut candidate) {
+// fn regexer(mut text: &str, user: &mut candidate) {
+ pub async fn regexer(mut text: &str) -> (Vec<String>,Vec<String>) {
+    let mut title: Vec<String> = Vec::new();
+    let mut exp_num:Vec<String>=Vec::new();
     let time_zone = chrono::FixedOffset::east(5 * 3600);
 
     // Get the current time in GMT+5
@@ -42,11 +52,12 @@ fn regexer(mut text: &str, user: &mut candidate) {
 
     for captures in pattern.captures_iter(text) {
         let start = captures.get(1).unwrap().start();
-        let end = captures.get(4).unwrap().end();
+        // let end = captures.get(4).unwrap().end();
         let starters = get_words_before_index(text, start);
-        let enders = get_words_after_index(text, end);
-        let combined = starters.clone() + enders.as_str();
-        println!("{}", starters);
+        // let enders = get_words_after_index(text, end);
+        // let combined = starters.clone() + enders.as_str();
+        title.push(starters);
+        // println!("{}", starters);
         // let mut temp =experience{
         //     name:starters,
         //     years:String::new(),
@@ -147,7 +158,8 @@ fn regexer(mut text: &str, user: &mut candidate) {
                 current_year.clone(),
             );
             let dur_rounded = format!("{:.3}", dur);
-            println!("{:?}", &dur_rounded);
+            // println!("{:?}", &dur_rounded);
+            exp_num.push(dur_rounded);
             // temp.years=dur_rounded
         } else {
             let dur = time_diff_years(
@@ -157,12 +169,16 @@ fn regexer(mut text: &str, user: &mut candidate) {
                 year2.to_string(),
             );
             let dur_rounded = format!("{:.3}", dur);
-            println!("{:?}", &dur_rounded);
+            // println!("{:?}", &dur_rounded);
+            exp_num.push(dur_rounded);
+
             // temp.years=dur_rounded
         }
 
         // user.experience.push(temp)
     }
+
+    return(title,exp_num);
 }
 
 fn time_diff_years(mut mo1: String, mut y1: String, mo2: String, y2: String) -> f64 {
@@ -369,7 +385,7 @@ fn remove_ending_in(s: &str) -> String {
     result
 }
 
-fn classifier_single_column(ocr_info: String) -> String {
+   pub async fn classifier_single_column(ocr_info: String) -> String {
     let mut fin_edu: String = "".to_string();
     let mut fin_exp: String = "".to_string();
     let mut fin_ski: String = "".to_string();
