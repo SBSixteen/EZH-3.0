@@ -1,11 +1,141 @@
-use std::{collections::HashMap, fs::{self, File}, hash::Hash, io::{BufReader, BufRead}};
+use std::{collections::HashMap, fs::{self, File}, hash::Hash, io::{self,BufReader,Write, BufRead}};
+// use std::io::{self, BufRead};
 
 use regex::Regex;
-use reqwest::Client;
+// use reqwest::Client;
 use serde_json::{json, Value};
+use serde::{Serialize, Deserialize};
 use sha256::digest;
 
-use crate::CloudStorage_EZH::context_path_generator;
+
+
+use crate::CloudStorage_EZH::{context_path_generator,return_dir_count,return_dir_contents};
+use reqwest::{header::{USER_AGENT, HeaderMap, HeaderValue, AUTHORIZATION}, Client};
+use crate::Single_Column::{caller};
+
+#[tauri::command]
+pub async fn ner_caller( email:String, filename:String ,dataset_name:String){
+    
+
+    let owner = email.clone();
+
+    // generate_PDF_queue_report(owner.clone(), true).await;
+    // jpeg2txt(owner.clone()).await;
+
+    let mut headers = HeaderMap::new();
+    headers.insert(USER_AGENT, HeaderValue::from_static("SBSixteen"));
+    headers.insert(AUTHORIZATION,HeaderValue::from_static("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") );
+
+    let client = Client::builder().default_headers(headers).build().unwrap();
+
+
+    let mut candidates: Vec<Candidate> = Vec::new();
+
+    for i in 0..return_dir_count(owner.clone(), "TEMP_TXT".to_string()).await{
+        candidates.push(Candidate::new().await);
+        println!("Candidate #{} is generated.", (i+1));
+    }
+
+    for i in 0..return_dir_count(owner.clone(), "TEMP_TXT".to_string()).await{
+    let temp = return_dir_contents(owner.clone(), "TEMP_TXT".to_string());
+
+    let contexts = generate_contexts(owner.clone(), temp.clone()).await;
+
+    let mut temple = Template::new();
+    temple.generate_from_default("languages.txt".to_string());
+    temple.change_name("Junior Software Developer".to_string());
+
+    let inst: Result<Vec<String>, io::Error>=buf_reader(contexts[i].clone()).await;
+    
+    // caller(contexts[i].clone()).await;
+    candidates[i].set_name(temp[i].clone());
+    candidates[i].generate_tokens(contexts[i].clone()).await;
+    candidates[i].generate_skills(&temple).await;
+    candidates[i].generate_institute(inst.unwrap()).await;
+    candidates[i].generate_workexp(contexts[i].clone()).await;
+    candidates[i].clear_tokens();
+
+    // println!("{:#?}", candidates[i]);
+
+    let x = sender{
+        name:candidates[i].name.clone(),
+        phone:candidates[i].phone.clone(),
+        skills:candidates[i].skills.clone(),
+        institutes:candidates[i].institutes.clone(),
+        workexp:candidates[i].workexp.clone(),
+        git_repos:candidates[i].git_repos.clone(),
+        github:candidates[i].github.clone(),
+        git_username:candidates[i].git_username.clone(),
+        linkedin:candidates[i].linkedin.clone(),
+    };
+    
+    let ind = temp[i].trim_end_matches(".txt");
+    let client = Client::builder().build().unwrap();
+
+    let url = url_generator_files(email.clone(),dataset_name.clone(),ind.to_string()).await;
+
+    let r1 = client.get(&url).send().await.unwrap();
+
+    let result = r1.text().await.unwrap(); 
+    let _response = client.put(&url).body(serde_json::to_string(&x).unwrap().replace("\\", "")).send().await.unwrap();
+
+    }
+}
+
+
+async fn url_generator_files(email:String,dataset_name:String,filename:String) -> String{
+
+    let mut url = String::from("");
+
+    url.push_str("https://rust-testezh-default-rtdb.europe-west1.firebasedatabase.app/Users/");
+    url.push_str(&sha256::digest(email.to_owned()));
+    url.push_str("/Datasets/");
+    url.push_str(dataset_name.as_str());
+    url.push_str("/Candidates/");
+    url.push_str(filename.as_str());
+    url.push_str(".json");
+
+    println!("{:?}",url);
+    return url;
+
+}
+
+pub async fn buf_reader(mut ocr: String) -> io::Result<Vec<String>> {
+    // Open the file
+    let file = File::open("Templates\\Assets\\institutes.txt")?;
+    let mut associations = Vec::<String>::new();
+
+    // Create a vector to store the names
+    let mut universities = Vec::new();
+
+    // Read the file line by line and fetch the names
+    for line in io::BufReader::new(file).lines() {
+        if let Ok(name) = line {
+            universities.push(name);
+        }
+    }
+
+    ocr = ocr.to_lowercase();
+
+    // Check for matches and add to associations vector
+    for university in universities {
+        if ocr.contains(&university.to_lowercase()) {
+            associations.push(university);
+        }
+    }
+
+    Ok(associations)
+}
+
+
+
+
+
+
+
+
+
+
 
 pub struct Template {
     name: String,
@@ -59,7 +189,48 @@ impl Template {
     }
 }
 
-#[derive(Debug)]
+// struct candidate {
+//     experience: Vec<experience>,
+// }
+
+#[derive(Serialize, Deserialize, Debug , Clone)]
+pub struct experience {
+    name: Vec<String>,
+    years: Vec<String>,
+}
+
+impl experience {
+    pub async fn new() ->experience{
+        return experience{
+            name:Vec::new(),
+            years:Vec::new(),
+        };
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct sender{
+    //Personal Info
+    name: String,
+    phone: String,
+
+    //Crux
+    skills: HashMap<String,i32>,
+    institutes:Vec<String>,
+    workexp: experience,
+    git_repos: Vec<Git_Repo_Info>,
+
+    //Socials
+    github: String,
+    git_username: String,
+    linkedin: String,
+
+    //metadata
+    // template:String,
+    // tokens:Vec<String>,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Candidate {
     //Personal Info
     name: String,
@@ -67,7 +238,8 @@ pub struct Candidate {
 
     //Crux
     skills: HashMap<String,i32>,
-    workexp: Vec<String>,
+    institutes:Vec<String>,
+    workexp: experience,
     git_repos: Vec<Git_Repo_Info>,
 
     //Socials
@@ -86,7 +258,8 @@ impl Candidate {
             name: String::new(),
             phone: String::new(),
             skills: HashMap::new(),
-            workexp: Vec::new(),
+            institutes:Vec::new(),
+            workexp: experience { name: Vec::new(), years: Vec::new() },
             git_repos: Vec::new(),
             github: String::new(),
             git_username: String::new(),
@@ -94,6 +267,16 @@ impl Candidate {
             template:String::from("NONE"),
             tokens:Vec::new()
         };
+    }
+    // pub async fn generate_workexp(&mut self, titles: Vec<String>, exp_num: Vec<String>) {
+        pub async fn generate_workexp(&mut self, ocr:String) {
+        let z = caller(ocr).await;
+        // caller(contexts[i].clone()).await;
+        let x = experience {
+            name: z.0,
+            years: z.1,
+        };
+        self.workexp=x;
     }
 
     fn get_phone(&mut self,regex:&Regex, context:String){
@@ -125,9 +308,10 @@ impl Candidate {
         }
 
     }
-    fn set_workexp(&mut self, input: Vec<String>) {
-        self.workexp = input;
-    }
+
+    // fn set_workexp(&mut self, input: Vec<String>) {
+    //     self.workexp = input;
+    // }
     fn set_git_url(&mut self, input: String) {
         self.github = input;
         self.identify_git_username();
@@ -167,7 +351,13 @@ impl Candidate {
                 }
             }
         }
-        fs::write("./ali.txt", temp).expect("Unable to write file");
+        // fs::write("./ali.txt", temp).expect("Unable to write file");
+    }
+
+
+
+    pub async fn generate_institute(&mut self, inst:Vec<String>){
+        self.institutes=inst;
     }
 
     pub async fn generate_tokens(&mut self,context:String){
@@ -185,9 +375,9 @@ impl Candidate {
     pub fn clear_tokens(&mut self){
         self.tokens = Vec::new();
     }
-}
 
-#[derive(Debug)]
+}
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Git_Repo_Info {
     name: String,
     description: String,
@@ -326,6 +516,10 @@ pub async fn generate_contexts(owner:String,arr:Vec<String>) -> Vec<String>{
     }
     return data;
 }
+
+
+
+
 //API HALP
 // Scoring => https://api.github.com/repos/{candidate.git_username}/{git_repos[i].name}/languages
 // User Fetch => https://api.github.com/users/{candidate.git_username}
