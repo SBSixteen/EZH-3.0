@@ -36,14 +36,11 @@ function Registration_v2() {
 
     const twopass = () => {
 
-
-
         if (password == cpassword) {
             setcheck2P(true);
         } else {
             setcheck2P(false);
         }
-
 
     }
 
@@ -106,15 +103,13 @@ function Registration_v2() {
                 <img src="/EZH Logo.svg" />
             </div>
 
-
-            <title>EZHIRE</title>
             <div className='box' style={{ height: "650px" }}>
 
                 <form>
 
                     <div className='inputBox'>
 
-                        <h2>Sign In</h2>
+                        <h2>Register</h2>
                         <input type="text" required
 
                             onChange={(e) => {
@@ -222,8 +217,6 @@ function Registration_v2() {
             {/* Add Login Implementation */}
             <a style={{ color: "#FFFFFF", marginTop: "-15px" }}> {helptext} </a>
         </form>
-                {/* Need to integrate registration properly */ }
-
 
 
             </div >

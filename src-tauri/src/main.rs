@@ -120,7 +120,7 @@ async fn main() {
     //Start PDF Processing. <Put PDF in TEMP_PDF> and set to true
 
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![LogReg::create_user, LogReg::login_user, LogReg::match_vcode, LogReg::match_2fa, LogReg::remember_me_token])
+        .invoke_handler(tauri::generate_handler![LogReg::create_user, LogReg::login_user, LogReg::match_vcode, LogReg::match_2fa, LogReg::remember_me_token, LogReg::generate_changepass_code, LogReg::update_password])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 

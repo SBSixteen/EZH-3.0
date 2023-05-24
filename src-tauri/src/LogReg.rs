@@ -6,7 +6,7 @@ use serde::{Serialize, Deserialize};
 use serde_json::{Value, json};
 use sha256::digest;
 
-use crate::SMTP_EZH;
+use crate::{SMTP_EZH, Response};
 
 //Session Token -> username + current time ->256 -> unique hash // Session Tokens, Remember tokens
 //Global User : monkaw@gmail.com
@@ -133,7 +133,7 @@ async fn json_patch_generator(var:String, value:String, dtype:String) -> String{
 
 async fn randomcode(length:i32) ->String{
 
-    let charset = String::from("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
+    let charset = String::from("ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz0123456789");
 
     let mut vcode = String::from("");
 
@@ -279,6 +279,76 @@ pub async fn generate_vcode(email:String){
             SMTP_EZH::send_mail_vcode(email.clone(), vcode).await;
         }
     }
+}
+
+#[tauri::command]
+pub async fn generate_changepass_code(email:String)->String{
+
+    
+    let url = url_generator_vcodes(email.clone()).await;
+    let client = Client::builder().build().unwrap();
+
+    let url2 = url_generator(email.clone()).await;
+    let r1 = client.get(&url2).send().await.unwrap().text().await.unwrap();
+
+    match r1.as_str(){
+        "null"=>{
+
+            let mut answer = ConfirmationLogin{
+                value:false,
+                response:"Account does not exist!".to_owned(),
+                two_fa:false,
+            };
+        }
+        _ =>{
+            
+        }
+    }
+
+    let r1 = client.get(&url).send().await.unwrap().text().await.unwrap();
+
+    match r1.as_str(){
+
+        "null" =>{
+            let answer = TwoFACode{
+                account: email.clone(),
+                code:randomcode(7).await,
+                attempts:3,
+            };
+            let _response = client.put(&url).body(serde_json::to_string(&answer).unwrap().replace("\\", "")).send().await.unwrap();
+            SMTP_EZH::send_mail_vcode(email.clone(), answer.code).await;
+
+            let mut answer = ConfirmationLogin{
+                value:true,
+                response:"Check Mail for Code!".to_owned(),
+                two_fa:false,
+            };
+
+            return serde_json::to_string(&answer).unwrap();
+        }
+
+        _ =>{
+            let vcode = randomcode(7).await;
+            
+            let mut dynstr = String::from("{\"");
+            dynstr.push_str("code\":\"");
+            dynstr.push_str(&vcode);
+            dynstr.push_str("\"}");
+
+            let _r2 = client.patch(&url).body(dynstr).send().await.unwrap();
+            SMTP_EZH::send_mail_vcode(email.clone(), vcode).await;
+
+            let mut answer = ConfirmationLogin{
+                value:true,
+                response:"Check Mail for Code!".to_owned(),
+                two_fa:false,
+            };
+
+            return serde_json::to_string(&answer).unwrap();
+
+        }
+    }
+
 }
 
 pub async fn generate_2fa(email:String){
@@ -575,7 +645,8 @@ pub async fn match_password(email:String, password:String) -> response{
 
 }
 
-pub async fn update_password(email:String, password:String) -> response{
+#[tauri::command]
+pub async fn update_password(email:String, password:String) -> String{
 
     let url = url_generator(email).await;
 
@@ -585,20 +656,23 @@ pub async fn update_password(email:String, password:String) -> response{
     match r1.as_str(){
 
         "null" => {
-            return response{
+            let gg = response{
                 proceed:false,
                 response:String::from("Account DNE")
-            }
+            };
+
+            return serde_json::to_string(&gg).unwrap();
         }
         _  =>{
 
-            let dynstr = json_patch_generator(String::from("password"), password, String::from("String")).await;
+            let dynstr = json_patch_generator(String::from("password"), sha256::digest(password), String::from("String")).await;
             let _r2 = client.patch(&url).body(dynstr).send().await.unwrap();
 
-            return response{
+           let gg= response{
                 proceed:true,
                 response:String::from("Password has been updated!")
-            }
+            };
+            return serde_json::to_string(&gg).unwrap();
 
         }
 
