@@ -12,12 +12,13 @@ import Datasetform from "./Datasetform.jsx";
 import Nabeel from "./Nabe.jsx";
 import Startingpage from "./Startingpage.jsx";
 import Comparision from "./Comparision.jsx";
+import Login_v2 from "./Login_v2.jsx";
+import Registration_v2 from "./Registration_v2.jsx";
+import Twofa_v2 from "./Twofa_v2.jsx";
+import Dashboard_v2 from "./Dashboard_v2.jsx";
 
 import {
   createStyles,
-  Navbar,
-  Group,
-  Code,
   getStylesRef,
   rem,
 } from "@mantine/core";
@@ -37,7 +38,6 @@ import {
   IconPhoto,
   IconUserCircle,
 } from "@tabler/icons-react";
-import { MantineLogo } from "@mantine/ds";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 
@@ -117,7 +117,9 @@ function App() {
     <div className={"App"}>
       <BrowserRouter>
         <Routes>
-          <Route path="" element={<Startingpage />} />
+          {/* <Route path="" element={<Startingpage />} /> */}
+          <Route path="/regv2" element={<Registration_v2/>} />
+          <Route path="/loginv2" element={<Login_v2/>} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/home" element={<Home />} />
@@ -126,13 +128,13 @@ function App() {
           <Route path="/settings" element={<Settings />} />
           <Route path="/subscription" element={<PricingPlan />} />
           <Route path="/dataset" element={<Dataset/>} />
-          <Route path="/nabeel" element={<Nabeel/>} />
+          <Route path="" element={<Nabeel/>} />
           <Route path="/Dataset" element={<Dataset />} />
           <Route path="/DynamicTable" element={<DynamicTable />} />
           <Route path="/Datasetform" element={<Datasetform />} />
-          <Route path="/Comparision" element={<Comparision />} />
-          
-
+          <Route path="/2fa" element={<Twofa_v2 />} />
+          <Route path="/dash" element={<Dashboard_v2 />} />
+          {/* <Route path="/Comparision" element={<Comparision />} /> */}
           navigate(path);
         </Routes>
       </BrowserRouter>
