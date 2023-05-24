@@ -202,28 +202,6 @@ fn string_to_user(s: &str) -> User {
     serde_json::from_str(s).unwrap()
 }
 
-async fn perform_batch_process(account:String,){
-
-
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // #![cfg_attr(
 //     all(not(debug_assertions), target_os = "windows"),
 //     windows_subsystem = "windows"

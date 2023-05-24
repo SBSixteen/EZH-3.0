@@ -57,7 +57,7 @@ function Login_v2() {
 
             <div>
                 {/* {Someone get the logo loaded!!} */}
-                <img src="/EZH Logo.svg" />
+                <img src="/EZH Logo.svg"/>
             </div>
 
 

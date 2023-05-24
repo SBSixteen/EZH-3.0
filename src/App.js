@@ -15,7 +15,7 @@ import Comparision from "./Comparision.jsx";
 import Login_v2 from "./Login_v2.jsx";
 import Registration_v2 from "./Registration_v2.jsx";
 import Twofa_v2 from "./Twofa_v2.jsx";
-import Dashboard_v2 from "./Dashboard_v2.jsx";
+import PassReset_v2 from "./PassReset_v2.jsx";
 
 import {
   createStyles,
@@ -117,7 +117,6 @@ function App() {
     <div className={"App"}>
       <BrowserRouter>
         <Routes>
-          <Route path="" element={<Datasetform />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/home" element={<Home />} />
@@ -130,8 +129,10 @@ function App() {
           <Route path="/Dataset" element={<Dataset />} />
           <Route path="/DynamicTable" element={<DynamicTable />} />
           <Route path="/Datasetform" element={<Datasetform />} />
+          <Route path="/logv2" element={<Login_v2 />} />
+          <Route path="/regv2" element={<Registration_v2 />} />
           <Route path="/2fa" element={<Twofa_v2 />} />
-          <Route path="/dash" element={<Dashboard_v2 />} />
+          <Route path="/passreset_v2" element={<PassReset_v2 />} />
           {/* <Route path="/Comparision" element={<Comparision />} /> */}
           navigate(path);
         </Routes>

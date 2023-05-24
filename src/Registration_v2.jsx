@@ -215,7 +215,7 @@ function Registration_v2() {
             <div className='links' style={{ marginTop: "-45px" }}>
                 {/* Temporary ? for ease of access */}
                 <a href="/">?</a>
-                <a href="/loginv2">Already have an account?</a>
+                <a href="/logv2">Already have an account?</a>
                 <a href="/">?</a>
             </div>
 
