@@ -174,6 +174,22 @@ export default function Sidebar() {
         >
           <a className="LogRegButt"> Log Out </a>
         </div>
+
+        <div>
+          <input type="file" id="imgupload" onChange={(e) => {
+
+            var file = e.target.files[0];
+            var reader = new FileReader();
+            reader.onload = function (event) {
+              // The file's text will be printed here
+              console.log(event.target.result)
+            };
+
+            reader.readAsBinaryString(file);
+
+          }} />
+        </div>
+
       </form>
     </div>
   );

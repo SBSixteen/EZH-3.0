@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from "react";
 import "./v2.css";
 import { invoke } from "@tauri-apps/api/tauri";
+import { useNavigate } from "react-router-dom";
 
 function Registration_v2() {
+
+  const navigate = useNavigate();
+
+  const to2vcode = () => {
+    navigate('/vcode_v2');
+  };
+
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
@@ -181,7 +189,8 @@ function Registration_v2() {
                   sethelptext(x.response);
 
                   if (x.value) {
-                    sessionStorage.setItem("acc", email);
+                    sessionStorage.setItem("login", email);
+                    to2vcode();
                   }
 
                   setTransit(true);
