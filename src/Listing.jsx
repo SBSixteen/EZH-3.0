@@ -1,14 +1,13 @@
 import "./listing.css";
 import { invoke } from "@tauri-apps/api/tauri";
 import { useEffect, useState } from 'react'
-import Sidebar from "./Sidebar";
+import Sidebar from "./Sidebar.jsx";
 
 function Listing() {
 
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    sessionStorage.setItem("login", "nabeelmirza79@gmail.com");
 
     invoke("fetch_cloud_stats", {
       owner: sessionStorage.getItem("login"),
