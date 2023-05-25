@@ -19,6 +19,7 @@ import PassReset_v2 from "./PassReset_v2.jsx";
 import Navbar from "./Components/Navbar/Navbar.jsx";
 import Listing from "./Listing.jsx";
 import CVpage from "./CVpage.jsx";
+import Vcode_v2 from "./vcode_v2.jsx";
 import {
   createStyles,
   getStylesRef,
@@ -138,7 +139,7 @@ function App() {
           <Route path="/2fa" element={<Twofa_v2 />} />
           <Route path="/passreset_v2" element={<PassReset_v2 />} />
           <Route path="/cvpage" element={<CVpage />} />
-
+          <Route path="/vcode_v2" element={<Vcode_v2 />} />
           {/* <Route path="/Comparision" element={<Comparision />} /> */}
           navigate(path);
         </Routes>

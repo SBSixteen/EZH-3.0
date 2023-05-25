@@ -1,48 +1,69 @@
-import React from 'react'
-import './v2.css'
+import React, { useState } from "react";
+import "./v2.css";
+import { invoke } from "@tauri-apps/api/tauri";
+import { useNavigate } from "react-router-dom";
 
-function vcode_v2() {
+function Vcode_v2() {
+  const navigate = useNavigate();
 
-    return (
+  const toListing = () => {
+    navigate("/listing");
+  };
 
-        <div>
+  const [transit, setTransit] = useState(false);
+  const [input, setInput] = useState("");
+  const [helptext, sethelptext] = useState(false);
 
-            <div>
-                {/* {Someone get the logo loaded!!} */}
-                <img src="/EZH Logo.svg" />
+  return (
+    <div>
+      <center>
+        {" "}
+        <div className="box" style={{ height: "270px" }}>
+          <form id="login">
+            <div className="inputBox">
+              <h2 style={{ fontSize: "22px", marginTop: "-35px" }}>
+                Verification Code
+              </h2>
+              <input
+                type="text"
+                required
+                style={{ marginTop: "-10px" }}
+                id="2FACODE"
+                onInput={(e) => setInput(e.target.value)}
+              ></input>
+              <span>2FA Code</span>
+              <i />
             </div>
 
+            <div
+              onClick={(e) => {
+                setTransit(false);
+                sethelptext("Querying...");
+                invoke("match_vcode", {
+                  email: sessionStorage.getItem("login"),
+                  attempt: input,
+                }).then((message) => {
+                  var x = JSON.parse(message);
+                  sethelptext(x.response);
+                  console.log(x);
 
-            <title>EZHIRE</title>
-            <div className='box' style={{height : "600px"}}>
+                  if (x.attempts == 0) {
+                  }
 
-                <form>
-
-                    <div className='inputBox'>
-                        <h2>Sign In</h2>
-                        <input type="text" required></input>
-                        <span>Verification Code</span>
-                        <i />
-                    </div>
-
-                    <input type='submit' value="Register" style={{marginTop:"55px"}}/>
-                    <div className='links'>
-                        {/* Temporary ? for ease of access */}
-                        <a href="/regv2">Back</a> 
-                        <a href="/loginv2">Got no code?</a>
-                    </div>
-
-                    {/* Add Code Verification*/}
-
-                </form>
-
+                  if (x.proceed) {
+                    toListing();
+                  }
+                });
+              }}
+            >
+              <a className="LogRegButt"> Verify </a>
             </div>
-
-
+            <a style={{ color: "#FFFFFF", marginTop: "-25px" }}>{helptext}</a>
+          </form>
         </div>
-
-    );
-
+      </center>
+    </div>
+  );
 }
 
-export default vcode_v2;
+export default Vcode_v2;
