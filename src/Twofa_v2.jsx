@@ -11,7 +11,7 @@ function Twofa_v2() {
     return (
         
         <div>
-            <div className='box' style={{ height: "270px" }}>
+           <center> <div className='box' style={{ height: "270px" }}>
                 <form id="login">
                     <div className='inputBox'>
                         <h2 style={{ fontSize: "22px", marginTop: "-35px" }}>Two Factor Authentication</h2>
@@ -43,6 +43,7 @@ function Twofa_v2() {
                 </form>
 
             </div>
+            </center>
         </div>
     )
 

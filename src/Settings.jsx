@@ -29,11 +29,14 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     alignItems: "center",
     paddingTop: theme.spacing(4),
+    
   },
   form: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    background: "#cd1985b5",
+    borderRadius: "30px"
   },
   section: {
     marginTop: theme.spacing(4),
@@ -73,7 +76,7 @@ const Settings = () => {
         <Sidebar />
         <div className="others">
           <div className={classes.root}>
-            <h1>Settings</h1>
+            <h1 style = {{color:"white"}} >Settings</h1>
             <Divider className={classes.section} />
             <form className={classes.form} onSubmit={handleSubmit}>
               <h1>Account Information</h1>

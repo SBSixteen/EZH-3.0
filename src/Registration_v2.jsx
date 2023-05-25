@@ -95,7 +95,7 @@ function Registration_v2() {
         {/* {Someone get the logo loaded!!} */}
         <img src="/EZH Logo.svg" style={{ width: "375px" }} />
       </div>
-
+      <center>
       <div className="box" style={{ height: "650px" }}>
         <form id="login">
           <div className="inputBox">
@@ -203,6 +203,7 @@ function Registration_v2() {
           <a style={{ color: "#FFFFFF", marginTop: "-15px" }}> {helptext} </a>
         </form>
       </div>
+      </center>
     </div>
   );
 }

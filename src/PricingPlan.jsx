@@ -47,26 +47,21 @@ const PricingPlan = () => {
       </div>
     );
   };
-  
+
   return (
     <>
-    <div className="container-new">
-      <Sidebar/>
-      <div className="others">
-      <Container>
-        <div className="row">
-          <a href="" target="_blank">
-         
-          </a>
+      <div className="container-new">
+        <div className="sidebar-flex">
+          <Sidebar />
         </div>
-      </Container>
-      <div className="price-plan">
-        {plans.map((plan, index) => (
-          <PlanCard key={index} {...plan} />
-        ))}
+        <div className="container-right-side"> 
+          <div className="price-plan">
+            {plans.map((plan, index) => (
+              <PlanCard key={index} {...plan} />
+            ))}
+          </div>
+        </div>
       </div>
-      </div>
-    </div>
     </>
   );
 };

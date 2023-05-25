@@ -58,7 +58,7 @@ function Login_v2() {
       </div>
 
       <title>EZHIRE</title>
-      <div className="box">
+     <center> <div className="box">
         <form id="login">
           <div className="inputBox">
             <h2>Sign In</h2>
@@ -122,7 +122,7 @@ function Login_v2() {
 
           <a style={{ color: "#FFFFFF", marginTop: "-10px" }}> {helptext} </a>
         </form>
-      </div>
+      </div></center>
     </div>
   );
 }

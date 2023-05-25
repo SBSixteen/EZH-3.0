@@ -30,7 +30,7 @@ function PassReset_v2() {
     return (
 
         <div>
-            <div className='box' style={{ height: "650px" }}>
+           <center> <div className='box' style={{ height: "650px" }}>
                 <form id = "login">
                     <div className='inputBox'>
                         <h2 style={{ fontSize: "22px", marginTop: "-35px" }}>Forgot Password</h2>
@@ -138,6 +138,7 @@ function PassReset_v2() {
                 </form>
 
             </div>
+            </center>
         </div>
     )
 
