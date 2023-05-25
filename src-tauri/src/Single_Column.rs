@@ -30,291 +30,355 @@ use std::str;
 
 pub async fn caller(ocr_info: String)-> (Vec<String>,Vec<String>) {
     let text=classifier_single_column(ocr_info.to_string()).await;
-    // println!("{}",text);
-    let y= regexer(&text).await;
+    
+    let corrected = replace_parentheses(&text).await;
+    let  final_cleaned=count_characters_between_matches(&corrected).await;
+    // println!("{:?}", final_cleaned.clone());
+    let y = regexer(&final_cleaned).await;
+    
+    // let y= regexer(&text).await;
     return (y.0,y.1);
-    // println!("{:?}",y.0);
-    // println!("{:?}",y.1);
 }
 
 // fn regexer(mut text: &str, user: &mut candidate) {
- pub async fn regexer(mut text: &str) -> (Vec<String>,Vec<String>) {
-    let mut title: Vec<String> = Vec::new();
-    let mut exp_num:Vec<String>=Vec::new();
-    let time_zone = chrono::FixedOffset::east(5 * 3600);
 
-    // Get the current time in GMT+5
-    let now_gmt5: DateTime<chrono::FixedOffset> = Utc::now().with_timezone(&time_zone);
-    let current_month = now_gmt5.format("%m").to_string();
-    let current_year = now_gmt5.format("%Y").to_string();
-
-    let pattern = Regex::new(r#"(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sept(?:ember)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?|\d{1,2})\s*[/\s]*\s*(\d{4})\s*(?:-|–|to)\s*(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sept(?:ember)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?|\d{1,2})?\s*[/\s]*\s*(\d{4}|Present)?\s*"#).unwrap();
-
-    for captures in pattern.captures_iter(text) {
-        let start = captures.get(1).unwrap().start();
-        // let end = captures.get(4).unwrap().end();
-        let starters = get_words_before_index(text, start);
-        // let enders = get_words_after_index(text, end);
-        // let combined = starters.clone() + enders.as_str();
-        title.push(starters);
-        // println!("{}", starters);
-        // let mut temp =experience{
-        //     name:starters,
-        //     years:String::new(),
-        // };
-
-        let mut month1 = captures.get(1).unwrap().as_str();
-        let mut year1 = captures.get(2).unwrap().as_str();
-        let mut month2 = captures.get(3).map_or("", |m| m.as_str());
-        let mut year2 = captures.get(4).map_or("", |y| y.as_str());
-        //    month1
-
-        if month1 == "January" || month1 == "Jan" || month1 == "01" {
-            month1 = "1";
-        }
-        if month1 == "February" || month1 == "Feb" || month1 == "02" {
-            month1 = "2";
-        }
-        if month1 == "March" || month1 == "Mar" || month1 == "03" {
-            month1 = "3";
-        }
-        if month1 == "April" || month1 == "Apr" || month1 == "04" {
-            month1 = "4";
-        }
-        if month1 == "May" || month1 == "05" {
-            month1 = "5";
-        }
-        if month1 == "June" || month1 == "Jun" || month1 == "06" {
-            month1 = "6";
-        }
-        if month1 == "July" || month1 == "Jul" || month1 == "07" {
-            month1 = "7";
-        }
-        if month1 == "August" || month1 == "Aug" || month1 == "08" {
-            month1 = "8";
-        }
-        if month1 == "September" || month1 == "Sept" || month1 == "Sep" || month1 == "09" {
-            month1 = "9";
-        }
-        if month1 == "October" || month1 == "Oct" {
-            month1 = "10";
-        }
-        if month1 == "November" || month1 == "Nov" {
-            month1 = "11";
-        }
-        if month1 == "December" || month1 == "Dec" {
-            month1 = "12";
-        }
-
-        // month2
-        if month2 == "January" || month2 == "Jan" || month2 == "01" {
-            month2 = "1";
-        }
-        if month2 == "February" || month2 == "Feb" || month2 == "02" {
-            month2 = "2";
-        }
-        if month2 == "March" || month2 == "Mar" || month2 == "03" {
-            month2 = "3";
-        }
-        if month2 == "April" || month2 == "Apr" || month2 == "04" {
-            month2 = "4";
-        }
-        if month2 == "May" || month2 == "05" {
-            month2 = "5";
-        }
-        if month2 == "June" || month2 == "Jun" || month2 == "06" {
-            month2 = "6";
-        }
-        if month2 == "July" || month2 == "Jul" || month2 == "07" {
-            month2 = "7";
-        }
-        if month2 == "August" || month2 == "Aug" || month2 == "08" {
-            month2 = "8";
-        }
-        if month2 == "September" || month2 == "Sept" || month2 == "Sep" || month2 == "09" {
-            month2 = "9";
-        }
-        if month2 == "October" || month2 == "Oct" {
-            month2 = "10";
-        }
-        if month2 == "November" || month2 == "Nov" {
-            month2 = "11";
-        }
-        if month2 == "December" || month2 == "Dec" {
-            month2 = "12";
-        }
-
-        let start_date = format!("{} {}", month1, year1);
-        let end_date = if !month2.is_empty() && !year2.is_empty() {
-            format!("{} {}", month2, year2)
-        } else {
-            "Present".to_string()
-        };
-        if (end_date == "Present") {
-            let dur = time_diff_years(
-                month1.to_string(),
-                year1.to_string(),
-                current_month.clone(),
-                current_year.clone(),
-            );
-            let dur_rounded = format!("{:.3}", dur);
-            // println!("{:?}", &dur_rounded);
-            exp_num.push(dur_rounded);
-            // temp.years=dur_rounded
-        } else {
-            let dur = time_diff_years(
-                month1.to_string(),
-                year1.to_string(),
-                month2.to_string(),
-                year2.to_string(),
-            );
-            let dur_rounded = format!("{:.3}", dur);
-            // println!("{:?}", &dur_rounded);
-            exp_num.push(dur_rounded);
-
-            // temp.years=dur_rounded
-        }
-
-        // user.experience.push(temp)
-    }
-
-    return(title,exp_num);
+    pub async fn replace_parentheses(input: &str) -> String {
+    let y = input.replace("()", "0");
+    let z=y.replace("—","-");
+    let a= z.replace("•"," ");
+    a
 }
-
-fn time_diff_years(mut mo1: String, mut y1: String, mo2: String, y2: String) -> f64 {
-    let mut month1 = mo1.parse::<i32>().unwrap();
-    let month2 = mo2.parse::<i32>().unwrap();
-    let mut year1 = y1.parse::<i32>().unwrap();
-    let year2 = y2.parse::<i32>().unwrap();
-
-    let mut yearss: f64 = 0.0;
-    let mut monthss: f64 = 0.0;
-    let mut add_: bool = true;
-    if (month1 > month2) {
-        add_ = false;
-    }
-
-    while year1 != year2 {
-        year1 = year1 + 1;
-        yearss = yearss + 1.0;
-    }
-
-    while month1 != month2 {
-        if (month1 > month2) {
-            month1 = month1 - 1;
-            monthss = monthss + 1.0;
-        }
-        // month1<month2
-        else {
-            month1 = month1 + 1;
-            monthss = monthss + 1.0;
-        }
-    }
-
-    if (add_ == true) {
-        yearss = yearss + (monthss / 12.0);
-    } else {
-        yearss = yearss - (monthss / 12.0);
-    }
-    return yearss;
-}
-
-fn get_words_before_index(s: &str, index: usize) -> String {
-    let exceptions = ["&", "in", "at", "on", "of"];
-    let mut words = String::new();
-    let mut i = index - 1;
-    let mut should_continue = true;
-    while should_continue && i > 0 {
-        let mut word = String::new();
-        while i > 0 && s.chars().nth(i - 1).unwrap().is_ascii_alphabetic() {
-            i -= 1;
-            word.insert(0, s.chars().nth(i).unwrap());
-        }
-        if !word.is_empty() {
-            if word.chars().next().unwrap().is_ascii_uppercase()
-                || exceptions.contains(&word.to_lowercase().as_str())
-            {
-                if !words.is_empty() {
-                    words.insert(0, ' ');
+    
+    pub async fn count_characters_between_matches(input_text: &str) -> String {
+    
+        let mut remove_start: Vec<usize> = Vec::new(); // Empty vector for starting indices
+        let mut remove_end: Vec<usize> = Vec::new();
+        
+        let pattern = Regex::new(r#"(?i)(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sept(?:ember)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?|\d{1,2})\s*[/\s]*\s*(\d{4})\s*(?:—|-|–|—|to)\s*(?i)(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sept(?:ember)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?|\d{1,2})\s*[/\s]*\s*(\d{4}|Present)?\s*"#).unwrap();
+    
+        for captures in pattern.captures_iter(input_text) {
+            let x= captures.get(1).unwrap().start();
+            let y = captures.get(4).unwrap().end();
+            let z = input_text.get(y..);
+                let bool_check=caller_one_after_another(z.unwrap()).await;
+                if(bool_check == true){
+                    remove_start.push(x);
+                    remove_end.push(y);
                 }
-                words.insert_str(0, &word);
+            
+        }
+        let final_cleaned=cut_multiple(remove_start.clone(), remove_end.clone(), input_text.to_string()).await;
+        // println!("{:?},{:?}",remove_start,remove_end);
+        // println!("{:?}",final_cleaned.clone());
+       
+        return  final_cleaned; 
+    
+    }
+    
+    pub async fn cut_multiple(remove_start: Vec<usize>, remove_end: Vec<usize>, mut input: String) -> String {
+        for i in (0..remove_start.len()).rev() {
+            input.drain(remove_start[i]..remove_end[i]);
+        }
+        input
+    }
+    
+    
+    
+    
+    pub async fn caller_one_after_another(input_text: &str)-> bool{
+        let pattern = Regex::new(r#"(?i)(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sept(?:ember)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?|\d{1,2})\s*[/\s]*\s*(\d{4})\s*(?:—|-|–|—|to)\s*(?i)(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sept(?:ember)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?|\d{1,2})\s*[/\s]*\s*(\d{4}|Present)?\s*"#).unwrap();
+        if let Some(captures) = pattern.captures(input_text) {
+            let first_match_start = captures.get(0).unwrap().start();
+            if(first_match_start < 10){
+                return true;
+            }else{
+                return false;
+            }
+        } else{
+            return false;
+        }   
+    }
+    
+    pub async fn regexer(mut text: &str) -> (Vec<String>,Vec<String>) {
+        let mut title: Vec<String> = Vec::new();
+        let mut exp_num:Vec<String>=Vec::new();
+        let time_zone: chrono::FixedOffset = chrono::FixedOffset::east(5 * 3600);
+    
+        // Get the current time in GMT+5
+        let now_gmt5: DateTime<chrono::FixedOffset> = Utc::now().with_timezone(&time_zone);
+        let current_month = now_gmt5.format("%m").to_string();
+        let current_year = now_gmt5.format("%Y").to_string();
+    
+        let pattern = Regex::new(r#"(?i)(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sept(?:ember)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?|\d{1,2})\s*[/\s]*\s*(\d{4})\s*(?:-|–|to)\s*(?i)(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sept(?:ember)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?|\d{1,2})?\s*[/\s]*\s*(\d{4}|Present)?\s*"#).unwrap();
+    
+        for captures in pattern.captures_iter(text) {
+            let start = captures.get(1).unwrap().start();
+            // let end = captures.get(4).unwrap().end();
+            let starters = get_words_before_index(text, start).await;
+            // let enders = get_words_after_index(text, end);
+            // let combined = starters.clone() + enders.as_str();
+            title.push(starters);
+            // println!("{}", starters);
+            // let mut temp =experience{
+            //     name:starters,
+            //     years:String::new(),
+            // };
+    
+            let mut month1 = captures.get(1).unwrap().as_str().to_lowercase();
+            let mut year1 = captures.get(2).unwrap().as_str();
+            let mut month2 = captures.get(3).map_or("", |m| m.as_str()).to_lowercase();
+            let mut year2 = captures.get(4).map_or("", |y| y.as_str());
+            //    month1
+    
+            
+            if month1 == "january" || month1 == "jan" || month1 == "01" {
+                month1 = "1".to_string();
+            }
+            if month1 == "february" || month1 == "feb" || month1 == "02" {
+                month1 = "2".to_string();
+            }
+            if month1 == "march" || month1 == "mar" || month1 == "03" {
+                month1 = "3".to_string();
+            }
+            if month1 == "april" || month1 == "apr" || month1 == "04" {
+                month1 = "4".to_string();
+            }
+            if month1 == "may" || month1 == "05" {
+                month1 = "5".to_string();
+            }
+            if month1 == "june" || month1 == "jun" || month1 == "06" {
+                month1 = "6".to_string();
+            }
+            if month1 == "july" || month1 == "jul" || month1 == "07" {
+                month1 = "7".to_string();
+            }
+            if month1 == "august" || month1 == "aug" || month1 == "08" {
+                month1 = "8".to_string();
+            }
+            if month1 == "september" || month1 == "sept" || month1 == "sep" || month1 == "09" {
+                month1 = "9".to_string();
+            }
+            if month1 == "october" || month1 == "oct" {
+                month1 = "10".to_string();
+            }
+            if month1 == "november" || month1 == "nov" {
+                month1 = "11".to_string();
+            }
+            if month1 == "december" || month1 == "dec" {
+                month1 = "12".to_string();
+            }
+    
+            // month2
+            if month2 == "january" || month2 == "jan" || month2 == "01" {
+                month2 = "1".to_string();
+            }
+            if month2 == "february" || month2 == "feb" || month2 == "02" {
+                month2 = "2".to_string();
+            }
+            if month2 == "march" || month2 == "mar" || month2 == "03" {
+                month2 = "3".to_string();
+            }
+            if month2 == "april" || month2 == "apr" || month2 == "04" {
+                month2 = "4".to_string();
+            }
+            if month2 == "may" || month2 == "05" {
+                month2 = "5".to_string();
+            }
+            if month2 == "june" || month2 == "jun" || month2 == "06" {
+                month2 = "6".to_string();
+            }
+            if month2 == "july" || month2 == "jul" || month2 == "07" {
+                month2 = "7".to_string();
+            }
+            if month2 == "august" || month2 == "aug" || month2 == "08" {
+                month2 = "8".to_string();
+            }
+            if month2 == "september" || month2 == "sept" || month2 == "sep" || month2 == "09" {
+                month2 = "9".to_string();
+            }
+            if month2 == "october" || month2 == "oct" {
+                month2 = "10".to_string();
+            }
+            if month2 == "november" || month2 == "nov" {
+                month2 = "11".to_string();
+            }
+            if month2 == "december" || month2 == "dec" {
+                month2 = "12".to_string();
+            }
+    
+            let start_date = format!("{} {}", month1, year1);
+            let end_date = if !month2.is_empty() && !year2.is_empty() {
+                format!("{} {}", month2, year2)
             } else {
-                should_continue = false;
+                "Present".to_string()
+            };
+            if (end_date == "Present") {
+                let dur = time_diff_years(
+                    month1.to_string(),
+                    year1.to_string(),
+                    current_month.clone(),
+                    current_year.clone(),
+                ).await;
+                let dur_rounded = format!("{:.3}", dur);
+                // println!("{:?}", &dur_rounded);
+                exp_num.push(dur_rounded);
+                // temp.years=dur_rounded
+            } else {
+                // println!("{:?},{:?},{:?},{:?}",month1.clone(),year1.clone(),month2.clone(),year2.clone());
+                let dur = time_diff_years(
+                    month1.to_string(),
+                    year1.to_string(),
+                    month2.to_string(),
+                    year2.to_string(),
+                ).await;
+                let dur_rounded = format!("{:.3}", dur);
+                // println!("{:?}", &dur_rounded);
+                exp_num.push(dur_rounded);
+    
+                // temp.years=dur_rounded
             }
+    
+            // user.experience.push(temp)
+        }
+    
+        return(title,exp_num);
+    }
+    
+    pub async fn time_diff_years(mut mo1: String, mut y1: String, mo2: String, y2: String) -> f64 {
+        let mut month1 = mo1.parse::<i32>().unwrap();
+        let month2 = mo2.parse::<i32>().unwrap();
+        let mut year1 = y1.parse::<i32>().unwrap();
+        let year2 = y2.parse::<i32>().unwrap();
+    
+        let mut yearss: f64 = 0.0;
+        let mut monthss: f64 = 0.0;
+        let mut add_: bool = true;
+        if (month1 > month2) {
+            add_ = false;
+        }
+    
+        while year1 != year2 {
+            year1 = year1 + 1;
+            yearss = yearss + 1.0;
+        }
+    
+        while month1 != month2 {
+            if (month1 > month2) {
+                month1 = month1 - 1;
+                monthss = monthss + 1.0;
+            }
+            // month1<month2
+            else {
+                month1 = month1 + 1;
+                monthss = monthss + 1.0;
+            }
+        }
+    
+        if (add_ == true) {
+            yearss = yearss + (monthss / 12.0);
         } else {
-            i -= 1;
+            yearss = yearss - (monthss / 12.0);
         }
+        return yearss;
     }
-    let final_words = remove_starting_in(&words.clone());
-    let final_withoutmonths = remove_months(final_words.clone());
-    return final_withoutmonths;
-}
-
-fn remove_months(input_string: String) -> String {
-    let months = [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December",
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sept",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-    ];
-    let mut output_string = String::new();
-    for word in input_string.split_whitespace() {
-        if !months.contains(&word) {
-            output_string.push_str(word);
-            output_string.push(' ');
-        }
-    }
-    output_string.trim().to_string()
-}
-
-fn remove_starting_in(s: &str) -> String {
-    let mut words = s.split_whitespace();
-    let mut result = String::new();
-    if let Some(word) = words.next() {
-        if (word.to_lowercase() == "in"
-            || word.to_lowercase() == "to"
-            || word.to_lowercase() == "at"
-            || word.to_lowercase() == "of"
-            || word.to_lowercase() == "&"
-            || word.to_lowercase() == "on")
-        {
-            for w in words {
-                result.push_str(w);
-                result.push(' ');
+    
+    pub async fn get_words_before_index(s: &str, index: usize) -> String {
+        let exceptions = ["&", "in", "at", "on", "of" , "member"];
+        let mut words = String::new();
+        let mut i = index - 1;
+        let mut should_continue = true;
+        while should_continue && i > 0 {
+            let mut word = String::new();
+            while i > 0 && s.chars().nth(i - 1).unwrap().is_ascii_alphabetic() {
+                i -= 1;
+                word.insert(0, s.chars().nth(i).unwrap());
             }
-            result.pop(); // remove last space
-            return result;
+            if !word.is_empty() {
+                if word.chars().next().unwrap().is_ascii_uppercase()
+                    || exceptions.contains(&word.to_lowercase().as_str())
+                {
+                    if !words.is_empty() {
+                        words.insert(0, ' ');
+                    }
+                    words.insert_str(0, &word);
+                } else {
+                    should_continue = false;
+                }
+            } else {
+                i -= 1;
+            }
         }
-        result.push_str(word);
-        result.push(' ');
+        let final_words = remove_starting_in(&words.clone()).await;
+        let final_withoutmonths = remove_months(final_words.clone()).await;
+        return final_withoutmonths;
     }
-    for w in words {
-        result.push_str(w);
-        result.push(' ');
+    
+    pub async fn remove_months(input_string: String) -> String {
+        let months = [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sept",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec",
+        ];
+        let mut output_string = String::new();
+        for word in input_string.split_whitespace() {
+            if !months.contains(&word) {
+                output_string.push_str(word);
+                output_string.push(' ');
+            }
+        }
+        output_string.trim().to_string()
     }
-    result.pop(); // remove last space
-    result
-}
+    
+    pub async fn remove_starting_in(s: &str) -> String {
+        let mut words = s.split_whitespace();
+        let mut result = String::new();
+        if let Some(word) = words.next() {
+            if (word.to_lowercase() == "in"
+                || word.to_lowercase() == "to"
+                || word.to_lowercase() == "at"
+                || word.to_lowercase() == "of"
+                || word.to_lowercase() == "&"
+                || word.to_lowercase() == "on"
+                || word.to_lowercase() == "member")
+            {
+                for w in words {
+                    result.push_str(w);
+                    result.push(' ');
+                }
+                result.pop(); // remove last space
+                return result;
+            }
+            result.push_str(word);
+            result.push(' ');
+        }
+        for w in words {
+            result.push_str(w);
+            result.push(' ');
+        }
+        result.pop(); // remove last space
+        result
+    }
 
 fn get_words_after_index(s: &str, index: usize) -> String {
     let exceptions = ["&", "in", "at", "on", "of"];
