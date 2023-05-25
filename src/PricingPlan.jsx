@@ -51,12 +51,14 @@ const PricingPlan = () => {
   return (
     <>
       <div className="container-new">
+        
         <div className="sidebar-flex">
           <Sidebar />
         </div>
-        <div className="container-right-side"> 
+        
+        <div className="container-right-side">
           <div className="price-plan">
-            {plans.map((plan, index) => (
+            {plans.map((plan, index) => ( 
               <PlanCard key={index} {...plan} />
             ))}
           </div>

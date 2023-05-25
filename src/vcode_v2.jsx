@@ -25,7 +25,7 @@ function vcode_v2() {
                         <i />
                     </div>
 
-                    <input type='submit' value="Register"  style={{marginTop:"55px"}}/>
+                    <input type='submit' value="Register" style={{marginTop:"55px"}}/>
                     <div className='links'>
                         {/* Temporary ? for ease of access */}
                         <a href="/regv2">Back</a> 
