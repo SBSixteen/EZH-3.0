@@ -1,8 +1,16 @@
 import React, { useState } from "react";
 import "./v2.css";
 import { invoke } from "@tauri-apps/api/tauri";
+import {useNavigate} from 'react-router-dom';
 
 function Login_v2() {
+
+  const navigate = useNavigate();
+
+  const to2fa = () => {
+    navigate('/2fa');
+  };
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [check_e, setcheckE] = useState(false);
@@ -102,7 +110,12 @@ function Login_v2() {
                     sethelptext(x.response);
 
                     if (x.value) {
-                      sessionStorage.setItem("acc", email);
+                      sessionStorage.setItem("login", email);
+                      if(x.two_fa){
+                        to2fa();
+                      }else{
+
+                      }
                     }
 
                     setTransit(true);

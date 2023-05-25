@@ -42,7 +42,7 @@ pub struct EZH_FileBank {
 pub struct EZH_FileBank_kekw {
 
     name: String,
-    size: f32,
+    size: String,
     date: String,
     filetype: String,
 
@@ -563,6 +563,18 @@ pub async fn download_file(name:String, owner:String) -> String{
 
 }
 
+
+#[tauri::command]
+pub async fn remove_file(name:String, owner:String){
+
+    let mut path = path_generator(owner.clone());
+    path.push_str("\\.files\\");
+    path.push_str(&name);
+
+    fs::remove_file(&path);
+
+}
+
 pub async fn return_dir_count(owner:String, file_in_cloud:String) -> usize{
     let hash = sha256::digest(owner);
     let mut path = String::from("..\\cloudStorage\\");
@@ -610,8 +622,8 @@ pub async fn fetch_cloud_stats(owner:String) ->String{
         let G = EZH_FileBank_kekw{
             
             name:tempname,
-            filetype:Path::new(&temp).extension().unwrap().to_str().unwrap().to_owned(),
-            size:fs::metadata(&temp).unwrap().len() as f32/1024.0,
+            filetype:Path::new(&temp).extension().unwrap().to_str().unwrap().to_uppercase().to_owned(),
+            size:format!("{:.2} KB ", fs::metadata(&temp).unwrap().len() as f32/1024.0),
             date:datetime.format("%d/%m/%Y - %T").to_string()
 
         };

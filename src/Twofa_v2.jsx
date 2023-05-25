@@ -1,8 +1,15 @@
 import React, { useState } from 'react'
 import './v2.css'
 import { invoke } from "@tauri-apps/api/tauri";
+import {useNavigate} from 'react-router-dom';
 
 function Twofa_v2() {
+
+    const navigate = useNavigate();
+
+    const toListing = () => {
+      navigate('/listing');
+    };
 
     const [transit, setTransit] = useState(false);
     const [input, setInput] = useState("");
@@ -25,12 +32,21 @@ function Twofa_v2() {
                         setTransit(false);
                         sethelptext("Querying...");
                         invoke("match_2fa", {
-                            email: sessionStorage.getItem("acc"),
+                            email: sessionStorage.getItem("login"),
                             attempt: input,
                           }).then((message) => {
                             var x = JSON.parse(message);
                             sethelptext(x.response);
                             console.log(x);
+
+                            if(x.attempts == 0){
+
+                            }
+
+                            if(x.proceed){
+                                toListing();
+                            }
+
                           })
 
 

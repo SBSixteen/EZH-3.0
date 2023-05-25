@@ -545,19 +545,21 @@ pub async fn generate_contexts(owner:String,arr:Vec<String>) -> Vec<String>{
     return data;
 }
 
+
+#[tauri::command]
 pub async fn process_one_cv(owner:String, name:String){
 
-    // let mut path = CloudStorage_EZH::path_generator(owner.clone());
-    // path.push_str("\\.files\\");
-    // path.push_str(&name);
+    let mut path = CloudStorage_EZH::path_generator(owner.clone());
+    path.push_str("\\.files\\");
+    path.push_str(&name);
 
-    // let bytes = std::fs::read(&path).unwrap();
+    let bytes = std::fs::read(&path).unwrap();
 
-    // let mut path = CloudStorage_EZH::path_generator(owner.clone());
-    // path.push_str("\\TEMP_PDF\\");
-    // path.push_str(&name);
+    let mut path = CloudStorage_EZH::path_generator(owner.clone());
+    path.push_str("\\TEMP_PDF\\");
+    path.push_str(&name);
     
-    // fs::write(path, bytes).unwrap();
+    fs::write(path, bytes).unwrap();
 
     let mut data = Candidate::new().await;
 
