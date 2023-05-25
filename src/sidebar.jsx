@@ -128,11 +128,11 @@ import { useNavigate } from "react-router-dom";
 }
 
 export default function Sidebar() {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
-  // const navigateToLogin = () => {
-  //   navigate('/logv2');
-  // };
+  const navigateToLogin = () => {
+    navigate('/logv2');
+  };
 
   return (
     <div
@@ -168,6 +168,8 @@ export default function Sidebar() {
         <div
           onClick={(e) => {
             console.log("Click");
+            sessionStorage.clear();
+            navigateToLogin();
           }}
         >
           <a className="LogRegButt"> Log Out </a>
