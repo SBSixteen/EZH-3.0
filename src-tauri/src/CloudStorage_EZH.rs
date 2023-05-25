@@ -28,7 +28,6 @@ use pdfium_render::{
 
 use std::{fs, collections::HashMap, time::Instant};
 // use std::fs::File;
-
 #[derive(Serialize, Deserialize, Debug)]
 pub struct EZH_FileBank {
 
@@ -38,6 +37,17 @@ pub struct EZH_FileBank {
     filetype: Vec<String>,
 
 }
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct EZH_FileBank_kekw {
+
+    name: String,
+    size: f32,
+    date: String,
+    filetype: String,
+
+}
+
 
 #[derive(Serialize, Deserialize, Debug)]
 struct Confirmation {
@@ -562,6 +572,7 @@ pub async fn return_dir_count(owner:String, file_in_cloud:String) -> usize{
     return fs::read_dir(&path).unwrap().count();
 }
 
+#[tauri::command]
 pub async fn fetch_cloud_stats(owner:String) ->String{
 
     let mut path = path_generator(owner.clone());
@@ -582,6 +593,8 @@ pub async fn fetch_cloud_stats(owner:String) ->String{
         date:Vec::new(),
     };
 
+    let mut tempvec = Vec::new();
+
     for i in files{
 
         let mut temp = path.clone();
@@ -590,12 +603,26 @@ pub async fn fetch_cloud_stats(owner:String) ->String{
         let x = fs::metadata(&temp).unwrap().created().unwrap();
         let datetime: DateTime<Utc> = x.into();
 
+        let mut tempname:String = i.clone().chars().rev().collect();
+        tempname = tempname[tempname.find(".").unwrap()+1..tempname.len()].to_string();
+        tempname= tempname.clone().chars().rev().collect();
+
+        let G = EZH_FileBank_kekw{
+            
+            name:tempname,
+            filetype:Path::new(&temp).extension().unwrap().to_str().unwrap().to_owned(),
+            size:fs::metadata(&temp).unwrap().len() as f32/1024.0,
+            date:datetime.format("%d/%m/%Y - %T").to_string()
+
+        };
+
+        tempvec.push(G);
         data.name.push(i.clone());
         data.filetype.push(Path::new(&temp).extension().unwrap().to_str().unwrap().to_owned());
         data.size.push(fs::metadata(&temp).unwrap().len() as f32/1024.0);
         data.date.push(datetime.format("%d/%m/%Y - %T").to_string());
     }
 
-    return serde_json::to_string(&data).unwrap();
+    return serde_json::to_string(&tempvec).unwrap();
 
 }
