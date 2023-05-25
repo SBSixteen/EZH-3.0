@@ -252,13 +252,13 @@ async fn main(){
         if !check_a{
 
             nougat = nougat.replace("CV", "");
-            nougat = nougat.replace("Resume", "");
-            nougat = nougat.replace("resume", "");
-            nougat = nougat.replace("Latest", "");
-            nougat = nougat.replace("latest", "");
-            nougat = nougat.replace("+", "");
-            nougat = nougat.replace("updated", "");
-            nougat = nougat.replace("update", "");
+            nougat = nougat.replace("Resume", " ");
+            nougat = nougat.replace("resume", " ");
+            nougat = nougat.replace("Latest", " ");
+            nougat = nougat.replace("latest", " ");
+            nougat = nougat.replace("+", " ");
+            nougat = nougat.replace("updated", " ");
+            nougat = nougat.replace("update", " ");
             nougat = nougat.replace(")", " ");
             nougat = nougat.replace("(", " ");
             nougat = nougat.replace("_", " ");

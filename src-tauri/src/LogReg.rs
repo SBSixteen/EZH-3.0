@@ -486,6 +486,38 @@ pub async fn toggle_2fa(email:String){
 
 }
 
+pub async fn toggle_admin(email:String){
+
+    let url = url_generator(email.clone()).await;
+
+    let client = Client::builder().build().unwrap();
+    let r1 = client.get(&url).send().await.unwrap().text().await.unwrap();
+
+    match r1.as_str(){
+
+        "null" => {
+            println!("Account DNE");
+            return;
+        }
+        _=>{
+            let v: Value = serde_json::from_str(&r1).unwrap();
+
+            if v["isAdmin"].as_bool().unwrap(){
+
+                let _r2 = client.patch(&url).body("{\"isAdmin\":false}").send().await.unwrap();
+                println!("Account Found! Now ships without 2FA");
+
+            }else{
+                let _r2 = client.patch(&url).body("{\"isAdmin\":true}").send().await.unwrap();
+                println!("Account Found! Now ships with 2FA");
+            }
+
+        }
+
+    }
+
+}
+
 #[tauri::command]
 pub async fn user_exist(email:String) -> bool{
 

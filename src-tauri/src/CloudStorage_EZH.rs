@@ -5,10 +5,13 @@ use reqwest::{header::{USER_AGENT, HeaderMap, HeaderValue, AUTHORIZATION}, Clien
 use serde::{Serialize, Deserialize};
 use serde_json::{Value, json};
 use sha256::digest;
+use chrono::offset::Utc;
+use chrono::DateTime;
+use std::time::SystemTime;
 
 use crate::SMTP_EZH;
 // use std::fs;
-use std::process::Command;
+use std::{process::Command, path};
 use base64::{encode};
 use base64::{decode};
 
@@ -26,10 +29,20 @@ use pdfium_render::{
 use std::{fs, collections::HashMap, time::Instant};
 // use std::fs::File;
 
-#[derive(Serialize, Deserialize)]
-pub struct EZH_File {
-    name: String,
-    base64: String,
+#[derive(Serialize, Deserialize, Debug)]
+pub struct EZH_FileBank {
+
+    name: Vec<String>,
+    size: Vec<f32>,
+    date: Vec<String>,
+    filetype: Vec<String>,
+
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+struct Confirmation {
+    value: bool,
+    response: String,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -48,6 +61,13 @@ pub struct test {
 struct Dataset{
     dataset_name:String,
     deadline:String,
+    // Folder:Vec<>,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+struct DL_FILE{
+    name:String,
+    bytes: Vec<u8>
     // Folder:Vec<>,
 }
 
@@ -188,33 +208,35 @@ fn unzip_file(zip_path: &Path, dest_dir: &Path) -> io::Result<()> {
 use tokio::time::sleep;
 use std::time::Duration;
 
-#[tauri::command]
-pub async fn write_file(b64: String, filename0: String, email:String) {
-    let mut path = generate_dir(email.clone()).await;
-    if(filename0.contains(".pdf")){
-        path =path.clone()+"\\TEMP_PDF\\";
-        let filename=filename0.trim_end_matches(".pdf");
-        decode_save(path.clone(), b64, &filename).await.unwrap();
-        generate_PDF_queue_report(email,true,"SubZero".to_string()).await;
-    }
-    else if(filename0.contains(".zip")){
-    println!("{:?}","zipper on");
-    let filename=filename0.trim_end_matches(".zip");
-    let mut path0=path.clone();
-    path0=path0+"\\TEMP_ZIP\\";
-    // recreates ZIP
-    decode_save_zip(path0.to_string(), b64, &filename).await.unwrap();
-    path0=path0+&filename0;
-    let zip_path = Path::new(&path0);
-    path=path+"\\TEMP_PDF\\";
-    let dest_dir = Path::new(&path);
-    // Unzip the file to the destination directory
-    unzip_file(zip_path, dest_dir);
-    sleep(Duration::from_secs(5)).await;
-    generate_PDF_queue_report(email,true,filename.to_string()).await;
-    }
-    // generate_PDF_queue_report(email,true).await;
-}
+//Abay kachray kisi banday ka function badla hai tou ussay bata tou de
+
+// #[tauri::command]
+// pub async fn write_file(b64: String, filename0: String, email:String) {
+//     let mut path = generate_dir(email.clone()).await;
+//     if(filename0.contains(".pdf")){
+//         path =path.clone()+"\\TEMP_PDF\\";
+//         let filename=filename0.trim_end_matches(".pdf");
+//         decode_save(path.clone(), b64, &filename).await.unwrap();
+//         generate_PDF_queue_report(email,true,"SubZero".to_string()).await;
+//     }
+//     else if(filename0.contains(".zip")){
+//     println!("{:?}","zipper on");
+//     let filename=filename0.trim_end_matches(".zip");
+//     let mut path0=path.clone();
+//     path0=path0+"\\TEMP_ZIP\\";
+//     // recreates ZIP
+//     decode_save_zip(path0.to_string(), b64, &filename).await.unwrap();
+//     path0=path0+&filename0;
+//     let zip_path = Path::new(&path0);
+//     path=path+"\\TEMP_PDF\\";
+//     let dest_dir = Path::new(&path);
+//     // Unzip the file to the destination directory
+//     unzip_file(zip_path, dest_dir);
+//     sleep(Duration::from_secs(5)).await;
+//     generate_PDF_queue_report(email,true,filename.to_string()).await;
+//     }
+//     // generate_PDF_queue_report(email,true).await;
+// }
 
 // pub async fn generate_PDF_queue_report(account: String, proceed: bool) {
 
@@ -241,22 +263,22 @@ pub async fn write_file(b64: String, filename0: String, email:String) {
 
 
 // Fetch file from server
-pub async fn return_file(owner: String, filename: String) -> String {
-    let path = file_path_generator(owner.clone(), filename.clone());
-    let data = fs::read(path).expect("Unable to write file");
+// pub async fn return_file(owner: String, filename: String) -> String {
+//     let path = file_path_generator(owner.clone(), filename.clone());
+//     let data = fs::read(path).expect("Unable to write file");
 
-    const CUSTOM_ENGINE: engine::GeneralPurpose =
-        engine::GeneralPurpose::new(&alphabet::URL_SAFE, general_purpose::NO_PAD);
+//     const CUSTOM_ENGINE: engine::GeneralPurpose =
+//         engine::GeneralPurpose::new(&alphabet::URL_SAFE, general_purpose::NO_PAD);
 
-    let result = CUSTOM_ENGINE.encode(data);
+//     let result = CUSTOM_ENGINE.encode(data);
 
-    let val = EZH_File {
-        name: filename,
-        base64: result,
-    };
+//     let val = EZH_File {
+//         name: filename,
+//         base64: result,
+//     };
 
-    return serde_json::to_string(&val).unwrap();
-}
+//     return serde_json::to_string(&val).unwrap();
+// }
 
 // Delete file from server
 pub async fn delete_file(owner: String, filename: String) {
@@ -278,22 +300,27 @@ pub async fn generate_dir(email: String) -> String{
 fn generate_temp_path(hash: String) {
     let mut path = "..\\cloudStorage\\".to_string();
     path.push_str(&hash);
-    path.push_str("/TEMP_PDF");
+    path.push_str("\\TEMP_PDF");
     fs::create_dir_all(path).unwrap();
 
     let mut path = "..\\cloudStorage\\".to_string();
     path.push_str(&hash);
-    path.push_str("/TEMP_ZIP");
+    path.push_str("\\TEMP_ZIP");
     fs::create_dir_all(path).unwrap();
 
     let mut path = "..\\cloudStorage\\".to_string();
     path.push_str(&hash);
-    path.push_str("/TEMP_JPEG");
+    path.push_str("\\.files");
     fs::create_dir_all(path).unwrap();
 
     let mut path = "..\\cloudStorage\\".to_string();
     path.push_str(&hash);
-    path.push_str("/TEMP_TXT");
+    path.push_str("\\TEMP_JPEG");
+    fs::create_dir_all(path).unwrap();
+
+    let mut path = "..\\cloudStorage\\".to_string();
+    path.push_str(&hash);
+    path.push_str("\\TEMP_TXT");
     fs::create_dir_all(path).unwrap();
 }
 
@@ -314,17 +341,12 @@ pub fn file_path_generator(email: String, file: String) -> String {
 }
 
 
-pub async fn generate_PDF_queue_report(account: String, proceed: bool, into:String){
+pub async fn generate_PDF_queue_report(account: String, proceed: bool){
     let hash = sha256::digest(account.clone());
 
     let mut path = String::from("..\\cloudStorage\\");
     path.push_str(&hash);
     path.push_str("\\TEMP_PDF\\");
-    if(into!="SubZero"){
-        path.push_str(&into);
-        path.push_str("\\");
-        println!("{:?}",path);
-    }
 
     let filepaths = fs::read_dir(&path).unwrap();
 
@@ -389,7 +411,7 @@ pub async fn pdf2jpeg(files: Vec<String>, hash: String, pdf_path: String) {
         println!("{} has been succesfully converted to JPEG | Time Elapsed : {:.4?} milliseconds", &f_name, elapsed);
     }
 
-    // jpeg2txt(hash).await;
+        jpeg2txt(hash).await;
 
 }
 
@@ -409,7 +431,7 @@ pub async fn destroy_directory(email : String) {
 
 #[tauri::command]
 pub async fn jpeg2txt(account:String){
-    let hash = sha256::digest(account.clone());
+    let hash = account;
     println!("");
     println!("Dislaimer : OCR Time varies on internet speed");
 
@@ -417,7 +439,9 @@ pub async fn jpeg2txt(account:String){
 
     let mut path = String::from("..\\cloudStorage\\");
     path.push_str(&hash);
-    path.push_str("/TEMP_JPEG/");
+    path.push_str("\\TEMP_JPEG\\");
+
+    println!("{}",path);
 
     let filepaths = fs::read_dir(&path).unwrap();
 
@@ -474,7 +498,7 @@ pub fn context_path_generator(email: String) -> String {
     let mut path = "..\\cloudStorage\\".to_string();
     let u_dir = sha256::digest(email);
     path.push_str(&u_dir);
-    path.push_str("/TEMP_TXT/");
+    path.push_str("\\TEMP_TXT\\");
     return path;
 }
 
@@ -495,6 +519,40 @@ pub fn return_dir_contents(owner:String, file_in_cloud:String) -> Vec<String>{
     return files;
 }
 
+pub async fn upload_file(bytes:Vec<u8>, name:String, owner:String) -> String{
+
+    let mut path = path_generator(owner.clone());
+    path.push_str("\\.files\\");
+    path.push_str(&name);
+
+    fs::write(path, bytes).unwrap();
+
+    let answer = Confirmation{
+        value:true,
+        response:"File has been successfully updated.".to_string()
+    };
+
+    return serde_json::to_string(&answer).unwrap();
+
+}
+
+pub async fn download_file(name:String, owner:String) -> String{
+
+    let mut path = path_generator(owner.clone());
+    path.push_str("\\.files\\");
+    path.push_str(&name);
+
+    let bytes = std::fs::read(&path).unwrap();
+
+    let answer = DL_FILE{
+        name:name.clone(),
+        bytes:bytes,
+    };
+
+    return serde_json::to_string(&answer).unwrap();
+
+}
+
 pub async fn return_dir_count(owner:String, file_in_cloud:String) -> usize{
     let hash = sha256::digest(owner);
     let mut path = String::from("..\\cloudStorage\\");
@@ -502,4 +560,42 @@ pub async fn return_dir_count(owner:String, file_in_cloud:String) -> usize{
     path.push_str(&format!("/{}/", file_in_cloud));
 
     return fs::read_dir(&path).unwrap().count();
+}
+
+pub async fn fetch_cloud_stats(owner:String) ->String{
+
+    let mut path = path_generator(owner.clone());
+    path.push_str("\\.files\\");
+
+    let filepaths = fs::read_dir(&path).unwrap();
+
+    let mut files = Vec::new();
+
+    for paths in filepaths {
+        files.push(paths.unwrap().file_name().to_str().unwrap().to_string());
+    }
+
+    let mut data = EZH_FileBank{
+        name:Vec::new(),
+        filetype:Vec::new(),
+        size:Vec::new(),
+        date:Vec::new(),
+    };
+
+    for i in files{
+
+        let mut temp = path.clone();
+        temp.push_str(&i);
+        
+        let x = fs::metadata(&temp).unwrap().created().unwrap();
+        let datetime: DateTime<Utc> = x.into();
+
+        data.name.push(i.clone());
+        data.filetype.push(Path::new(&temp).extension().unwrap().to_str().unwrap().to_owned());
+        data.size.push(fs::metadata(&temp).unwrap().len() as f32/1024.0);
+        data.date.push(datetime.format("%d/%m/%Y - %T").to_string());
+    }
+
+    return serde_json::to_string(&data).unwrap();
+
 }

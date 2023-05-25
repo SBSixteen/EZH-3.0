@@ -1,9 +1,12 @@
 #![allow(dead_code, unused_variables)]
 
+#![allow(warnings)]
+
 #![cfg_attr(
     all(not(debug_assertions), target_os = "windows"),
     windows_subsystem = "windows"
 )]
+
 
 pub mod LogReg;
 pub mod SMTP_EZH;
@@ -119,10 +122,18 @@ async fn main() {
 
     //Start PDF Processing. <Put PDF in TEMP_PDF> and set to true
 
+    NER_EZH::process_one_cv("nabeelmirza79@gmail.com".to_string(), "Nabeel Mirza.pdf".to_string()).await;
+
+    println!("{:?}",CloudStorage_EZH::fetch_cloud_stats("nabeelmirza79@gmail.com".to_string()).await);
+    
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![LogReg::create_user, LogReg::login_user, LogReg::match_vcode, LogReg::match_2fa, LogReg::remember_me_token, LogReg::generate_changepass_code, LogReg::update_password])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
+
+
+
+    //
 
 
     // let owner = String::from("nabeelmirza79@gmail.com");

@@ -7,15 +7,12 @@ use serde_json::{json, Value};
 use serde::{Serialize, Deserialize};
 use sha256::digest;
 
-
-
-use crate::CloudStorage_EZH::{context_path_generator,return_dir_count,return_dir_contents};
+use crate::CloudStorage_EZH::{context_path_generator,return_dir_count,return_dir_contents, self};
 use reqwest::{header::{USER_AGENT, HeaderMap, HeaderValue, AUTHORIZATION}, Client};
 use crate::Single_Column::{caller};
 
 #[tauri::command]
 pub async fn ner_caller( email:String, filename:String ,dataset_name:String){
-    
 
     let owner = email.clone();
 
@@ -82,7 +79,6 @@ pub async fn ner_caller( email:String, filename:String ,dataset_name:String){
     }
 }
 
-
 async fn url_generator_files(email:String,dataset_name:String,filename:String) -> String{
 
     let mut url = String::from("");
@@ -127,16 +123,6 @@ pub async fn buf_reader(mut ocr: String) -> io::Result<Vec<String>> {
     Ok(associations)
 }
 
-
-
-
-
-
-
-
-
-
-
 pub struct Template {
     name: String,
     tokens: Vec<String>,
@@ -152,6 +138,7 @@ impl Template {
     
     pub fn generate_from_default(&mut self, interface:String){
 
+        self.tokens = Vec::new();
         let mut path = "./Templates/Assets/".to_string();
         path.push_str(&interface);
 
@@ -281,8 +268,19 @@ impl Candidate {
 
     fn get_phone(&mut self,regex:&Regex, context:String){
 
-        let mat = regex.find(&context).unwrap();
-        self.phone = mat.as_str().to_string();
+        let temp = context.replace(" ", "-");
+
+        let mat:Vec<String> = regex.find_iter(&context).map(|digits| digits.as_str().to_owned()).collect();
+
+        for i in mat{
+
+            if self.phone.len() < i.len(){
+
+                self.phone = i;
+
+            }
+
+        }
 
     }
 
@@ -316,11 +314,26 @@ impl Candidate {
         self.github = input;
         self.identify_git_username();
     }
+
+    fn fetch_git_from_context(&mut self){
+
+        for i in &self.tokens{
+
+                if i.to_lowercase().contains("github.com"){
+                    //println!("{} | {}", i,j);
+                   self.github = i.to_string();
+                   self.identify_git_username();
+                   return;
+                }
+        }
+
+    }
+
     fn set_linkedin_url(&mut self, input: String) {
         self.linkedin = input;
     }
     fn identify_git_username(&mut self) {
-        let mut temp = self.github.clone();
+        let mut temp = self.github.clone().to_lowercase();
         temp = temp.replace("https://", "");
         temp = temp.replace("http://", "");
         temp = temp.replace("www.github.com/", "");
@@ -331,7 +344,12 @@ impl Candidate {
     fn append_git_repo(&mut self, input: Git_Repo_Info) {
         self.git_repos.push(input);
     }
-    pub async fn generate_git_report(&mut self){
+    pub async fn generate_git_report(&mut self, repos:Vec<String>, client:&Client){
+
+        for i in repos{
+            let mut temp = Git_Repo_Info::automatic(client, self.git_username.clone(), i).await;
+            self.append_git_repo(temp);
+        }
 
     }
     pub async fn generate_skills(&mut self, template:&Template){
@@ -400,13 +418,16 @@ impl Git_Repo_Info {
 
         let url = generate_repo_info(owner.clone(), repo.clone());
         let r1 = client.get(&url).send().await.unwrap().text().await.unwrap();
-
         let repo_info:Value = serde_json::from_str(&r1).unwrap();
-
         let mut answer = Git_Repo_Info::new();
 
         answer.name = repo_info["name"].as_str().unwrap().to_string();
+
+        if repo_info["description"].is_null(){
+            answer.description = "DNE (Does Not Exist)".to_string();
+        }else{
         answer.description = repo_info["description"].as_str().unwrap().to_string();
+        }
         answer.url = repo_info["html_url"].as_str().unwrap().to_string();
 
         let url = generate_repo_languages(owner.clone(), repo.clone());
@@ -433,8 +454,15 @@ impl Git_Repo_Info {
         }
     
         for i in temp{
-            let index = i.find(":").unwrap();
+            println!("{}", &i);
+            let index = i.find(":").unwrap_or(1892);
+
+            if index == 1892{
+                continue;
+            }
+
             let key = i[0..index].to_string();
+            
             let val = i[index+1..i.len()].to_string();
             //println!("{} => {}", &key, &val);
             real.insert(key, val.parse::<i32>().unwrap());
@@ -515,6 +543,120 @@ pub async fn generate_contexts(owner:String,arr:Vec<String>) -> Vec<String>{
         data.push(fs::read_to_string(&path).expect("Unable to read file"));
     }
     return data;
+}
+
+pub async fn process_one_cv(owner:String, name:String){
+
+    // let mut path = CloudStorage_EZH::path_generator(owner.clone());
+    // path.push_str("\\.files\\");
+    // path.push_str(&name);
+
+    // let bytes = std::fs::read(&path).unwrap();
+
+    // let mut path = CloudStorage_EZH::path_generator(owner.clone());
+    // path.push_str("\\TEMP_PDF\\");
+    // path.push_str(&name);
+    
+    // fs::write(path, bytes).unwrap();
+
+    let mut data = Candidate::new().await;
+
+    // CloudStorage_EZH::generate_PDF_queue_report(owner.clone(), true).await;
+
+    let mut txtname = name[0..name.len()-4].to_string();
+    let mut nougat = txtname.clone();
+    txtname.push_str(".txt");
+
+    let mut path = CloudStorage_EZH::path_generator(owner.clone());
+    path.push_str("\\TEMP_TXT\\");
+    path.push_str(&txtname);
+    let context = fs::read_to_string(&path).expect("Unable to read file");
+
+    let re = Regex::new(r"\+?\(?\d*\)? ?\(?\d+\)?\d*([\s./-]?\d{2,})+").unwrap();
+
+    let mut template = Template::new();
+
+    template.change_name("Software Developer Junior".to_string());
+    template.generate_from_default("languages.txt".to_string());
+
+    data.generate_tokens(context.clone()).await;
+    data.generate_skills(&template).await;
+    data.fetch_git_from_context();
+    data.clear_tokens();
+    data.get_phone(&re, context.clone());
+
+    if data.github !=""{
+
+        let mut headers = HeaderMap::new();
+        headers.insert(USER_AGENT, HeaderValue::from_static("SBSixteen"));
+        headers.insert(AUTHORIZATION,HeaderValue::from_static("token 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") );
+        let client = Client::builder().default_headers(headers).build().unwrap();
+        let url = format!("https://api.github.com/users/{}",data.git_username);
+
+        println!("{}", &url);
+
+        let r1 = client.get(&url).send().await.unwrap().text().await.unwrap();
+        println!("{}", &r1);
+
+        let info:Value = serde_json::from_str(&r1).unwrap();
+        
+        let x= info["name"].as_str().unwrap().to_string();
+
+        data.set_name(x);
+
+        let repos_url = info["repos_url"].as_str().unwrap().to_string();
+
+        let r1 = client.get(&repos_url).send().await.unwrap().text().await.unwrap();
+        let info:Value = serde_json::from_str(&r1).unwrap();
+
+        let x = info.as_array().unwrap();
+
+        let mut temp = Vec::new();
+
+        for i in x{
+            temp.push(i["name"].as_str().unwrap().to_string());
+        }
+        
+        data.generate_git_report(temp, &client).await;
+
+    }else{
+
+        nougat = nougat.replace("CV", "");
+        nougat = nougat.replace("Resume", " ");
+        nougat = nougat.replace("resume", " ");
+        nougat = nougat.replace("Latest", " ");
+        nougat = nougat.replace("latest", " ");
+        nougat = nougat.replace("+", " ");
+        nougat = nougat.replace("updated", " ");
+        nougat = nougat.replace("update", " ");
+        nougat = nougat.replace(")", " ");
+        nougat = nougat.replace("(", " ");
+        nougat = nougat.replace("_", " ");
+        nougat = nougat.replace("-", " ");
+        nougat = nougat.replace("   ", " ");
+        nougat = nougat.replace("  ", " ");
+        nougat = nougat.replace("  ", " ");
+        nougat = nougat.trim_end().to_owned();
+        nougat = nougat.trim_start().to_owned();
+
+        data.set_name(nougat);
+    }
+
+    template.change_name("Software Developer (Junior)".to_string());
+    template.generate_from_default("institutes.txt".to_string());
+
+    data.template = template.name;
+
+    let smolcontext = context.to_lowercase();
+
+    for i in template.tokens{
+        if smolcontext.contains(&i.to_lowercase()){
+            data.institutes.push(i);
+        }
+    }
+
+    println!("{:#?}", data)
+
 }
 
 
