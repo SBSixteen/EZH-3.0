@@ -1,143 +1,130 @@
-import React, { useState } from 'react'
-import './v2.css'
+import React, { useState } from "react";
+import "./v2.css";
 import { invoke } from "@tauri-apps/api/tauri";
 
 function Login_v2() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [check_e, setcheckE] = useState(false);
+  const [check_p, setcheckP] = useState(false);
+  const [transit, setTransit] = useState(true);
+  const [helptext, sethelptext] = useState("");
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [check_e, setcheckE] = useState(false);
-    const [check_p, setcheckP] = useState(false);
-    const [transit, setTransit] = useState(true);
-    const [helptext, sethelptext] = useState("");
+  const emailValidation = () => {
+    const regEx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (regEx.test(email)) {
+      setcheckE(true);
+    } else if (!regEx.test(email)) {
+      setcheckE(false);
+    } else if (email.length == 0) {
+      setcheckE(false);
+    }
+  };
 
-    const emailValidation = () => {
-        const regEx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (regEx.test(email)) {
-            setcheckE(true);
-        } else if (!regEx.test(email)) {
-            setcheckE(false);
-        } else if (email.length == 0) {
-            setcheckE(false);
-        }
-    };
+  const passValidation = () => {
+    if (password.length < 7) {
+      setcheckP(false);
+    } else {
+      setcheckP(true);
+    }
+  };
 
-    const passValidation = () => {
-        if (password.length < 7) {
-            setcheckP(false);
-        } else {
-            setcheckP(true);
-        }
-    };
+  const validate = () => {
+    emailValidation();
+    passValidation();
 
-    const validate = () => {
-        emailValidation()
-        passValidation()
-
-        if (!check_p) {
-            sethelptext("Password is too short.");
-        }
-
-        if (!check_e) {
-            sethelptext("Email is invalid");
-            if (!check_p) {
-                sethelptext("Email & Password are invalid.");
-            }
-        }
-
-        if (check_p && check_e) {
-            sethelptext("");
-        }
-        console.log(helptext);
+    if (!check_p) {
+      sethelptext("Password is too short.");
     }
 
-    return (
+    if (!check_e) {
+      sethelptext("Email is invalid");
+      if (!check_p) {
+        sethelptext("Email & Password are invalid.");
+      }
+    }
 
-        <div>
+    if (check_p && check_e) {
+      sethelptext("");
+    }
+    console.log(helptext);
+  };
 
-            <div>
-                {/* {Someone get the logo loaded!!} */}
-                <img src="/EZH Logo.svg"/>
-            </div>
+  return (
+    <div>
+      <div>
+        {/* {Someone get the logo loaded!!} */}
+        <img src="/EZH Logo.svg" style={{ width: "375px" }} />
+      </div>
 
+      <title>EZHIRE</title>
+      <div className="box">
+        <form id="login">
+          <div className="inputBox">
+            <h2>Sign In</h2>
+            <input
+              type="text"
+              required
+              onChange={(e) => {
+                setEmail(e.currentTarget.value);
+                validate();
+              }}
+            ></input>
+            <span>Email</span>
+            <i />
+          </div>
 
-            <title>EZHIRE</title>
-            <div className='box'>
+          <div className="inputBox">
+            <input
+              type="password"
+              style={{ marginTop: "-25px" }}
+              required
+              onChange={(e) => {
+                setPassword(e.currentTarget.value);
+                validate();
+              }}
+            ></input>
+            <span>Enter Password</span>
 
-                <form id='login'>
+            <i />
+          </div>
 
-                    <div className='inputBox'>
+          <div
+            onClick={(e) => {
+              if (check_e && check_p && transit) {
+                setTransit(false);
+                sethelptext("Querying...");
 
-                        <h2>Sign In</h2>
-                        <input type="text" required onChange={(e) => {
-                            setEmail(e.currentTarget.value)
-                            validate()
-                        }
-                        }></input>
-                        <span>Email</span>
-                        <i />
-                    </div>
+                invoke("login_user", { email: email, password: password }).then(
+                  (message) => {
+                    var x = JSON.parse(message);
+                    console.log(x);
+                    sethelptext(x.response);
 
-                    <div className='inputBox' >
-
-                        <input type="password" style={{ marginTop: "-25px" }} required
-                            onChange={(e) => {
-                                setPassword(e.currentTarget.value);
-                                validate();
-                            }
-                            }></input>
-                        <span>Enter Password</span>
-
-                        <i />
-                    </div>
-
-                    <div onClick={(e) => {
-
-                        if (check_e && check_p && transit) {
-
-                            setTransit(false);
-                            sethelptext("Querying...")
-
-                            invoke("login_user", { email: email, password: password }).then(
-                                (message) => {
-                                    var x = JSON.parse(message);
-                                    console.log(x);
-                                    sethelptext(x.response);
-
-                                    if(x.value){
-                                        sessionStorage.setItem("acc", email);
-                                        
-                                    }
-
-                                    setTransit(true);
-                                }
-                            )
-                            console.log("end of task");
-
-                        }
+                    if (x.value) {
+                      sessionStorage.setItem("acc", email);
                     }
-                    }>
 
-                        <a className='LogRegButt'> Login </a>
+                    setTransit(true);
+                  }
+                );
+                console.log("end of task");
+              }
+            }}
+          >
+            <a className="LogRegButt"> Login </a>
+          </div>
 
-                    </div>
+          <div className="links" style={{ marginTop: "-40px" }}>
+            <a href="#">Forgot Password?</a>
+            <a href="/regv2">Register</a>
+          </div>
 
-                    <div className='links' style={{ marginTop: "-40px" }}>
-                        <a href="#">Forgot Password?</a>
-                        <a href="/regv2">Register</a>
-                    </div>
-
-                    <a style={{ color: "#FFFFFF", marginTop: "-10px" }}> {helptext} </a>
-
-                </form>
-
-            </div>
-
-
-        </div>
-
-    );
-
+          <a style={{ color: "#FFFFFF", marginTop: "-10px" }}> {helptext} </a>
+        </form>
+      </div>
+    </div>
+  );
 }
 
 export default Login_v2;

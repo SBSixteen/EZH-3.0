@@ -56,11 +56,7 @@ const PricingPlan = () => {
       <Container>
         <div className="row">
           <a href="" target="_blank">
-            <img
-              src="/Logo_Ezhire.svg"
-              className="logo tauri"
-              alt="Tauri logo"
-            />
+         
           </a>
         </div>
       </Container>

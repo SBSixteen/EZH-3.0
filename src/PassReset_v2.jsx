@@ -31,7 +31,7 @@ function PassReset_v2() {
 
         <div>
             <div className='box' style={{ height: "650px" }}>
-                <form>
+                <form id = "login">
                     <div className='inputBox'>
                         <h2 style={{ fontSize: "22px", marginTop: "-35px" }}>Forgot Password</h2>
                         <input type="text" required style={{ marginTop: "-10px" }} onInput={e => setInput(e.target.value)}></input>

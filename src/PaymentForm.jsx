@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function PaymentPage() {
+function Payment() {
   const [product] = useState({
     name: "Final Payment",
     price: 19.99,
@@ -70,4 +70,4 @@ function PaymentPage() {
   );
 }
 
-export default PaymentPage;
+export default Payment;

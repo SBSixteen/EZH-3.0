@@ -122,7 +122,7 @@ async fn main() {
 
     //Start PDF Processing. <Put PDF in TEMP_PDF> and set to true
 
-    NER_EZH::process_one_cv("nabeelmirza79@gmail.com".to_string(), "Nabeel Mirza.pdf".to_string()).await;
+    // NER_EZH::process_one_cv("nabeelmirza79@gmail.com".to_string(), "Nabeel Mirza.pdf".to_string()).await;
 
     println!("{:?}",CloudStorage_EZH::fetch_cloud_stats("nabeelmirza79@gmail.com".to_string()).await);
     

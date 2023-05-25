@@ -3,7 +3,7 @@ import Login from "./Login.jsx";
 import Home from "./Home.js";
 import Register from "./Register";
 import Settings from "./Settings";
-import PaymentForm from "./PaymentForm.jsx";
+import Payment from "./PaymentForm.jsx";
 import PassReset from "./PassReset.jsx";
 import PricingPlan from "./PricingPlan.jsx";
 import Dataset from "./Dataset.jsx";
@@ -16,7 +16,8 @@ import Login_v2 from "./Login_v2.jsx";
 import Registration_v2 from "./Registration_v2.jsx";
 import Twofa_v2 from "./Twofa_v2.jsx";
 import PassReset_v2 from "./PassReset_v2.jsx";
-
+import Navbar from "./Components/Navbar/Navbar.jsx";
+import Listing from "./Listing.jsx";
 import {
   createStyles,
   getStylesRef,
@@ -115,13 +116,15 @@ const data = [
 function App() {
   return (
     <div className={"App"}>
+      
       <BrowserRouter>
         <Routes>
           <Route path="/register" element={<Register />} />
+          <Route path="/listing" element={<Listing />} />
           <Route path="/login" element={<Login />} />
           <Route path="/home" element={<Home />} />
           <Route path="/pass-reset" element={<PassReset />} />
-          <Route path="/payment-form" element={<PaymentForm />} />
+          <Route path="/payment-form" element={<Payment />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/subscription" element={<PricingPlan />} />
           <Route path="/dataset" element={<Dataset/>} />

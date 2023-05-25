@@ -1,231 +1,210 @@
-import React, { useState, useEffect } from 'react'
-import './v2.css'
+import React, { useState, useEffect } from "react";
+import "./v2.css";
 import { invoke } from "@tauri-apps/api/tauri";
 
 function Registration_v2() {
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
+  const [cpassword, setCpassword] = useState("");
+  const [check_e, setcheckE] = useState(false);
+  const [check_p, setcheckP] = useState(false);
+  const [check_2p, setcheck2P] = useState(false);
+  const [check_n, setcheckN] = useState(false);
+  const [transit, setTransit] = useState(true);
+  const [helptext, sethelptext] = useState("");
 
-    const [email, setEmail] = useState("");
-    const [name, setName] = useState("");
-    const [password, setPassword] = useState("");
-    const [cpassword, setCpassword] = useState("");
-    const [check_e, setcheckE] = useState(false);
-    const [check_p, setcheckP] = useState(false);
-    const [check_2p, setcheck2P] = useState(false);
-    const [check_n, setcheckN] = useState(false);
-    const [transit, setTransit] = useState(true);
-    const [helptext, sethelptext] = useState("");
+  const emailValidation = () => {
+    const regEx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (regEx.test(email)) {
+      setcheckE(true);
+    } else if (!regEx.test(email)) {
+      setcheckE(false);
+    } else if (email.length == 0) {
+      setcheckE(false);
+    }
+  };
 
-    const emailValidation = () => {
-        const regEx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (regEx.test(email)) {
-            setcheckE(true);
-        } else if (!regEx.test(email)) {
-            setcheckE(false);
-        } else if (email.length == 0) {
-            setcheckE(false);
-        }
-    };
+  const passValidation = () => {
+    if (password.length < 7) {
+      setcheckP(false);
+    } else {
+      setcheckP(true);
+    }
+  };
 
-    const passValidation = () => {
-        if (password.length < 7) {
-            setcheckP(false);
-        } else {
-            setcheckP(true);
-        }
-    };
+  const twopass = () => {
+    if (password == cpassword) {
+      setcheck2P(true);
+    } else {
+      setcheck2P(false);
+    }
+  };
 
-    const twopass = () => {
+  const nameValidation = () => {
+    if (name.length > 0) {
+      setcheckN(true);
+    } else {
+      setcheckN(false);
+    }
+  };
 
-        if (password == cpassword) {
-            setcheck2P(true);
-        } else {
-            setcheck2P(false);
-        }
+  const validate = () => {
+    emailValidation();
+    passValidation();
+    nameValidation();
+    twopass();
 
+    sethelptext("");
+
+    var x = "";
+
+    if (!check_e) {
+      x = "Email is invalid.";
     }
 
-    const nameValidation = () => {
-
-        if (name.length > 0) {
-            setcheckN(true);
-        } else {
-            setcheckN(false);
-        }
-
+    if (!check_n) {
+      x = x + " Name is empty.";
     }
 
-    const validate = () => {
-        emailValidation()
-        passValidation()
-        nameValidation()
-        twopass()
-
-        sethelptext("");
-
-        var x = "";
-
-        if (!check_e) {
-            x = "Email is invalid."
-        }
-
-        if (!check_n) {
-            x = x + " Name is empty."
-        }
-
-        if (!check_p) {
-            x = x + " Password is too short." ;
-        }
-
-        if (!check_2p) {
-            x = x + " Passwords do not match."
-        }
-
-        sethelptext(x);
-
-        if (check_p && check_e && check_2p && check_n) {
-            sethelptext("");
-        }
+    if (!check_p) {
+      x = x + " Password is too short.";
     }
 
-    // useEffect(()=>{
-    //     const interval = setInterval(() =>validate(),1000);
-    //     return()=>{
-    //         clearInterval(interval);
-    //     };
-    // }, [])
+    if (!check_2p) {
+      x = x + " Passwords do not match.";
+    }
 
-    return (
+    sethelptext(x);
 
-        <div>
+    if (check_p && check_e && check_2p && check_n) {
+      sethelptext("");
+    }
+  };
 
-            <div>
-                {/* {Someone get the logo loaded!!} */}
-                <img src="/EZH Logo.svg" />
-            </div>
+  // useEffect(()=>{
+  //     const interval = setInterval(() =>validate(),1000);
+  //     return()=>{
+  //         clearInterval(interval);
+  //     };
+  // }, [])
 
-            <div className='box' style={{ height: "650px" }}>
+  return (
+    <div>
+      <div>
+        {/* {Someone get the logo loaded!!} */}
+        <img src="/EZH Logo.svg" style={{ width: "375px" }} />
+      </div>
 
-                <form>
-
-                    <div className='inputBox'>
-
-                        <h2>Register</h2>
-                        <input type="text" required
-
-                            onChange={(e) => {
-
-                                setEmail(e.currentTarget.value)
-                                validate();
-                                validate();
-                            }}
-
-                        ></input>
-                        <span>Email</span>
-                        <i />
-                    </div>
-
-                    <div className='inputBox' style={{ marginTop: "0px" }} >
-                        <input type="text" required 
-                        onChange={(e) => {
-
-                            setName(e.currentTarget.value)
-                            validate();
-                            validate();
-                        }}></input>
-                        <span>Full Name</span>
-                        <i />
-                    </div>
-
-                    <div className='inputBox' >
-
-                        <input type="password" style={{ marginTop: "-25px" }} required 
-                        
-                        onChange={(e) => {
-
-                            setPassword(e.currentTarget.value)
-                            validate();                                validate();
-                        }
-                    }
-                        ></input>
-                    <span>Enter Password</span>
-
-                    <i />
-            </div>
-            <div className='inputBox' >
-
-                <input type="password" style={{ marginTop: "-25px" }} required
-                
-                onChange={(e) => {
-
-                    setCpassword(e.currentTarget.value)
-                    validate();                                validate();
-                }
-            }
-                ></input>
-                <span>Confirm Password</span>
-
-                <i />
-            </div>
-            <div onClick={(e) => {
-
-                sethelptext("");
+      <div className="box" style={{ height: "650px" }}>
+        <form id="login">
+          <div className="inputBox">
+            <h2>Register</h2>
+            <input
+              type="text"
+              required
+              onChange={(e) => {
+                setEmail(e.currentTarget.value);
                 validate();
+                validate();
+              }}
+            ></input>
+            <span>Email</span>
+            <i />
+          </div>
 
-                console.log(check_e);
-                console.log(check_p);
-                console.log(check_n);
-                console.log(check_2p);
+          <div className="inputBox" style={{ marginTop: "0px" }}>
+            <input
+              type="text"
+              required
+              onChange={(e) => {
+                setName(e.currentTarget.value);
+                validate();
+                validate();
+              }}
+            ></input>
+            <span>Full Name</span>
+            <i />
+          </div>
 
-                if (check_e && check_p && check_n && check_2p && transit) {
+          <div className="inputBox">
+            <input
+              type="password"
+              style={{ marginTop: "-25px" }}
+              required
+              onChange={(e) => {
+                setPassword(e.currentTarget.value);
+                validate();
+                validate();
+              }}
+            ></input>
+            <span>Enter Password</span>
 
-                    setTransit(false);
-                    sethelptext("Querying...")
+            <i />
+          </div>
+          <div className="inputBox">
+            <input
+              type="password"
+              style={{ marginTop: "-25px" }}
+              required
+              onChange={(e) => {
+                setCpassword(e.currentTarget.value);
+                validate();
+                validate();
+              }}
+            ></input>
+            <span>Confirm Password</span>
 
-                    invoke("create_user", {
-                        email: email,
-                        name: name,
-                        password: password,
-                    }).then(
-                        (message) => {
-                            var x = JSON.parse(message);
-                            console.log(x);
-                            sethelptext(x.response);
+            <i />
+          </div>
+          <div
+            onClick={(e) => {
+              sethelptext("");
+              validate();
 
-                            if (x.value) {
-                                sessionStorage.setItem("acc", email);
-                            }
+              console.log(check_e);
+              console.log(check_p);
+              console.log(check_n);
+              console.log(check_2p);
 
-                            setTransit(true);
-                        }
-                    )
-                    console.log("end of task");
+              if (check_e && check_p && check_n && check_2p && transit) {
+                setTransit(false);
+                sethelptext("Querying...");
 
-                }
-            }
-            }>
+                invoke("create_user", {
+                  email: email,
+                  name: name,
+                  password: password,
+                }).then((message) => {
+                  var x = JSON.parse(message);
+                  console.log(x);
+                  sethelptext(x.response);
 
-                <a className='LogRegButt'> Login </a>
+                  if (x.value) {
+                    sessionStorage.setItem("acc", email);
+                  }
 
-            </div>
-            <div className='links' style={{ marginTop: "-45px" }}>
-                {/* Temporary ? for ease of access */}
-                <a href="/">?</a>
-                <a href="/logv2">Already have an account?</a>
-                <a href="/">?</a>
-            </div>
+                  setTransit(true);
+                });
+                console.log("end of task");
+              }
+            }}
+          >
+            <a className="LogRegButt"> Register </a>
+          </div>
+          <div className="links" style={{ marginTop: "-45px" }}>
+            {/* Temporary ? for ease of access */}
+            <a href="/">?</a>
+            <a href="/logv2">Already have an account?</a>
+            <a href="/">?</a>
+          </div>
 
-            {/* Add Login Implementation */}
-            <a style={{ color: "#FFFFFF", marginTop: "-15px" }}> {helptext} </a>
+          {/* Add Login Implementation */}
+          <a style={{ color: "#FFFFFF", marginTop: "-15px" }}> {helptext} </a>
         </form>
-
-
-            </div >
-
-
-        </div >
-
-    );
-
+      </div>
+    </div>
+  );
 }
 
 export default Registration_v2;
