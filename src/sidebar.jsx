@@ -12,6 +12,7 @@ import {
   ExitToApp,
 } from "@material-ui/icons";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 // export default function Sidebar() {
 //   return (
@@ -127,25 +128,50 @@ import { Link } from "react-router-dom";
 }
 
 export default function Sidebar() {
-  // const sidebarStyles = {
+  // const navigate = useNavigate();
 
-  //   width: '200px',
-  //   height: '100%',
-  //   padding: '20px',
+  // const navigateToLogin = () => {
+  //   navigate('/logv2');
   // };
 
   return (
-    <div className="box" style={{display:"flex", height: "100vh", width: "350px"}}>
+    <div
+      className="box"
+      style={{ display: "flex", height: "100vh", width: "350px" }}
+    >
       <form id="login" style={{ width: "348px", marginRight: "3px" }}>
         <div className="inputBox">
-          <h2 style={{ fontSize: "22px", marginTop: "-35px" }}>EZHire</h2>
-          <i />
+          <h2 style={{ fontSize: "50px", marginTop: "-35px" }}>EZHire </h2>
         </div>
 
         <div>
-          <a className="LogRegButt"> Verify </a>
+          <a href="/listing" className="LogRegButt">
+            {" "}
+            Cloud Storage{" "}
+          </a>
         </div>
-        <a style={{ color: "#FFFFFF", marginTop: "-25px" }}>Help</a>
+
+        <div>
+          <a href="/cvpage" className="LogRegButt">
+            {" "}
+            CV Page{" "}
+          </a>
+        </div>
+
+        <div>
+          <a href="/Settings" className="LogRegButt">
+            {" "}
+            Settings{" "}
+          </a>
+        </div>
+
+        <div
+          onClick={(e) => {
+            console.log("Click");
+          }}
+        >
+          <a className="LogRegButt"> Log Out </a>
+        </div>
       </form>
     </div>
   );
