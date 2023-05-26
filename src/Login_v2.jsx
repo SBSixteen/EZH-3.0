@@ -11,6 +11,10 @@ function Login_v2() {
     navigate('/2fa');
   };
 
+  const toListing = () => {
+    navigate('/listing');
+  };
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [check_e, setcheckE] = useState(false);
@@ -114,7 +118,7 @@ function Login_v2() {
                       if(x.two_fa){
                         to2fa();
                       }else{
-
+                        toListing();
                       }
                     }
 

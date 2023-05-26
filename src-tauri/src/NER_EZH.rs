@@ -1,6 +1,7 @@
 use std::{collections::HashMap, fs::{self, File}, hash::Hash, io::{self,BufReader,Write, BufRead}};
 // use std::io::{self, BufRead};
 
+use image::math;
 use regex::Regex;
 // use reqwest::Client;
 use serde_json::{json, Value};
@@ -123,6 +124,11 @@ pub async fn buf_reader(mut ocr: String) -> io::Result<Vec<String>> {
     Ok(associations)
 }
 
+#[derive(Serialize, Deserialize, Debug , Clone)]
+pub struct Confirmation {
+    filedata: String,
+}
+
 pub struct Template {
     name: String,
     tokens: Vec<String>,
@@ -176,9 +182,6 @@ impl Template {
     }
 }
 
-// struct candidate {
-//     experience: Vec<experience>,
-// }
 
 #[derive(Serialize, Deserialize, Debug , Clone)]
 pub struct experience {
@@ -222,6 +225,7 @@ pub struct Candidate {
     //Personal Info
     name: String,
     phone: String,
+    email: String,
 
     //Crux
     skills: HashMap<String,i32>,
@@ -244,6 +248,7 @@ impl Candidate {
         return Candidate {
             name: String::new(),
             phone: String::new(),
+            email:String::new(),
             skills: HashMap::new(),
             institutes:Vec::new(),
             workexp: experience { name: Vec::new(), years: Vec::new() },
@@ -278,6 +283,19 @@ impl Candidate {
 
                 self.phone = i;
 
+            }
+
+        }
+
+    }
+
+    fn set_email(&mut self, context:String){
+
+
+        for i in self.tokens.clone(){
+
+            if i.contains("@"){
+                self.email = i;
             }
 
         }
@@ -547,7 +565,7 @@ pub async fn generate_contexts(owner:String,arr:Vec<String>) -> Vec<String>{
 
 
 #[tauri::command]
-pub async fn process_one_cv(owner:String, name:String){
+pub async fn process_one_cv(owner:String, name:String) -> String{
 
     let mut path = CloudStorage_EZH::path_generator(owner.clone());
     path.push_str("\\.files\\");
@@ -563,7 +581,7 @@ pub async fn process_one_cv(owner:String, name:String){
 
     let mut data = Candidate::new().await;
 
-    // CloudStorage_EZH::generate_PDF_queue_report(owner.clone(), true).await;
+    //CloudStorage_EZH::generate_PDF_queue_report(owner.clone(), true).await;
 
     let mut txtname = name[0..name.len()-4].to_string();
     let mut nougat = txtname.clone();
@@ -582,16 +600,25 @@ pub async fn process_one_cv(owner:String, name:String){
     template.generate_from_default("languages.txt".to_string());
 
     data.generate_tokens(context.clone()).await;
+    println!("1");
     data.generate_skills(&template).await;
+    println!("2");
     data.fetch_git_from_context();
+    println!("3");
+    data.set_email(context.clone());
+    println!("4");
     data.clear_tokens();
+    println!("5");
     data.get_phone(&re, context.clone());
+    println!("6");
+
 
     if data.github !=""{
 
+        println!("7");
         let mut headers = HeaderMap::new();
         headers.insert(USER_AGENT, HeaderValue::from_static("SBSixteen"));
-        headers.insert(AUTHORIZATION,HeaderValue::from_static("token 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") );
+        headers.insert(AUTHORIZATION,HeaderValue::from_static("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") );
         let client = Client::builder().default_headers(headers).build().unwrap();
         let url = format!("https://api.github.com/users/{}",data.git_username);
 
@@ -618,8 +645,9 @@ pub async fn process_one_cv(owner:String, name:String){
         for i in x{
             temp.push(i["name"].as_str().unwrap().to_string());
         }
-        
+        println!("8");
         data.generate_git_report(temp, &client).await;
+        println!("9");
 
     }else{
 
@@ -656,8 +684,8 @@ pub async fn process_one_cv(owner:String, name:String){
             data.institutes.push(i);
         }
     }
-
-    println!("{:#?}", data)
+    println!("finished");
+    return serde_json::to_string_pretty(&data).unwrap();
 
 }
 

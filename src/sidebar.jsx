@@ -1,4 +1,4 @@
-import React from "react";
+import {React, useState} from "react";
 import "./Sidebar.css";
 import "./v2.css";
 import {
@@ -13,6 +13,7 @@ import {
 } from "@material-ui/icons";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { invoke } from "@tauri-apps/api/tauri";
 
 // export default function Sidebar() {
 //   return (
@@ -130,6 +131,9 @@ import { useNavigate } from "react-router-dom";
 export default function Sidebar() {
   const navigate = useNavigate();
 
+  const [filebytes,setFileBytes] = useState("");
+  const [filename,setFileName] = useState("");
+
   const navigateToLogin = () => {
     navigate('/logv2');
   };
@@ -179,13 +183,24 @@ export default function Sidebar() {
           <input type="file" id="imgupload" onChange={(e) => {
 
             var file = e.target.files[0];
+            var namez = file.name;
+
             var reader = new FileReader();
             reader.onload = function (event) {
               // The file's text will be printed here
-              console.log(event.target.result)
+              var bbs = event.target.result;
+
+              console.log("Filename => "+bbs);
+              invoke("upload_file",{bytes:bbs, name:namez, owner:sessionStorage.getItem("login")}).then((message)=>
+              {
+                var x = JSON.parse(message);
+                console.log(x);
+              }
+              )
+
             };
 
-            reader.readAsBinaryString(file);
+            reader.readAsText(file, 'windows-1252');
 
           }} />
         </div>

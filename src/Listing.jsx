@@ -46,6 +46,12 @@ function Listing() {
                     <button className="parsebtn" onClick={()=>
                       {
                         sessionStorage.setItem("fname", `${item.name}.pdf`);
+
+                        invoke("process_one_cv",{owner:sessionStorage.getItem("login"), name:sessionStorage.getItem("fname")}).then((message)=>{
+
+                            sessionStorage.setItem("parseData", message);
+
+                        })
                       }
                     }>Parse</button>
                   }

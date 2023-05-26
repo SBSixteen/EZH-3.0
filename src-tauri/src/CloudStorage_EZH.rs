@@ -379,10 +379,11 @@ pub async fn generate_PDF_queue_report(account: String, proceed: bool){
 }
 
 pub async fn pdf2jpeg(files: Vec<String>, hash: String, pdf_path: String) {
-    let pdfium = Pdfium::new(
+   
+    let mut pdfium = Pdfium::new(
         Pdfium::bind_to_library(Pdfium::pdfium_platform_library_name_at_path("./"))
             .or_else(|_| Pdfium::bind_to_system_library())
-            .unwrap(),
+            .unwrap()
     );
 
     let mut path = String::from("..\\cloudStorage\\");
@@ -439,7 +440,6 @@ pub async fn destroy_directory(email : String) {
     }
 }
 
-#[tauri::command]
 pub async fn jpeg2txt(account:String){
     let hash = account;
     println!("");
@@ -529,13 +529,18 @@ pub fn return_dir_contents(owner:String, file_in_cloud:String) -> Vec<String>{
     return files;
 }
 
-pub async fn upload_file(bytes:Vec<u8>, name:String, owner:String) -> String{
+#[tauri::command]
+pub async fn upload_file(bytes:String, name:String, owner:String) -> String{
 
     let mut path = path_generator(owner.clone());
     path.push_str("\\.files\\");
     path.push_str(&name);
 
-    fs::write(path, bytes).unwrap();
+    println!("{}", &path);
+
+    println!("{}", &bytes);
+
+    fs::write(&path, bytes).expect("Unable to write file");
 
     let answer = Confirmation{
         value:true,

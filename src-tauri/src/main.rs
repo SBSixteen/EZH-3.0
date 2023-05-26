@@ -1,7 +1,3 @@
-#![allow(dead_code, unused_variables)]
-
-#![allow(warnings)]
-
 #![cfg_attr(
     all(not(debug_assertions), target_os = "windows"),
     windows_subsystem = "windows"
@@ -15,6 +11,7 @@ pub mod CloudStorage_EZH;
 pub mod Single_Column;
 mod NER_EZH;
 
+use CloudStorage_EZH::generate_PDF_queue_report;
 use serde::{Deserialize, Serialize};
 use reqwest::{header::{USER_AGENT, HeaderMap, HeaderValue, AUTHORIZATION}, Client};
 use regex::Regex;
@@ -119,12 +116,12 @@ async fn main() {
 
     //Start PDF Processing. <Put PDF in TEMP_PDF> and set to true
 
-    // NER_EZH::process_one_cv("nabeelmirza79@gmail.com".to_string(), "Nabeel Mirza.pdf".to_string()).await;
+    //NER_EZH::process_one_cv("nabeelmirza79@gmail.com".to_string(), "Nabeel Mirza.pdf".to_string()).await;
 
     // println!("{:?}",CloudStorage_EZH::fetch_cloud_stats("nabeelmirza79@gmail.com".to_string()).await);
     
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![LogReg::create_user, LogReg::login_user, LogReg::match_vcode, LogReg::match_2fa, LogReg::remember_me_token, LogReg::generate_changepass_code, LogReg::update_password, CloudStorage_EZH::fetch_cloud_stats, NER_EZH::process_one_cv, CloudStorage_EZH::remove_file])
+        .invoke_handler(tauri::generate_handler![LogReg::create_user, LogReg::login_user, LogReg::match_vcode, LogReg::match_2fa, LogReg::remember_me_token, LogReg::generate_changepass_code, LogReg::update_password, CloudStorage_EZH::fetch_cloud_stats, CloudStorage_EZH::remove_file, CloudStorage_EZH::upload_file, NER_EZH::process_one_cv])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
     //
