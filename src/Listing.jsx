@@ -1,9 +1,16 @@
 import "./listing.css";
 import { invoke } from "@tauri-apps/api/tauri";
 import { useEffect, useState } from 'react'
+import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar.jsx";
 
 function Listing() {
+
+  const navigate = useNavigate();
+
+  const tocv = () => {
+    navigate('/cvpage');
+  };
 
   const [data, setData] = useState([]);
 
@@ -50,6 +57,7 @@ function Listing() {
                         invoke("process_one_cv",{owner:sessionStorage.getItem("login"), name:sessionStorage.getItem("fname")}).then((message)=>{
 
                             sessionStorage.setItem("parseData", message);
+                            tocv();
 
                         })
                       }
