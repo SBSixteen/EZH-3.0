@@ -121,7 +121,7 @@ async fn main() {
     // println!("{:?}",CloudStorage_EZH::fetch_cloud_stats("nabeelmirza79@gmail.com".to_string()).await);
     
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![LogReg::create_user, LogReg::login_user, LogReg::match_vcode, LogReg::match_2fa, LogReg::remember_me_token, LogReg::generate_changepass_code, LogReg::update_password, CloudStorage_EZH::fetch_cloud_stats, CloudStorage_EZH::remove_file, CloudStorage_EZH::upload_file, NER_EZH::process_one_cv])
+        .invoke_handler(tauri::generate_handler![LogReg::create_user, LogReg::login_user, LogReg::match_vcode, LogReg::match_2fa, LogReg::remember_me_token, LogReg::generate_changepass_code, LogReg::update_password, CloudStorage_EZH::fetch_cloud_stats, CloudStorage_EZH::remove_file, CloudStorage_EZH::upload_file, NER_EZH::process_one_cv, CloudStorage_EZH::delete_file])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
     //

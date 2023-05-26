@@ -291,6 +291,7 @@ use std::time::Duration;
 // }
 
 // Delete file from server
+#[tauri::command]
 pub async fn delete_file(owner: String, filename: String) {
     let path = file_path_generator(owner, filename);
     let _f = fs::remove_file(path).unwrap();

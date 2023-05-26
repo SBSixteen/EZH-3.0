@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    background: "#cd1985b5",
+    background: "#28292dbf",
     borderRadius: "30px"
   },
   section: {
@@ -120,7 +120,7 @@ const Settings = () => {
                     secondary="Change your password"
                   />
                   <div>
-                    <a className="LogRegButt" href="passreset_v2">
+                    <a  className="LogRegButt" href="passreset_v2"><p style = {{color: "white"}}></p>
                       {" "}
                       Change Password{" "}
                     </a>
